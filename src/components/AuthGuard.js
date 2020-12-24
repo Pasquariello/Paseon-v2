@@ -7,7 +7,7 @@ function AuthGuard({ children }) {
   if (!account.auth) {
     return <Redirect to="/login" />;
   }
-  return children;
+  return <div>{children}</div>
 }
 AuthGuard.propTypes = {
   children: PropTypes.any
