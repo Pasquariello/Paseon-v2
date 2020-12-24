@@ -7,7 +7,7 @@ function GuestGuard({ children }) {
   if (account.auth) {
     return <Redirect to="/app/dashboard" />;
   }
-  return children;
+  return <div>{children}</div>;
 }
 GuestGuard.propTypes = {
   children: PropTypes.any

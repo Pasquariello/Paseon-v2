@@ -1,25 +1,26 @@
-import React from 'react';
-import {  Droppable, Draggable  } from 'react-beautiful-dnd';
+import React, { Component, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { DragDropContext, Droppable, Draggable, onDragStart } from 'react-beautiful-dnd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons'
 
 
 // fake data generator
-// const getItems = count =>
-//   Array.from({ length: count }, (v, k) => k).map(k => ({
-//     id: `item-${k}`,
-//     content: `item ${k}`,
-//   }));
+const getItems = count =>
+  Array.from({ length: count }, (v, k) => k).map(k => ({
+    id: `item-${k}`,
+    content: `item ${k}`,
+  }));
 
 // a little function to help us with reordering the result
-// const reorder = (list, startIndex, endIndex) => {
-//   const result = Array.from(list);
-//   const [removed] = result.splice(startIndex, 1);
-//   result.splice(endIndex, 0, removed);
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
 
-//   return result;
-// };
+  return result;
+};
 
 const grid = 8;
 
@@ -59,18 +60,14 @@ const ServiceCommandUnit = (props) => {
       
       });
 
+      const [ dragFoo, setDragFoo ] = useState();
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
     return (
         // <Droppable droppableId="droppable" direction="horizontal">
         <>
 
-        <Droppable 
-            droppableId={props.type} 
-            type={`droppableSubItem`} 
-            direction="horizontal" 
-            //isDropDisabled={ props.subItems.length > 3 ? true : false }
-        >
+        <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
 
         {(provided, snapshot) => (
             <div 

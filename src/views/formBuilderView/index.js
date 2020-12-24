@@ -1,13 +1,18 @@
-/* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from 'react';
 
 import Box from '@material-ui/core/Box';
+// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+// import Typography from '@material-ui/core/Typography';
+// import { makeStyles } from '@material-ui/core/styles';
+// import {Button, Card, CardContent, Container, Paper, TextField, FormGroup} from '@material-ui/core';
+// import { v4 as uuidv4 } from 'uuid';
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import ServiceCommandUnit from "./ServiceCommandUnit";
 import FieldOptions from './FieldOptions'
 
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import shortid from 'shortid';
 
 
@@ -102,15 +107,16 @@ const reorder = (list, startIndex, endIndex) => {
 
 
 function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
+  const dispatch = useDispatch();
 
-//   function getRows(list){
-//     console.log('getRows', list.map(elem => elem))
-//     return list.map(elem => elem.row);
-//   }
+  function getRows(list){
+    console.log('getRows', list.map(elem => elem))
+    return list.map(elem => elem.row);
+  }
 
-//   const getMaxRow = (list) => {
-//     return Math.max(...getRows(list));
-//   }
+  const getMaxRow = (list) => {
+    return Math.max(...getRows(list));
+  }
 
 
   const [dataList, setDataList] = useState([]);
@@ -121,35 +127,35 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   }, []);
 
 
-//   const sortedFormElements = (array) => {
-//     return array.sort(function (row1, row2){
+  const sortedFormElements = (array) => {
+    return array.sort(function (row1, row2){
 
-//         // sort by row
-//         if  (row1.row < row2.row) return -1;
-//         if  (row1.row > row2.row) return 1;
+        // sort by row
+        if  (row1.row < row2.row) return -1;
+        if  (row1.row > row2.row) return 1;
 
-//         // sort by col
-//         if  (row1.col < row2.col) return -1;
-//         if  (row1.col > row2.col) return 1;
+        // sort by col
+        if  (row1.col < row2.col) return -1;
+        if  (row1.col > row2.col) return 1;
 
-//     });
-//   }
+    });
+  }
 
   const buildArrayMatrix = (array) => {
     let tempArray = []
-    // const arrayCopy = array
-    // let foo = arrayCopy.map((el, index) => {
-    //     // tempArray.push([])
-    //         if (tempArray[el.row]){
-    //             tempArray[el.row].splice(el.col, 0, el)
-    //             return el
+    const arrayCopy = array
+    let foo = arrayCopy.map((el, index) => {
+        // tempArray.push([])
+            if (tempArray[el.row]){
+                tempArray[el.row].splice(el.col, 0, el)
+                return el
 
-    //         } else {
-    //             tempArray.push([el])
-    //             return {...el, row: tempArray.length - 1 }
-    //         }
+            } else {
+                tempArray.push([el])
+                return {...el, row: tempArray.length - 1 }
+            }
 
-    //     });
+        });
 
     const bar = tempArray.map((row, rowIndex) => {
         return {
