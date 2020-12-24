@@ -166,14 +166,7 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
 
         });
 
-    console.log('buildArrayMatrix foo', foo)
-    console.log('tempArray before bar', tempArray, tempArray.length)
- 
-//   tempArray = tempArray.reduce((arr, b) => [...arr, b, []], []);
-
-
     const bar = tempArray.map((row, rowIndex) => {
-        console.log('row', row)
         return {
             id: `${rowIndex}`,
             subItems: row.map((col, colIndex) => {
