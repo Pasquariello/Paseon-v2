@@ -32,7 +32,7 @@ import React, {
     // if (isLoading) {
     //   return <SplashScreen />;
     // }
-    return children;
+    return <div>{children}</div>;
   }
   Auth.propTypes = {
     children: PropTypes.any
