@@ -120,7 +120,7 @@ import React, {
         })}
       </Switch>
     </Suspense>
-  ) : null);
+  ) : '');
   function Routes() {
     return renderRoutes(routesConfig);
   }
