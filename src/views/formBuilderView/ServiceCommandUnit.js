@@ -51,113 +51,113 @@ const ServiceCommandUnit = (props) => {
 
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
+  // <Droppable droppableId="droppable" direction="horizontal">
+
     return (
-        // <Droppable droppableId="droppable" direction="horizontal">
         <>
+            <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
 
-        <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
-
-        {(provided, snapshot) => (
-            <div 
-                style={{
-                    border: '1px solid green',
-                    padding: 10,
-                }}
-            >
-                <div
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDraggingOver)}
-                    {...provided.droppableProps}
+            {(provided, snapshot) => (
+                <div 
+                    style={{
+                        border: '1px solid green',
+                        padding: 10,
+                    }}
                 >
-
-                    <div 
-                        style={{
-                            overflowY: 'visible',
-                            overflowX: 'auto',
-                        }}
+                    <div
+                        ref={provided.innerRef}
+                        style={getListStyle(snapshot.isDraggingOver)}
+                        {...provided.droppableProps}
                     >
+
                         <div 
                             style={{
-                                width: 50,
-                                height: 25,
-                                background: 'purple',
-                                position: 'absolute',
-                                top: -12.5,
-                                right: 10,
-                                zIndex: 99,
+                                overflowY: 'visible',
+                                overflowX: 'auto',
                             }}
                         >
-
-                        </div>
-
-                        <div
-                            style={{
-                                display: 'flex',
-                                margin: 15,
-                                border:'1px solid red'
-                            }}
-                        > 
-                            {/* <button 
-                                onClick={addNewRow}
-                                //   onClick={() => {addNewRow(index + 1)}}
+                            <div 
+                                style={{
+                                    width: 50,
+                                    height: 25,
+                                    background: 'purple',
+                                    position: 'absolute',
+                                    top: -12.5,
+                                    right: 10,
+                                    zIndex: 99,
+                                }}
                             >
-                                Insert Row below
-                            </button> */}
 
-                            {props.subItems.map((item, index) => (
-                            
-                            <>
-                                <Draggable  
-                                key={item.id}
-                                draggableId={item.id} index={index}>
-                                    {(provided, snapshot) => (
-                                        <>
-            
-                                {/* <div
-                                    key={item.id} 
-                                    onMouseDown={(e)=> {console.log('e',e)}}
-                                    style={{
-                                        background: 'pink',
-                                        margin: 5,
-                                        // width: `100%`,
-                                        // width: `${100 / props.subItems.length}%`,
-                                        display: 'flex',
-                                    }}
-                                > */}
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getItemStyle(
-                                                    snapshot.isDragging,
-                                                    provided.draggableProps.style, 
-                                                    props.subItems.length
-                                                )}
-                                            >
-                                                <span
-                                            
-                                                ></span>
-                                                <FontAwesomeIcon
-                                                    icon={faGripVertical}
-                                                    style={{ float: "left" }}
-                                                />
-                                                {item.name}
-                                            </div>
-                                {/* </div> */}
-                                        </>
-                                    )}
-                                </Draggable>
+                            </div>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    margin: 15,
+                                    border:'1px solid red'
+                                }}
+                            > 
+                                {/* <button 
+                                    onClick={addNewRow}
+                                    //   onClick={() => {addNewRow(index + 1)}}
+                                >
+                                    Insert Row below
+                                </button> */}
+
+                                {props.subItems.map((item, index) => (
                                 
-                             </>
-                            ))}
-                            {provided.placeholder} 
+                                <>
+                                    <Draggable  
+                                    key={item.id}
+                                    draggableId={item.id} index={index}>
+                                        {(provided, snapshot) => (
+                                            <>
+                
+                                    {/* <div
+                                        key={item.id} 
+                                        onMouseDown={(e)=> {console.log('e',e)}}
+                                        style={{
+                                            background: 'pink',
+                                            margin: 5,
+                                            // width: `100%`,
+                                            // width: `${100 / props.subItems.length}%`,
+                                            display: 'flex',
+                                        }}
+                                    > */}
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    style={getItemStyle(
+                                                        snapshot.isDragging,
+                                                        provided.draggableProps.style, 
+                                                        props.subItems.length
+                                                    )}
+                                                >
+                                                    <span
+                                                
+                                                    ></span>
+                                                    <FontAwesomeIcon
+                                                        icon={faGripVertical}
+                                                        style={{ float: "left" }}
+                                                    />
+                                                    {item.name}
+                                                </div>
+                                    {/* </div> */}
+                                            </>
+                                        )}
+                                    </Draggable>
+                                    
+                                </>
+                                ))}
+                                {provided.placeholder} 
+                            </div>
                         </div>
                     </div>
+                            
                 </div>
-                         
-            </div>
-        )}
-        </Droppable>
+            )}
+            </Droppable>
         </>
     );
 }
@@ -165,6 +165,4 @@ const ServiceCommandUnit = (props) => {
 export default ServiceCommandUnit
 
 // Put the thing into the DOM!
-
-
 //  https://codesandbox.io/s/j4yvnr7n83?file=/src/answer.js:1198-1344
