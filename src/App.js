@@ -33,18 +33,15 @@ const useStyles = makeStyles(() => createStyles({
     }
   }
 }));
+
 function App() {
   useStyles();
   return (
-
-        // <MuiPickersUtilsProvider utils={MomentUtils}>
-            <Router history={history}>
-              <Auth>
-                <Routes />
-              </Auth>
-            </Router>
-        // </MuiPickersUtilsProvider>
-
+    <Router history={history}>
+      <Auth>
+        <Routes />
+      </Auth>
+    </Router>
   );
 }
 export default App;
