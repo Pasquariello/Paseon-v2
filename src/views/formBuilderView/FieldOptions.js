@@ -2,11 +2,8 @@ import React from 'react';
 
 import Box from '@material-ui/core/Box';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import {Button, Card, CardContent, Container, Paper, TextField, FormGroup} from '@material-ui/core';
-import { v4 as uuidv4 } from 'uuid';
+import { Paper } from '@material-ui/core';
 
 
 const FieldOptions = (props) => {
