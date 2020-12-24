@@ -1,20 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-
 import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-// import Typography from '@material-ui/core/Typography';
-// import { makeStyles } from '@material-ui/core/styles';
-// import {Button, Card, CardContent, Container, Paper, TextField, FormGroup} from '@material-ui/core';
-// import { v4 as uuidv4 } from 'uuid';
+
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import ServiceCommandUnit from "./ServiceCommandUnit";
 import FieldOptions from './FieldOptions'
 
-import { useDispatch } from 'react-redux';
 import shortid from 'shortid';
-
 
 const formElementsList = [
     {
@@ -107,17 +99,6 @@ const reorder = (list, startIndex, endIndex) => {
 
 
 function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
-  const dispatch = useDispatch();
-
-  function getRows(list){
-    console.log('getRows', list.map(elem => elem))
-    return list.map(elem => elem.row);
-  }
-
-  const getMaxRow = (list) => {
-    return Math.max(...getRows(list));
-  }
-
 
   const [dataList, setDataList] = useState([]);
 
@@ -127,39 +108,29 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   }, []);
 
 
-  const sortedFormElements = (array) => {
-    return array.sort(function (row1, row2){
-
-        // sort by row
-        if  (row1.row < row2.row) return -1;
-        if  (row1.row > row2.row) return 1;
-
-        // sort by col
-        if  (row1.col < row2.col) return -1;
-        if  (row1.col > row2.col) return 1;
-
-    });
-  }
-
   const buildArrayMatrix = (array) => {
-    let tempArray = []
-    const arrayCopy = array
-    let foo = arrayCopy.map((el, index) => {
-        // tempArray.push([])
-            if (tempArray[el.row]){
-                tempArray[el.row].splice(el.col, 0, el)
-                return el
+    let tempArray = [];
+    const arrayCopy = array;
 
-            } else {
-                tempArray.push([el])
-                return {...el, row: tempArray.length - 1 }
-            }
+    // Build Matrix from array list based on element row
+    arrayCopy.map((el, index) => {
+        if (tempArray[el.row]){
+            tempArray[el.row].splice(el.col, 0, el)
+            return el
 
-        });
+        } else {
+            tempArray.push([el])
+            return {...el, row: tempArray.length - 1 }
+        }
+    });
 
-    const bar = tempArray.map((row, rowIndex) => {
+ 
+    // transform above matrix into array of rows
+    // update column index to be sequential and set row to correct index
+    const formModel = tempArray.map((row, rowIndex) => {
         return {
-            id: `${rowIndex}`,
+            // id: `${rowIndex}`,
+            id: shortid.generate(),
             subItems: row.map((col, colIndex) => {
                 return {
                     ...col, 
@@ -170,24 +141,18 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
         }
     }) 
 
-    setDataList(bar)
+    setDataList(formModel)
 
     // Rebuild function
-    const arr = []
-    bar.map(row => {
-        return row.subItems.map(col => {
-            arr.push(col)
-            return col
-        })
-    })
-
-    // tempArray.forEach((row, i) => {
-    //     tempArray.splice(i, 0, []);
+    // const arr = []
+    // bar.map(row => {
+    //     return row.subItems.map(col => {
+    //         arr.push(col)
+    //         return col
+    //     })
     // })
-
-    console.log('arr', arr)
     
-    return tempArray
+    // return tempArray
   }
 
 
@@ -211,9 +176,10 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
         return acc;
       }, {});
 
-      const sourceParentId = parseInt(result.source.droppableId);
-      const destParentId = parseInt(result.destination.droppableId);
-
+      //   const sourceParentId = parseInt(result.source.droppableId);
+      //   const destParentId = parseInt(result.destination.droppableId);
+      const sourceParentId = result.source.droppableId;
+      const destParentId = result.destination.droppableId;
 
       const sourceSubItems = itemSubItemMap[sourceParentId];
 
@@ -230,12 +196,11 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
         );
 
         newItems = newItems.map(item => {
-          if (item.id == sourceParentId) {
+          if (item.id === sourceParentId) {
             item.subItems = reorderedSubItems;
           }
           return item;
         });
-
         setDataList(newItems);
       } else {
         let newSourceSubItems = [...sourceSubItems];
@@ -244,9 +209,9 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
         let newDestSubItems = [...destSubItems];
         newDestSubItems.splice(destIndex, 0, draggedItem);
         newItems = newItems.map(item => {
-          if (item.id == sourceParentId) {
+          if (item.id === sourceParentId) {
             item.subItems = newSourceSubItems;
-          } else if (item.id == destParentId) {
+          } else if (item.id === destParentId) {
             item.subItems = newDestSubItems;
           }
           return item;
@@ -266,7 +231,8 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
     const newTempArray = [
         ...tempArray, 
         {
-            id: `${dataList.length}`, 
+            //id: `${dataList.length}`, 
+            id: shortid.generate(), 
             subItems: [
                 {
                     id: shortid.generate(), 
@@ -284,8 +250,8 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
 
   }
 
-
   const scrollToRef = () => {
+    // Need to wait for DOM to update after elem has been added to list
     setTimeout(function(){ 
         resultsRef.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
     }, 100);
@@ -296,7 +262,6 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   const addNewRow = (indexToAdd) => {
     const tempArray = dataList
     tempArray.splice(indexToAdd , 0, {subItems: []})
-
     setDataList(
         tempArray.map((el, tempIndex) => { 
             return {...el, id: `${tempIndex}`}
@@ -305,6 +270,7 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   }
 
 const [elemWidth, setElemWidth] = useState(false)
+
   return (
     <Box display="flex" height="100%" width="100%" style={{border: '1px solid red'}}>
         <FieldOptions
@@ -327,40 +293,33 @@ const [elemWidth, setElemWidth] = useState(false)
                                     key={item.id}
                                     ref={resultsRef} 
                                 >
-                                <Draggable key={item.id} draggableId={item.id} index={index}>
-                                    
-                                {(provided, snapshot) => (
-                                    <div>
-                                        <div
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                            // {...provided.dragHandleProps}
-                                        >
-                                            {console.log('===', item)}
-                                            {/* <span {...provided.dragHandleProps} style={{marginRight: 10}}>
-                                                <FontAwesomeIcon
-                                                    icon={faGripVertical}
-                                                    style={{ float: "left" }}
-                                                />
-                                                </span> */}
-                                    
-                                            <ServiceCommandUnit
-                                                parentDrag={{...provided.dragHandleProps}}
-                                                elemWidth={elemWidth}
-                                                addNewRow={() => addNewRow(index + 1)}
-                                                subItems={item.subItems}
-                                                type={item.id}
-                                            />
-                                
-                                        </div>
-                        
-                                
-                                    </div>
-                                    
-                                )}
-                                
-                                </Draggable>
-
+                                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                                        {(provided, snapshot) => (
+                                            <div>
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                >
+                                                    {/* <span {...provided.dragHandleProps} style={{marginRight: 10}}>
+                                                        <FontAwesomeIcon
+                                                            icon={faGripVertical}
+                                                            style={{ float: "left" }}
+                                                        />
+                                                        </span> */}
+                                            
+                                                    <ServiceCommandUnit
+                                                        parentDrag={{...provided.dragHandleProps}}
+                                                        elemWidth={elemWidth}
+                                                        addNewRow={() => addNewRow(index + 1)}
+                                                        subItems={item.subItems}
+                                                        type={item.id}
+                                                    />
+                                        
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Draggable>
                                 </div>
                             ))}
                             {provided.placeholder} 
@@ -372,6 +331,7 @@ const [elemWidth, setElemWidth] = useState(false)
             <button
                 onClick={() => {
                     // this will re clean the array row and col values
+                    // array will need to be the value to 'save'/post back to the DB
                     const arr = [];
 
                     dataList.map((row, rowIndex) => {

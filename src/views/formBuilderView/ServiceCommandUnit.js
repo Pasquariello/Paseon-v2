@@ -1,26 +1,14 @@
-import React, { Component, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { DragDropContext, Droppable, Draggable, onDragStart } from 'react-beautiful-dnd';
+import React from 'react';
+import { 
+    // DragDropContext, 
+    Droppable, 
+    Draggable, 
+    // onDragStart 
+} from 'react-beautiful-dnd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons'
 
-
-// fake data generator
-const getItems = count =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
-    id: `item-${k}`,
-    content: `item ${k}`,
-  }));
-
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
 
 const grid = 8;
 
@@ -38,9 +26,9 @@ const getListStyle = isDraggingOver => ({
 });
 
 const ServiceCommandUnit = (props) => {
-    const {
-        addNewRow
-    } = props
+    // const {
+    //     addNewRow
+    // } = props
 
 
     const getItemStyle = (isDragging, draggableStyle, rowLength) => ({
@@ -48,10 +36,11 @@ const ServiceCommandUnit = (props) => {
         //userSelect: 'none',
         padding: grid * 2,
         margin: `0 ${grid}px 0 0`,
+        border: '1px solid red',
         // change background colour if dragging
         background: isDragging ? 'lightgreen' : 'grey',
         // width: '100%',
-        width: `${100 / (rowLength )}%`,
+        // width: `${100 / (rowLength )}%`,
 
       
         // styles we need to apply on draggables
@@ -60,13 +49,10 @@ const ServiceCommandUnit = (props) => {
       
       });
 
-      const [ dragFoo, setDragFoo ] = useState();
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
-     // <Droppable droppableId="droppable" direction="horizontal">
-
-  
     return (
+        // <Droppable droppableId="droppable" direction="horizontal">
         <>
 
         <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
@@ -108,21 +94,15 @@ const ServiceCommandUnit = (props) => {
                             style={{
                                 display: 'flex',
                                 margin: 15,
+                                border:'1px solid red'
                             }}
                         > 
-                        {/* parentDrag */}
-                        <span {...props.parentDrag} style={{marginRight: 10}}>
-                            <FontAwesomeIcon
-                                icon={faGripVertical}
-                                style={{ float: "left" }}
-                            />
-                        </span>
-                            <button 
+                            {/* <button 
                                 onClick={addNewRow}
                                 //   onClick={() => {addNewRow(index + 1)}}
                             >
                                 Insert Row below
-                            </button>
+                            </button> */}
 
                             {props.subItems.map((item, index) => (
                             
@@ -147,30 +127,34 @@ const ServiceCommandUnit = (props) => {
                                             <div
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
-                                                // {...provided.dragHandleProps}
+                                                {...provided.dragHandleProps}
                                                 style={getItemStyle(
                                                     snapshot.isDragging,
                                                     provided.draggableProps.style, 
                                                     props.subItems.length
                                                 )}
                                             >
-                                                <span {...provided.dragHandleProps} style={{marginRight: 10}}>
+                                                <span
+                                            
+                                                ></span>
                                                 <FontAwesomeIcon
                                                     icon={faGripVertical}
                                                     style={{ float: "left" }}
                                                 />
-                                                </span>
                                                 {item.name}
                                             </div>
                                 {/* </div> */}
                                         </>
                                     )}
                                 </Draggable>
+                                
                              </>
                             ))}
+                            {provided.placeholder} 
                         </div>
                     </div>
                 </div>
+                         
             </div>
         )}
         </Droppable>
