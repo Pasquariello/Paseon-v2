@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+// import shortid from 'shortid';
 
 export const formElementsList = [
     {

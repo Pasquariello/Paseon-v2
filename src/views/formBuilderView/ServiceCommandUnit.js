@@ -16,7 +16,6 @@ const grid = 8;
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver && 'lightblue',
   padding: grid,
-//   overflow: 'auto',
   border: '1px solid #eee',
   borderRadius: 5,
   margin: 10,
@@ -56,7 +55,6 @@ const ServiceCommandUnit = (props) => {
     return (
         <>
             <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
-
             {(provided, snapshot) => (
                 <div 
                     style={{
@@ -64,6 +62,15 @@ const ServiceCommandUnit = (props) => {
                         padding: 10,
                     }}
                 >
+                {/* wrapper drag */}
+                <div {...props.parentDrag} style={{marginRight: 10}}>
+                    <FontAwesomeIcon
+                    icon={faGripVertical}
+                    style={{ float: "left" }}
+                    />
+                </div> 
+                    
+
                     <div
                         ref={provided.innerRef}
                         style={getListStyle(snapshot.isDraggingOver)}
@@ -103,6 +110,7 @@ const ServiceCommandUnit = (props) => {
                                 >
                                     Insert Row below
                                 </button> */}
+
 
                                 {props.subItems.map((item, index) => (
                                 

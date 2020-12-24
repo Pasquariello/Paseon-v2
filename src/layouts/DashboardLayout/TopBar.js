@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from '@material-ui/core';
 
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +24,7 @@ export default function TopBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" elevation='0'>
+      <AppBar position="static" elevation={0}>
         <Toolbar>
           
           <Typography variant="h6" className={classes.title}>

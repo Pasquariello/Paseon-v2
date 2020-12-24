@@ -23,9 +23,9 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 import { mockValues, formElementsList } from '../../utils/mockFormFields';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+// function createData(name, calories, fat, carbs, protein) {
+//   return { name, calories, fat, carbs, protein };
+// }
 
 // form_id: 1,
 // field_id: 1,

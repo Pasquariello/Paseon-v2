@@ -8,6 +8,7 @@ import FieldOptions from './FieldOptions'
 
 import shortid from 'shortid';
 
+
 const formElementsList = [
     {
         id: shortid.generate(),
@@ -299,7 +300,7 @@ const [elemWidth, setElemWidth] = useState(false)
                                                 <div
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
+                                                    // {...provided.dragHandleProps}
                                                 >
                                                     {/* <span {...provided.dragHandleProps} style={{marginRight: 10}}>
                                                         <FontAwesomeIcon
