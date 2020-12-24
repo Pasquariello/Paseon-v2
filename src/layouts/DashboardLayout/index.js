@@ -9,9 +9,7 @@ const DashboardLayout = ({children}) => {
         <div style={{height: "100%"}}>
             <TopBar/>
 
-            <Box
-             //mb={8}
-            >
+            <Box>
             {children}
             </Box>
         </div>

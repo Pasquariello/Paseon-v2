@@ -63,8 +63,10 @@ const ServiceCommandUnit = (props) => {
       const [ dragFoo, setDragFoo ] = useState();
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
+     // <Droppable droppableId="droppable" direction="horizontal">
+
+  
     return (
-        // <Droppable droppableId="droppable" direction="horizontal">
         <>
 
         <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
