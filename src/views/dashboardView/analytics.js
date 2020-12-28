@@ -23,30 +23,73 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 import { mockValues, formElementsList } from '../../utils/mockFormFields';
 
-// function createData(name, calories, fat, carbs, protein) {
-//   return { name, calories, fat, carbs, protein };
-// }
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
 
 // form_id: 1,
 // field_id: 1,
 // field: 'First Name',
 // value: 'Taylor'
+// const rows = mockValues;
+ 
+    
 
-// [
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Donut', 452, 25.0, 51, 4.9),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-//   createData('Honeycomb', 408, 3.2, 87, 6.5),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Jelly Bean', 375, 0.0, 94, 0.0),
-//   createData('KitKat', 518, 26.0, 65, 7.0),
-//   createData('Lollipop', 392, 0.2, 98, 0.0),
-//   createData('Marshmallow', 318, 0, 81, 2.0),
-//   createData('Nougat', 360, 19.0, 9, 37.0),
-//   createData('Oreo', 437, 18.0, 63, 4.0),
-// ];
+// const columns = mockValues.map((item, index) => {
+//     let tempArray = [];
+
+//     // Build Matrix from array list based on element row
+//     mockValues.map((el, index) => {
+//         if (tempArray[el.sub_id]){
+//             tempArray[el.sub_id].splice(el.col, 0, el)
+//             return el
+
+//         } else {
+//             tempArray.push([el])
+//             return {...el, row: tempArray.length - 1 }
+//         }
+//     });
+
+//     // transform above matrix into array of rows
+//     // update column index to be sequential and set row to correct index
+//     return tempArray.map((row, rowIndex) => {
+//         console.log('row', row)
+//         return {
+//             // id: `${rowIndex}`,
+//             id: '',
+//             subItems: row.map((col, colIndex) => {
+//                 return {
+//                     ...col, 
+//                     col: colIndex, 
+//                     row: rowIndex
+//                 }
+//             })
+//         }
+//     }) 
+// }) 
+
+
+
+
+
+const rows = [
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Donut', 452, 25.0, 51, 4.9),
+  createData('Eclair', 262, 16.0, 24, 6.0),
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+  createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData('Honeycomb', 408, 3.2, 87, 6.5),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+  createData('Jelly Bean', 375, 0.0, 94, 0.0),
+  createData('KitKat', 518, 26.0, 65, 7.0),
+  createData('Lollipop', 392, 0.2, 98, 0.0),
+  createData('Marshmallow', 318, 0, 81, 2.0),
+  createData('Nougat', 360, 19.0, 9, 37.0),
+  createData('Oreo', 437, 18.0, 63, 4.0),
+];
+
+
+console.log(rows)
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -85,22 +128,60 @@ const headCells = formElementsList.map(formItem => {
         disablePadding: true, 
         label: name
     }
-});
+})
 
-const rows = headCells.map(cell => {
-    mockValues.map(mockValue => {
-        if (cell.id === mockValue.field_id) {
-            return {
-                value: mockValue.value
-            }
-        }
-        return {
-            value: ''
-        }
-    })
-});
+const rows2 = mockValues.reduce(function (r, a) {
+    r[a.sub_id] = r[a.sub_id] || [];
+    r[a.sub_id].push(a);
+    return r;
+}, Object.create(null));
 
-console.log('ROWS', rows)
+console.log(rows2);
+
+
+
+const columns = () => {
+    const col = mockValues.map((doc) => {
+        const obj = {
+            title: doc.label
+        };
+        mockValues.forEach((field) => {
+            obj.id = doc.docId;
+            obj[field.name] = field.value;
+        });
+        return obj;
+    });
+    console.log('COL', col)
+    // setData(col);
+
+}
+columns()
+
+
+
+// {headerColumns.map((col) => (
+//     <TableCell key={item.id + col.key} scope="row">
+//       {item[col.key]}
+//     </TableCell>
+//   ))}
+
+// useEffect(() => {
+// if (documents) {
+// const col = documents.map((doc) => {
+// const obj = {
+// title: doc.title
+// };
+// doc.viewFields.forEach((field) => {
+// obj.id = doc.docId;
+// obj[field.name] = field.value;
+// });
+// return obj;
+// });
+// setData(col);
+// }
+// }, [documents]);
+
+
 
 // const headCells =  [
 //   { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
@@ -346,26 +427,14 @@ export default function AnalyticsTable() {
                       key={row.name}
                       selected={isItemSelected}
                     >
-                    <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                    </TableCell>
-                     {
-                         rows.map(value => (
-                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                {value.value}
-                            </TableCell>
-                         ))
-                     }
-                      {/* <TableCell padding="checkbox">
+                      <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      {mockValues.map(item => ( <TableCell align="right">{item.value}</TableCell>))}
+                      {/* <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
                       <TableCell align="right">{row.calories}</TableCell>

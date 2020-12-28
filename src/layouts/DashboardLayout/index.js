@@ -10,7 +10,7 @@ const DashboardLayout = ({children}) => {
             <TopBar/>
 
             <Box>
-            {children}
+                {children}
             </Box>
         </div>
     )

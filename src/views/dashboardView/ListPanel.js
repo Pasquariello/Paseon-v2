@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import { getForms } from '../../actions/formActions';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
@@ -37,19 +40,25 @@ const listItems = [
 
 function ListPanel({ className, onSubmitSuccess, ...rest }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const formList = useSelector(state => state.forms.list)
+
+  useEffect(() => {
+    dispatch(getForms());
+  }, [dispatch]);
 
   return (
     <List className={classes.root}>
-        {listItems.map(item => (
-            <>
+        {formList.map(form => (
+            <div key={form._id}>
             <ListItem>
-                <ListItemText primary={item.name} secondary={item.date} />
+                <ListItemText primary={form.name} secondary={form.date} />
                 <IconButton aria-label="delete" className={classes.margin}>
                     <MoreVertIcon  />
                 </IconButton>
             </ListItem>
             <Divider component="li" />
-            </>
+            </div>
         ))}
     </List>
   );
