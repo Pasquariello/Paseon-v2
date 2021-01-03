@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -21,77 +21,13 @@ import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-import { mockValues, formElementsList } from '../../utils/mockFormFields';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import {useSelector, useDispatch} from 'react-redux';
+import { getSubmissionData } from '../../actions/submissionActions';
 
-// form_id: 1,
-// field_id: 1,
-// field: 'First Name',
-// value: 'Taylor'
-// const rows = mockValues;
- 
-    
-
-// const columns = mockValues.map((item, index) => {
-//     let tempArray = [];
-
-//     // Build Matrix from array list based on element row
-//     mockValues.map((el, index) => {
-//         if (tempArray[el.sub_id]){
-//             tempArray[el.sub_id].splice(el.col, 0, el)
-//             return el
-
-//         } else {
-//             tempArray.push([el])
-//             return {...el, row: tempArray.length - 1 }
-//         }
-//     });
-
-//     // transform above matrix into array of rows
-//     // update column index to be sequential and set row to correct index
-//     return tempArray.map((row, rowIndex) => {
-//         console.log('row', row)
-//         return {
-//             // id: `${rowIndex}`,
-//             id: '',
-//             subItems: row.map((col, colIndex) => {
-//                 return {
-//                     ...col, 
-//                     col: colIndex, 
-//                     row: rowIndex
-//                 }
-//             })
-//         }
-//     }) 
-// }) 
-
-
-
-
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
-
-
-console.log(rows)
 
 function descendingComparator(a, b, orderBy) {
+  console.log('====a, b', a, b)
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -108,6 +44,7 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  console.log('hhhh', array)
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -116,86 +53,15 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-const headCells = formElementsList.map(formItem => {
-  
-    const { id, name, type } =  formItem;
-
-    return {
-        id, 
-        name,
-        numeric: type === 'number', 
-        disablePadding: true, 
-        label: name
-    }
-})
-
-const rows2 = mockValues.reduce(function (r, a) {
-    r[a.sub_id] = r[a.sub_id] || [];
-    r[a.sub_id].push(a);
-    return r;
-}, Object.create(null));
-
-console.log(rows2);
-
-
-
-const columns = () => {
-    const col = mockValues.map((doc) => {
-        const obj = {
-            title: doc.label
-        };
-        mockValues.forEach((field) => {
-            obj.id = doc.docId;
-            obj[field.name] = field.value;
-        });
-        return obj;
-    });
-    console.log('COL', col)
-    // setData(col);
-
-}
-columns()
-
-
-
-// {headerColumns.map((col) => (
-//     <TableCell key={item.id + col.key} scope="row">
-//       {item[col.key]}
-//     </TableCell>
-//   ))}
-
-// useEffect(() => {
-// if (documents) {
-// const col = documents.map((doc) => {
-// const obj = {
-// title: doc.title
-// };
-// doc.viewFields.forEach((field) => {
-// obj.id = doc.docId;
-// obj[field.name] = field.value;
-// });
-// return obj;
-// });
-// setData(col);
-// }
-// }, [documents]);
-
-
-
-// const headCells =  [
-//   { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-//   { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-//   { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-//   { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-//   { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
-// ];
-
 function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+  const selectedForm = useSelector(state => state.forms.selected)
+  console.log('selectedForm', selectedForm)
+
+
 
   return (
     <TableHead>
@@ -208,20 +74,21 @@ function EnhancedTableHead(props) {
             inputProps={{ 'aria-label': 'select all desserts' }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
+        {props.headCells.map((headCell, index) => (
           <TableCell
-            key={headCell.id}
+            key={headCell.id.$oid}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              active={orderBy === headCell.name}
+              direction={orderBy === headCell.name ? order : 'asc'}
+              onClick={createSortHandler(headCell.name)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+          {console.log('ORDERBY', orderBy)}
+              {orderBy === headCell.name ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
@@ -280,7 +147,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          Nutrition
+          Form Analytics
         </Typography>
       )}
 
@@ -332,11 +199,64 @@ const useStyles = makeStyles((theme) => ({
 export default function AnalyticsTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('field');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const dispatch = useDispatch();
+  const selectedForm = useSelector(state => state.forms.selected)
+  const submissionsList = useSelector(state => state.submissions.list)
+
+  const [ rows, setRows ] = useState([])
+
+  useEffect(() => {
+    const list = submissionsList.map(submission => {
+      console.log(submission)
+      // return submission.values.map(val => {
+      //   return {
+      //     ...val
+      //   }
+      // })
+      const obj = {}
+      submission.values.forEach(field => {
+        obj.id = submission._id.$oid;
+        obj[field.field] = field.value
+      })
+      return obj;
+    })
+
+    setRows(list)
+  },[submissionsList])
+
+  console.log('ROWS', rows)
+
+  useEffect(() => {
+    dispatch(getSubmissionData('5fe930205c09c62f1bc669e9'));
+  }, [dispatch, selectedForm])
+
+  console.log('submissionsList', submissionsList)
+
+
+  const headCells = selectedForm.fields.map(formItem => {
+  
+    const { 
+      _id, 
+      name,
+      label,
+      type
+    } =  formItem;
+    
+    return {
+        id: _id, 
+        name,
+        label,
+        numeric: type === 'number', 
+        disablePadding: true, 
+    }
+})
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -346,19 +266,19 @@ export default function AnalyticsTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -386,7 +306,7 @@ export default function AnalyticsTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -409,22 +329,24 @@ export default function AnalyticsTable() {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              headCells={headCells}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  // console.log('ROW', row._id.$oid)
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      // key={row._id.$oid}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -433,7 +355,12 @@ export default function AnalyticsTable() {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      {mockValues.map(item => ( <TableCell align="right">{item.value}</TableCell>))}
+                      {console.log('===== row', row)}
+                      {
+                        headCells.map((col, index) => {
+                        return ( <TableCell key={index}>{row[col.name]}</TableCell>)
+                        })
+                      }
                       {/* <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>

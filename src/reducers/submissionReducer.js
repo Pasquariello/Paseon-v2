@@ -1,20 +1,20 @@
 import {
-    FETCH_FORMS,
+  FETCH_FORM_SUBMISSIONS,
     
-  } from '../actions/formActions'
+  } from '../actions/submissionActions'
 
 const initialState = {
     list: [],
     selected: null
   };
   
-const formReducer = (state = initialState, action) => {
+const submissionReducer = (state = initialState, action) => {
     switch (action.type) {
-      case FETCH_FORMS:
+      case FETCH_FORM_SUBMISSIONS:
           console.log('Action', action.payload)
         return Object.assign({}, state, {
             list: action.payload,
-            selected: action.payload[0]
+            selected: action.payload[0] // might need to make a conditional?
         });
     
       default:
@@ -22,4 +22,4 @@ const formReducer = (state = initialState, action) => {
     }
 };
   
-  export default formReducer;
+  export default submissionReducer;
