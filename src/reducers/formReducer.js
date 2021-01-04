@@ -1,6 +1,6 @@
 import {
     FETCH_FORMS,
-    
+    FETCH_SINLGE_FORM,
   } from '../actions/formActions'
 
 const initialState = {
@@ -16,6 +16,11 @@ const formReducer = (state = initialState, action) => {
             list: action.payload,
             selected: action.payload[0]
         });
+      
+      case FETCH_SINLGE_FORM:
+        return Object.assign({}, state, {
+          selected:  action.payload
+      }); 
     
       default:
         return state;

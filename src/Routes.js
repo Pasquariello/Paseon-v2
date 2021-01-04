@@ -69,14 +69,19 @@ import React, {
           path: '/app/form-builder',
           component: lazy(() => import('src/views/formBuilderView'))
         },
-    //     {
-    //       exact: true,
-    //       path: '/app/documents/:id',
-    //       component: lazy(() => import('src/views/documents/PreviewView'))
-    //     },
-    //     {
-    //       component: () => <Redirect to="/404" />
-    //     }
+        {
+          exact: true,
+          path: '/app/form-builder/details/:id',
+          component: lazy(() => import('src/views/formBuilderView/details'))
+        },
+        {
+          exact: true,
+          path: '/app/form-builder/edit/:id',
+          component: lazy(() => import('src/views/formBuilderView'))
+        },
+        // {
+        //   component: () => <Redirect to="/404" />
+        // }
     //   ]
     // },
     // {

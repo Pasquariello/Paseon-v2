@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from "react-router-dom";
+import {useSelector, useDispatch} from 'react-redux';
+import {getSingleForm} from 'src/actions/formActions';
+
 import Box from '@material-ui/core/Box';
 
 
@@ -9,7 +13,7 @@ import FieldOptions from './FieldOptions'
 import shortid from 'shortid';
 
 
-const formElementsList = [
+const formElementsListOLD = [
     {
         id: shortid.generate(),
         name: 'First Name',
@@ -100,13 +104,24 @@ const reorder = (list, startIndex, endIndex) => {
 
 
 function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
-
-  const [dataList, setDataList] = useState([]);
-
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
+console.log('formElementsList', formElementsList)
+  
+const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
     buildArrayMatrix(formElementsList);
-  }, []);
+  }, [formElementsList]);
+
+  useEffect(() => {
+    dispatch(getSingleForm(id))
+  }, [dispatch, id])
+
+  useEffect(() => {
+    dispatch(getSingleForm(id))
+  }, [dispatch, id])
 
 
   const buildArrayMatrix = (array) => {
@@ -133,8 +148,10 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
             // id: `${rowIndex}`,
             id: shortid.generate(),
             subItems: row.map((col, colIndex) => {
+                console.log('COL', col)
                 return {
                     ...col, 
+                    id: col._id.$oid,
                     col: colIndex, 
                     row: rowIndex
                 }
@@ -297,6 +314,7 @@ const [elemWidth, setElemWidth] = useState(false)
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
                                         {(provided, snapshot) => (
                                             <div>
+                                                {console.log('0000000', item)}
                                                 <div
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}

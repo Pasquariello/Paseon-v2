@@ -115,6 +115,7 @@ const ServiceCommandUnit = (props) => {
                                 {props.subItems.map((item, index) => (
                                 
                                 <>
+                                {console.log('ITEM', item)}
                                     <Draggable  
                                     key={item.id}
                                     draggableId={item.id} index={index}>
