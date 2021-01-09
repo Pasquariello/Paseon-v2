@@ -25,7 +25,7 @@ const getListStyle = isDraggingOver => ({
 
 });
 const ServiceCommandUnit = (props) => {
-
+    console.log('hello')
 
     const getItemStyle = (isDragging, draggableStyle, rowLength, isDraggingOver) => {
         console.log(isDraggingOver)
