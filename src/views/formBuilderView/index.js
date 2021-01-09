@@ -107,22 +107,20 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
-console.log('formElementsList', formElementsList)
   
 const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
-    buildArrayMatrix(formElementsList);
+    if (formElementsList.length) {
+        buildArrayMatrix(formElementsList);
+    }
   }, [formElementsList]);
 
   useEffect(() => {
-    dispatch(getSingleForm(id))
+    if (id) {
+        dispatch(getSingleForm(id))
+    }
   }, [dispatch, id])
-
-  useEffect(() => {
-    dispatch(getSingleForm(id))
-  }, [dispatch, id])
-
 
   const buildArrayMatrix = (array) => {
     let tempArray = [];
@@ -287,7 +285,7 @@ const [dataList, setDataList] = useState([]);
     );                 
   }
 
-const [elemWidth, setElemWidth] = useState(false)
+  const [elemWidth, setElemWidth] = useState(false)
 
   return (
     <Box display="flex" height="100%" width="100%" style={{border: '1px solid red'}}>

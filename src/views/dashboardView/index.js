@@ -67,17 +67,14 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
     setFormListMenuOpen(event.currentTarget);
   };
 
-
-
-
   return (
-    <Box style={{display: 'flex', flexDirection:'column', width: '100%', height: '100vh', background: '#e0e0e0'}} p={4}>
+    <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0'}} p={4}>
         <Box item my={2}>
           <Typography variant="h6">Quick Statistics</Typography>
         </Box>
         <div style={{flex: '1 1 auto'}}>
           <Grid container spacing={4}>
-            <Grid item sm={4} style={{height: 200, width: '100%'}}>
+            <Grid item md={4} style={{height: 200, width: '100%'}}>
               <Card style={{height: '100%'}}>
                 <CardContent>
                   <Box height="100%" display="flex" alignItems="center">
@@ -117,7 +114,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
               </Card>
             </Grid>
 
-            <Grid item sm={4} style={{height: 200, width: '100%'}}>
+            <Grid item md={4} style={{height: 200, width: '100%'}}>
               <Card style={{height: '100%'}}>
                 <CardContent style={{height: '100%'}}>
                   <Box height="100%" display="flex" alignItems="center">
@@ -129,7 +126,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
               </Card>
             </Grid>
 
-            <Grid item sm={4} style={{height: 200, width: '100%'}}>
+            <Grid item md={4} style={{height: 200, width: '100%'}}>
               <Card style={{height: '100%'}}>
                 <CardContent style={{height: '100%'}}>
                   <Box height="100%" display="flex" alignItems="center">

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     // DragDropContext, 
     Droppable, 
     Draggable, 
-    // onDragStart 
+    onDragStart 
 } from 'react-beautiful-dnd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons'
+import { Box, TextField } from '@material-ui/core';
 
 
 const grid = 8;
@@ -23,30 +24,36 @@ const getListStyle = isDraggingOver => ({
 //   overflowX: 'auto',
 
 });
-
 const ServiceCommandUnit = (props) => {
-    // const {
-    //     addNewRow
-    // } = props
 
 
-    const getItemStyle = (isDragging, draggableStyle, rowLength) => ({
-        // some basic styles to make the items look a bit nicer
-        //userSelect: 'none',
-        padding: grid * 2,
-        margin: `0 ${grid}px 0 0`,
-        border: '1px solid red',
-        // change background colour if dragging
-        background: isDragging ? 'lightgreen' : 'grey',
-        // width: '100%',
-        // width: `${100 / (rowLength )}%`,
+    const getItemStyle = (isDragging, draggableStyle, rowLength, isDraggingOver) => {
+        console.log(isDraggingOver)
 
-      
-        // styles we need to apply on draggables
-        ...draggableStyle,
-        draggableStyle: !isDragging ? '10%' : `${100 / (rowLength + 2 )}%`,
-      
-      });
+        return ({
+            // some basic styles to make the items look a bit nicer
+            //userSelect: 'none',
+            display: 'flex',
+            padding: grid * 2,
+            // margin: `0 ${grid}px 0 0`,
+            border: '1px solid red',
+            // change background colour if dragging
+            background: isDragging ? 'lightgreen' : 'grey',
+    
+          
+            // styles we need to apply on draggables
+            ...draggableStyle,
+            // width : isDragging ? '25px' : '100%',
+
+            // width: props.elemWidth === '5feab443b53b2be8cef8406f'  ? `100px` : '100%',
+            // width: isOver ? `${100 / rowLength}%` : '200px'
+            width: isDraggingOver ? `${100 / rowLength}%`  : '20px'
+
+            // width: `${100 / rowLength}%`,
+            // maxWidth: '421.5px'
+
+          })
+    }
 
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
@@ -54,7 +61,7 @@ const ServiceCommandUnit = (props) => {
 
     return (
         <>
-            <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
+            <Droppable onDragStart={() => console.log('dragging')} droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
             {(provided, snapshot) => (
                 <div 
                     style={{
@@ -100,8 +107,9 @@ const ServiceCommandUnit = (props) => {
                             <div
                                 style={{
                                     display: 'flex',
+                                    flexDirection: 'row',
                                     margin: 15,
-                                    border:'1px solid red'
+                                    border:'4px solid red',
                                 }}
                             > 
                                 {/* <button 
@@ -115,7 +123,6 @@ const ServiceCommandUnit = (props) => {
                                 {props.subItems.map((item, index) => (
                                 
                                 <>
-                                {console.log('ITEM', item)}
                                     <Draggable  
                                     key={item.id}
                                     draggableId={item.id} index={index}>
@@ -136,21 +143,32 @@ const ServiceCommandUnit = (props) => {
                                                 <div
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
                                                     style={getItemStyle(
                                                         snapshot.isDragging,
                                                         provided.draggableProps.style, 
-                                                        props.subItems.length
+                                                        props.subItems.length,
+                                                        snapshot.isDraggingOver
                                                     )}
                                                 >
                                                     <span
-                                                
-                                                    ></span>
-                                                    <FontAwesomeIcon
-                                                        icon={faGripVertical}
-                                                        style={{ float: "left" }}
-                                                    />
-                                                    {item.name}
+                                                    {...provided.dragHandleProps}
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faGripVertical}
+                                                            style={{ float: "left" }}
+                                                        />
+                                                   </span>
+                                                   
+                                                    <Box style={{width: '100%'}}>
+                                                        <TextField 
+                                                            label={item.name}
+                                                            variant="outlined" 
+                                                            size="small"
+                                                            fullWidth
+                                                            disabled
+                                                        />
+                                                    </Box>
+                                                    {/* {item.name} */}
                                                 </div>
                                     {/* </div> */}
                                             </>
