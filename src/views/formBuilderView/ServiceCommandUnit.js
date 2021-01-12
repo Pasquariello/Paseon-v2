@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
-    // DragDropContext, 
     Droppable, 
     Draggable, 
-    onDragStart 
 } from 'react-beautiful-dnd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGripVertical } from '@fortawesome/free-solid-svg-icons'
+import { faGripVertical, faArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 import { Box, TextField } from '@material-ui/core';
 
 
@@ -21,35 +19,58 @@ const getListStyle = isDraggingOver => ({
   borderRadius: 5,
   margin: 10,
   position: 'relative',
+  width: isDraggingOver ? `calc(100% + 200px)` : '100%'
+
+//   width: '80%'
 //   overflowX: 'auto',
 
 });
-const ServiceCommandUnit = (props) => {
 
-    const getItemStyle = (isDragging, draggableStyle, rowLength, isDraggingOver) => {
-        console.log(isDraggingOver)
+const getListContainerStyle = isDraggingOver => ({
+    display: 'flex',
+    flexDirection: 'row',
+    margin: 15,
+    // border:'4px solid blue',
+    // width: '80%',
+    // width: isDraggingOver ? `calc(100% - 200px)` : 'inherit'
+  //   overflowX: 'auto',
+  
+  });
+
+
+const ServiceCommandUnit = (props) => {
+    const ref = useRef(null)
+    const [colCount, setColCount ] = useState(props.subItems.length);
+
+    const getItemStyle = (isDragging, draggableStyle, rowLength, isDraggingOver, itemId ) => {
+
+           const division1 = isDraggingOver ? `calc((${100 / (rowLength )}%) - (${200 / (rowLength )}px)` :  `${100 / (rowLength )}%`;
+        //    const division1 = isDraggingOver ? '200px' :  `${100 / (rowLength )}%`;
+
+        // const division1 = props.elemWidth ? `calc((${100 / (rowLength )}%) - (${200 / (rowLength)}px)` :  `${100 / (rowLength )}%`;
+
 
         return ({
             // some basic styles to make the items look a bit nicer
-            //userSelect: 'none',
+            userSelect: 'none',
             display: 'flex',
             padding: grid * 2,
-            // margin: `0 ${grid}px 0 0`,
+            // margin: grid,
             border: '1px solid red',
             // change background colour if dragging
             background: isDragging ? 'lightgreen' : 'grey',
-    
-          
             // styles we need to apply on draggables
+            // width: 200,
             ...draggableStyle,
-            // width : isDragging ? '25px' : '100%',
+            // MINWIDTH MUSHT BE SAME AS FIRST IF PSART OF TERNARY
+            //width.current.clientWidth
 
-            // width: props.elemWidth === '5feab443b53b2be8cef8406f'  ? `100px` : '100%',
-            // width: isOver ? `${100 / rowLength}%` : '200px'
-            width: isDraggingOver ? `${100 / rowLength}%`  : '20px'
-
-            // width: `${100 / rowLength}%`,
-            // maxWidth: '421.5px'
+            width :  props.elemWidth === itemId ? 200 : division1,
+            minWidth:  props.elemWidth === itemId ? 200  : division1,
+          
+            // width :  props.elemWidth && props.elemWidth === itemId ? '200px' : `${100 / (rowLength )}%`,
+            // minWidth:   props.elemWidth && props.elemWidth === itemId ? '200px' : `${100 / (rowLength )}%`,
+         
 
           })
     }
@@ -60,18 +81,26 @@ const ServiceCommandUnit = (props) => {
 
     return (
         <>
-            <Droppable onDragStart={() => console.log('dragging')} droppableId={props.type} type={`droppableSubItem`} direction="horizontal" isDropDisabled={ props.subItems.length > 3 ? true : false }>
+            <Droppable droppableId={props.type} type={`droppableSubItem`} direction="horizontal" 
+              
+            // isDropDisabled={ props.subItems.length > 2 && props.type !== hoverRow ? true : false }
+            >
             {(provided, snapshot) => (
                 <div 
                     style={{
                         border: '1px solid green',
                         padding: 10,
+                        minHeight: 100,
+                        minWidth: 100
                     }}
+
+
                 >
+ 
                 {/* wrapper drag */}
                 <div {...props.parentDrag} style={{marginRight: 10}}>
                     <FontAwesomeIcon
-                    icon={faGripVertical}
+                    icon={faArrowsAlt}
                     style={{ float: "left" }}
                     />
                 </div> 
@@ -84,10 +113,10 @@ const ServiceCommandUnit = (props) => {
                     >
 
                         <div 
-                            style={{
-                                overflowY: 'visible',
-                                overflowX: 'auto',
-                            }}
+                            // style={{
+                            //     overflowY: 'visible',
+                            //     overflowX: 'auto',
+                            // }}
                         >
                             <div 
                                 style={{
@@ -100,19 +129,24 @@ const ServiceCommandUnit = (props) => {
                                     zIndex: 99,
                                 }}
                             >
+                                 <button 
+                                    onClick={props.addNewRow}
+                                    //   onClick={() => {addNewRow(index + 1)}}
+                                >
+                                    +
+                                </button> 
+
+
 
                             </div>
 
                             <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    margin: 15,
-                                    border:'4px solid red',
-                                }}
+                                // ref={ref}
+                                style={getListContainerStyle(snapshot.isDraggingOver)}
+
                             > 
                                 {/* <button 
-                                    onClick={addNewRow}
+                                    onClick={props.addNewRow}
                                     //   onClick={() => {addNewRow(index + 1)}}
                                 >
                                     Insert Row below
@@ -125,40 +159,40 @@ const ServiceCommandUnit = (props) => {
                                     <Draggable  
                                     key={item.id}
                                     draggableId={item.id} index={index}>
-                                        {(provided, snapshot) => (
+                                        {(provided2, snapshot2) => (
                                             <>
                 
-                                    {/* <div
-                                        key={item.id} 
-                                        onMouseDown={(e)=> {console.log('e',e)}}
-                                        style={{
-                                            background: 'pink',
-                                            margin: 5,
-                                            // width: `100%`,
-                                            // width: `${100 / props.subItems.length}%`,
-                                            display: 'flex',
-                                        }}
-                                    > */}
                                                 <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    style={getItemStyle(
-                                                        snapshot.isDragging,
-                                                        provided.draggableProps.style, 
-                                                        props.subItems.length,
-                                                        snapshot.isDraggingOver
-                                                    )}
+                                                    ref={provided2.innerRef}
+                                                    {...provided2.draggableProps}
+
+                                                    // {...provided2.dragHandleProps}
+
+                                                    style={
+                                                        getItemStyle(
+                                                            snapshot2.isDragging,
+                                                            provided2.draggableProps.style, 
+                                                            props.subItems.length,
+                                                            snapshot.isDraggingOver,
+                                                            item.id,
+                                                        
+                                                        )
+                                                    }
                                                 >
-                                                    <span
-                                                    {...provided.dragHandleProps}
+                                                   
+                                                   <span
+                                                    // {...provided2.draggableProps}
+
+                                                    {...provided2.dragHandleProps}
                                                     >
                                                         <FontAwesomeIcon
-                                                            icon={faGripVertical}
+                                                            icon={faArrowsAlt}
                                                             style={{ float: "left" }}
                                                         />
                                                    </span>
-                                                   
-                                                    <Box style={{width: '100%'}}>
+                                                    <Box 
+                                                        style={{width: '100%'}}
+                                                    >
                                                         <TextField 
                                                             label={item.name}
                                                             variant="outlined" 
@@ -169,7 +203,6 @@ const ServiceCommandUnit = (props) => {
                                                     </Box>
                                                     {/* {item.name} */}
                                                 </div>
-                                    {/* </div> */}
                                             </>
                                         )}
                                     </Draggable>

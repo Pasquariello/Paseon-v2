@@ -13,81 +13,6 @@ import FieldOptions from './FieldOptions'
 import shortid from 'shortid';
 
 
-const formElementsListOLD = [
-    {
-        id: shortid.generate(),
-        name: 'First Name',
-        row: 0,
-        col: 0,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'Last Name',
-        row: 0,
-        col: 6,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'Address',
-        row: 0,
-        col: 1,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'Phone',
-        row: 1,
-        col: 0,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'Email',
-        row: 1,
-        col: 1,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'Row',
-        row: 2,
-        col: 1,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'thing1',
-        row: 2,
-        col: 0,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'thing2',
-        row: 3,
-        col: 0,
-        type: 'text',
-    },
-    {
-        id: shortid.generate(),
-        name: 'thing2.5',
-        row: 5,
-        col: 0,
-        type: 'text',
-    },
-
-    {
-        id: shortid.generate(),
-        name: 'thing3',
-        row: 9,
-        col: 0,
-        type: 'text',
-    },
-]
-
-
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
 
@@ -289,51 +214,52 @@ const [dataList, setDataList] = useState([]);
 
   return (
     <Box display="flex" height="100%" width="100%" style={{border: '1px solid red'}}>
+        
         <FieldOptions
             addNewField={ addNewField }
         />
+     
+
         {/* FORM DROP ZONE START */}
-        <Box style={{border: '1px solid green'}} width="50%">  {/* 67% */}
-            <DragDropContext onDragEnd={onDragEnd} onBeforeCapture={(e) => setElemWidth(true)}>
+        <Box style={{border: '1px solid purple'}} width="50%">  {/* 67% */}
+            <DragDropContext onDragEnd={onDragEnd}  
+                onBeforeCapture={(e) => {
+                    setElemWidth(e.draggableId)
+                }}
+            >
                 <Droppable droppableId="droppable" type="droppableItem">
                     {(provided, snapshot) => (
                         <div
                             ref={provided.innerRef}
-                            //   style={getListStyle(snapshot.isDraggingOver)}
                         >
                             <button onClick={() => {addNewRow(0)}}>
                                 Add First Row
                             </button>
-                            {dataList.map((item, index) => (
+
+                            {dataList.map((row, index) => (
                                 <div   
-                                    key={item.id}
+                                    key={row.id}
                                     ref={resultsRef} 
                                 >
-                                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                                    {console.log('ROW', row)}
+                                    <Draggable draggableId={row.id} index={index}> 
                                         {(provided, snapshot) => (
-                                            <div>
-                                                {console.log('0000000', item)}
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    // {...provided.dragHandleProps}
-                                                >
-                                                    {/* <span {...provided.dragHandleProps} style={{marginRight: 10}}>
-                                                        <FontAwesomeIcon
-                                                            icon={faGripVertical}
-                                                            style={{ float: "left" }}
-                                                        />
-                                                        </span> */}
-                                            
-                                                    <ServiceCommandUnit
-                                                        parentDrag={{...provided.dragHandleProps}}
-                                                        elemWidth={elemWidth}
-                                                        addNewRow={() => addNewRow(index + 1)}
-                                                        subItems={item.subItems}
-                                                        type={item.id}
-                                                    />
-                                        
-                                                </div>
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                            >
+                                                {console.log('= = provided', provided)}
+                                                {console.log('= = snapshot', snapshot)}
+                                                <ServiceCommandUnit
+                                                    parentDrag={{...provided.dragHandleProps}}
+                                                    provided={provided}
+                                                    snapshot={snapshot}
+                                                    elemWidth={elemWidth}
+                                                    addNewRow={() => addNewRow(index + 1)}
+                                                    subItems={row.subItems}
+                                                    type={row.id}
+                                                />
+                                    
                                             </div>
                                         )}
                                     </Draggable>

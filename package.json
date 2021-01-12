@@ -27,7 +27,9 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-form": "^8.3.6",
     "redux-thunk": "^2.3.0",
+    "semantic-ui-react": "^2.0.1",
     "shortid": "^2.2.16",
+    "styled-components": "^5.2.1",
     "victory": "^35.4.4"
   },
   "scripts": {
