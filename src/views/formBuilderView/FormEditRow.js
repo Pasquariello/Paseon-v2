@@ -6,8 +6,13 @@ import {
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGripVertical, faArrowsAlt } from '@fortawesome/free-solid-svg-icons'
-import { Box, TextField } from '@material-ui/core';
+import { Box, TextField, Button, Menu, MenuItem } from '@material-ui/core';
 
+import CheckboxInput from 'src/components/formBuilderInputControls/checkboxInput';
+import SelectInput from 'src/components/formBuilderInputControls/selectInput';
+import TextAreaInput from 'src/components/formBuilderInputControls/textAreaInput';
+import TextInput from 'src/components/formBuilderInputControls/textInput';
+import RadioInput from 'src/components/formBuilderInputControls/radioInput';
 
 const grid = 8;
 
@@ -38,9 +43,22 @@ const getListContainerStyle = isDraggingOver => ({
   });
 
 
-const ServiceCommandUnit = (props) => {
+const FormEditRow = (props) => {
     const ref = useRef(null)
     const [colCount, setColCount ] = useState(props.subItems.length);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = (increment) => {
+
+       const insertIndex = props.rowIndex + increment <= 0 ? 0 : increment
+       props.addNewRow(insertIndex)
+       setAnchorEl(null);
+    };
 
     const getItemStyle = (isDragging, draggableStyle, rowLength, isDraggingOver, itemId ) => {
 
@@ -74,6 +92,19 @@ const ServiceCommandUnit = (props) => {
 
           })
     }
+
+    const renderInput = (item) => {
+     const obj = {
+         text: <TextInput />,
+         textArea: <TextAreaInput/>,
+         checkbox: <CheckboxInput />,
+         radio: <RadioInput />,
+         select: <SelectInput />,
+     }
+     return obj[item.type]
+    }
+
+  
 
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
@@ -120,24 +151,30 @@ const ServiceCommandUnit = (props) => {
                         >
                             <div 
                                 style={{
-                                    width: 50,
-                                    height: 25,
-                                    background: 'purple',
+                                    // width: 100,
+                                    height: 50,
+                                    // background: 'purple',
                                     position: 'absolute',
-                                    top: -12.5,
+                                    top: -25,
                                     right: 10,
                                     zIndex: 99,
+                                    display: 'flex',
+                                    border: '1px solid #eee'
                                 }}
                             >
-                                 <button 
-                                    onClick={props.addNewRow}
-                                    //   onClick={() => {addNewRow(index + 1)}}
+                                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                                    New Row {props.rowIndex}
+                                </Button>
+                                <Menu
+                                id="simple-menu"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={() => setAnchorEl(null)}
                                 >
-                                    +
-                                </button> 
-
-
-
+                                <MenuItem onClick={() => handleClose(-1)}>Insert Above</MenuItem>
+                                <MenuItem onClick={() => handleClose(1)}>Insert Below</MenuItem>
+                                </Menu> 
                             </div>
 
                             <div
@@ -193,14 +230,16 @@ const ServiceCommandUnit = (props) => {
                                                     <Box 
                                                         style={{width: '100%'}}
                                                     >
-                                                        <TextField 
-                                                            label={item.name}
-                                                            variant="outlined" 
-                                                            size="small"
-                                                            fullWidth
-                                                            disabled
-                                                        />
+                                                        {/* INPUT TYPE */}
+                                                        { renderInput(item) }
+                                                        
                                                     </Box>
+                                                    <button
+                                                        onClick={() => props.setIsEdit(item)}
+                                                    >Edit</button>
+                                                    <button
+                                                        onClick={() => props.remove(item.id, props.type)}
+                                                    >Delete</button>
                                                     {/* {item.name} */}
                                                 </div>
                                             </>
@@ -221,7 +260,7 @@ const ServiceCommandUnit = (props) => {
     );
 }
 
-export default ServiceCommandUnit
+export default FormEditRow
 
 // Put the thing into the DOM!
 //  https://codesandbox.io/s/j4yvnr7n83?file=/src/answer.js:1198-1344

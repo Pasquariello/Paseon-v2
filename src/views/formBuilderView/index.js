@@ -3,14 +3,16 @@ import { useParams } from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux';
 import {getSingleForm} from 'src/actions/formActions';
 
-import Box from '@material-ui/core/Box';
+import { Box, TextField } from '@material-ui/core';
 
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import ServiceCommandUnit from "./ServiceCommandUnit";
+import FormEditRow from "./FormEditRow";
 import FieldOptions from './FieldOptions'
 
 import shortid from 'shortid';
+import { Edit } from '@material-ui/icons';
+import EditField from './EditField';
 
 
 const reorder = (list, startIndex, endIndex) => {
@@ -34,6 +36,8 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
   
 const [dataList, setDataList] = useState([]);
+const [ isEdit, setIsEdit ] = useState(null);
+
 
   useEffect(() => {
     if (formElementsList.length) {
@@ -168,6 +172,7 @@ const [dataList, setDataList] = useState([]);
   let resultsRef = useRef();
 
   const addNewField = (name, type) => {
+    console.log('name', name)
     const tempArray = dataList;
     const newTempArray = [
         ...tempArray, 
@@ -214,10 +219,47 @@ const [dataList, setDataList] = useState([]);
 
   return (
     <Box display="flex" height="100%" width="100%" style={{border: '1px solid red'}}>
-        
-        <FieldOptions
-            addNewField={ addNewField }
-        />
+      {/* Panel Start */}
+      <Box style={{ width: '33%', border: '1px solid red', maxHeight: '100vh', position: 'relative'}}>
+        <Box 
+          style={{
+              // position: 'absolute',
+              top: '0',
+              left: 0,
+              // right: 0,
+              margin: '0 auto',
+              textAlign: 'center',
+              // width: 'calc(33% - 4.25rem',
+              // padding: '24px',
+              whiteSpace: 'nowrap',
+          }}
+        >
+          <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="form-title"
+              label="Form Title"
+              name="title"
+              autoFocus
+              // value={customField.name}
+              // onChange={(e) => setCustomField({ ...customField, name: e.target.value})}
+          />
+          {
+            isEdit 
+            ? <EditField setIsEdit={setIsEdit} /> 
+            : (
+              <FieldOptions
+                addNewField={ addNewField }
+                isEdit={isEdit}
+              />
+            )   
+          }
+        </Box>
+      </Box>
+      {/* Panel End */}
+ 
      
 
         {/* FORM DROP ZONE START */}
@@ -241,7 +283,7 @@ const [dataList, setDataList] = useState([]);
                                     key={row.id}
                                     ref={resultsRef} 
                                 >
-                                    {console.log('ROW', row)}
+                                    {console.log('dataList', dataList)}
                                     <Draggable draggableId={row.id} index={index}> 
                                         {(provided, snapshot) => (
                                             <div
@@ -250,14 +292,31 @@ const [dataList, setDataList] = useState([]);
                                             >
                                                 {console.log('= = provided', provided)}
                                                 {console.log('= = snapshot', snapshot)}
-                                                <ServiceCommandUnit
+                                                <FormEditRow
                                                     parentDrag={{...provided.dragHandleProps}}
-                                                    provided={provided}
-                                                    snapshot={snapshot}
                                                     elemWidth={elemWidth}
-                                                    addNewRow={() => addNewRow(index + 1)}
+                                                    rowIndex={index}
+                                                    addNewRow={(increment) => addNewRow(index + increment)}
+
+                                                    // addNewRow={(insertIndex) => addNewRow(index +insertIndex)}
                                                     subItems={row.subItems}
                                                     type={row.id}
+                                                    setIsEdit={setIsEdit}
+                                                    remove={(removeItemId, removeRowId) => {
+                                               
+
+                                                      const newSubList = row.subItems.filter(item => item.id !== removeItemId)
+
+                                                      const newDataList = dataList.map(row => {
+
+                                                        if (row.id === removeRowId) {
+
+                                                         return  {...row, subItems: newSubList}
+                                                        }
+                                                        return row
+                                                      })
+                                                      setDataList(newDataList);
+                                                    }}
                                                 />
                                     
                                             </div>
