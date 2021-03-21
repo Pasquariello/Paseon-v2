@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Checkbox, Divider, Link, List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { deleteForm } from 'src/actions/formActions';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +63,7 @@ function ListPanel({ formList, checked, setChecked }) {
                       <Link component="button" onClick={()=> history.push(`/app/form-builder/edit/${form._id.$oid}`)}><Typography style={{fontSize: 12}}>Edit</Typography></Link>
                     </Box>
                     <Box mx={1}>
-                      <Link onClick={() => setOpenConfirmation(true)} component="button"><Typography style={{fontSize: 12}}>Delete</Typography></Link>
+                      <Link onClick={() => setOpenConfirmation(form._id.$oid)} component="button"><Typography style={{fontSize: 12}}>Delete</Typography></Link>
                     </Box>
                     
                   </div>
@@ -74,14 +75,16 @@ function ListPanel({ formList, checked, setChecked }) {
         ))}
 
       <ConfirmationDialog 
-        open={openConfirmation}
+        open={!!openConfirmation}
         setOpen={setOpenConfirmation}
-        contentText="
-        By deleting this form you will also be losing all associated submission data.  
-        Make sure to export any information you would like to save.
-        Are you sure you would like to continue?
-        "
+        contentText={`
+          ${openConfirmation}
+          By deleting this form you will also be losing all associated submission data.  
+          Make sure to export any information you would like to save.
+          Are you sure you would like to continue?
+        `}
         titleText="Confrim Delete Form?"
+        confirmationAction={()=> dispatch(deleteForm(openConfirmation)) }
       />
     </List>
   );

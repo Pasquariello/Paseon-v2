@@ -90,7 +90,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
                     onClick={handleOpenFormList}
                     endIcon={<KeyboardArrowDownIcon />}
                   >
-                    View Details
+                    View
                   </Button>
                   <Menu
                     id="Form Menu"
@@ -160,7 +160,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
             <Box item my={2} display="flex" justifyContent="space-between">
               <Typography variant="h6">Form List</Typography>
               
-              <Link href="/app/form-builder" color="inherit">
+              <Link href="/app/form-builder" color="inherit" variant="outlined">
                 <Typography variant="h6">Add New</Typography>
               </Link>
               

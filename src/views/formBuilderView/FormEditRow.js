@@ -35,6 +35,7 @@ const getListContainerStyle = isDraggingOver => ({
     display: 'flex',
     flexDirection: 'row',
     margin: 15,
+    // justifyContent: 'center',
     // border:'4px solid blue',
     // width: '80%',
     // width: isDraggingOver ? `calc(100% - 200px)` : 'inherit'
@@ -62,34 +63,19 @@ const FormEditRow = (props) => {
 
     const getItemStyle = (isDragging, draggableStyle, rowLength, isDraggingOver, itemId ) => {
 
-           const division1 = isDraggingOver ? `calc((${100 / (rowLength )}%) - (${200 / (rowLength )}px)` :  `${100 / (rowLength )}%`;
-        //    const division1 = isDraggingOver ? '200px' :  `${100 / (rowLength )}%`;
-
-        // const division1 = props.elemWidth ? `calc((${100 / (rowLength )}%) - (${200 / (rowLength)}px)` :  `${100 / (rowLength )}%`;
-
+        const division1 = isDraggingOver ? `calc((${100 / (rowLength )}%) - (${200 / (rowLength )}px)` :  `${100 / (rowLength )}%`;
 
         return ({
             // some basic styles to make the items look a bit nicer
             userSelect: 'none',
             display: 'flex',
             padding: grid * 2,
-            // margin: grid,
-            border: '1px solid red',
-            // change background colour if dragging
             background: isDragging ? 'lightgreen' : 'grey',
-            // styles we need to apply on draggables
-            // width: 200,
+            border: '1px solid  red',
             ...draggableStyle,
-            // MINWIDTH MUSHT BE SAME AS FIRST IF PSART OF TERNARY
-            //width.current.clientWidth
-
+            // MINWIDTH MUSHT BE SAME AS FIRST IF PART OF TERNARY
             width :  props.elemWidth === itemId ? 200 : division1,
             minWidth:  props.elemWidth === itemId ? 200  : division1,
-          
-            // width :  props.elemWidth && props.elemWidth === itemId ? '200px' : `${100 / (rowLength )}%`,
-            // minWidth:   props.elemWidth && props.elemWidth === itemId ? '200px' : `${100 / (rowLength )}%`,
-         
-
           })
     }
 
@@ -119,13 +105,11 @@ const FormEditRow = (props) => {
             {(provided, snapshot) => (
                 <div 
                     style={{
-                        border: '1px solid green',
                         padding: 10,
                         minHeight: 100,
-                        minWidth: 100
+                        minWidth: 100,
+                        border: '2px solid pink'
                     }}
-
-
                 >
  
                 {/* wrapper drag */}
@@ -135,20 +119,13 @@ const FormEditRow = (props) => {
                     style={{ float: "left" }}
                     />
                 </div> 
-                    
-
                     <div
                         ref={provided.innerRef}
                         style={getListStyle(snapshot.isDraggingOver)}
                         {...provided.droppableProps}
                     >
 
-                        <div 
-                            // style={{
-                            //     overflowY: 'visible',
-                            //     overflowX: 'auto',
-                            // }}
-                        >
+                        <div>
                             <div 
                                 style={{
                                     // width: 100,
@@ -182,72 +159,51 @@ const FormEditRow = (props) => {
                                 style={getListContainerStyle(snapshot.isDraggingOver)}
 
                             > 
-                                {/* <button 
-                                    onClick={props.addNewRow}
-                                    //   onClick={() => {addNewRow(index + 1)}}
-                                >
-                                    Insert Row below
-                                </button> */}
-
-
-                                {props.subItems.map((item, index) => (
-                                
-                                <>
+                                {props.subItems.map((subItem, index) =>{
+                                 return (
                                     <Draggable  
-                                    key={item.id}
-                                    draggableId={item.id} index={index}>
+                                    key={subItem.id}
+                                    draggableId={subItem.id} 
+                                    index={index}>
                                         {(provided2, snapshot2) => (
-                                            <>
-                
-                                                <div
-                                                    ref={provided2.innerRef}
-                                                    {...provided2.draggableProps}
+                                            <div
+                                                ref={provided2.innerRef}
+                                                {...provided2.draggableProps}
+                                                style={
+                                                    getItemStyle(
+                                                        snapshot2.isDragging,
+                                                        provided2.draggableProps.style, 
+                                                        props.subItems.length,
+                                                        snapshot.isDraggingOver,
+                                                        subItem.id,
+                                                    )
+                                                }
+                                            > 
+                                                <span {...provided2.dragHandleProps}>
+                                                    <FontAwesomeIcon
+                                                        icon={faArrowsAlt}
+                                                        style={{ float: "left" }}
+                                                    />
+                                                </span>
 
-                                                    // {...provided2.dragHandleProps}
-
-                                                    style={
-                                                        getItemStyle(
-                                                            snapshot2.isDragging,
-                                                            provided2.draggableProps.style, 
-                                                            props.subItems.length,
-                                                            snapshot.isDraggingOver,
-                                                            item.id,
-                                                        
-                                                        )
-                                                    }
-                                                >
-                                                   
-                                                   <span
-                                                    // {...provided2.draggableProps}
-
-                                                    {...provided2.dragHandleProps}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faArrowsAlt}
-                                                            style={{ float: "left" }}
-                                                        />
-                                                   </span>
-                                                    <Box 
-                                                        style={{width: '100%'}}
-                                                    >
-                                                        {/* INPUT TYPE */}
-                                                        { renderInput(item) }
-                                                        
-                                                    </Box>
-                                                    <button
-                                                        onClick={() => props.setIsEdit(item)}
-                                                    >Edit</button>
-                                                    <button
-                                                        onClick={() => props.remove(item.id, props.type)}
-                                                    >Delete</button>
-                                                    {/* {item.name} */}
-                                                </div>
-                                            </>
+                                                <Box  style={{width: '100%'}}>
+                                                    {/* INPUT TYPE */}
+                                                    { renderInput(subItem) }
+                                                </Box>
+                                                <button
+                                                    onClick={() => props.setIsEdit(subItem)}
+                                                >Edit</button>
+                                                {/* <button
+                                                    onClick={() => props.remove(item.id, props.type)}
+                                                >Delete</button> */}
+                                                {/* {item.name} */}
+                                            </div>
                                         )}
                                     </Draggable>
                                     
-                                </>
-                                ))}
+                            
+                                )})
+                                }
                                 {provided.placeholder} 
                             </div>
                         </div>

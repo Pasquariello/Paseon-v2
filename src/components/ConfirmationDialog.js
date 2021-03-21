@@ -7,7 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function ConfirmationDialog(props) {
-  const { contentText, titleText, open, setOpen } = props;
+  const { contentText, titleText, open, setOpen, confirmationAction } = props;
 //   const [open, setOpen] = useState(false);
 
 //   const handleClickOpen = () => {
@@ -15,7 +15,7 @@ export default function ConfirmationDialog(props) {
 //   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpen();
   };
 
   return (
@@ -37,7 +37,12 @@ export default function ConfirmationDialog(props) {
           <Button onClick={handleClose} color="primary">
             Disagree
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button 
+            onClick={() => {
+            handleClose();
+            confirmationAction();
+            }} 
+            color="primary" autoFocus>
             Agree
           </Button>
         </DialogActions>

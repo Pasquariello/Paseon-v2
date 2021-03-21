@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { Button, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import FieldEdit from './EditField';
-import CustomFieldAdd from './AddCustomField';
+import CustomFieldAdd from '../AddCustomField';
 
 
 const FieldOptions = (props) => {

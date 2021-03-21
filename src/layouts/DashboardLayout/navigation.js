@@ -5,19 +5,17 @@ import { faHome, faUserPlus, faKey, faSignOutAlt} from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {Box, IconButton, Card, Paper, CardContent, Typography, Grid, CardActions, Button, Link} from '@material-ui/core';
-
+import { useHistory } from 'react-router';
 
 import './navigation.css';
 
 
 export default function Navigation() {
-    console.log('HELLO')
 	// eslint-disable-next-line no-unused-vars
 	const [ activeNav, setActiveNav ] = useState('');
+	const history = useHistory();
 
 	const [ hoverState, setHoverState ] = useState(false)
-
-    
 
 
 	const toggleState = () => {
@@ -52,9 +50,13 @@ export default function Navigation() {
 					className={`
                         ${hoverState ? 'activePathOpen' : 'activePathClosed'}
                         myElem sidebar-item
-                    `}
+					`}
+					onClick={()=>  {
+						history.push('/app/dashboard')
+						setActiveNav('home')
+					}}
                 > 
-						<Button size="small" className="btn btn-link" onClick={()=>setActiveNav('home')}>
+						<Button size="small" className="btn btn-link">
 							<Typography>
 								<span 
 									className="icon"
@@ -63,17 +65,19 @@ export default function Navigation() {
 								</span>
                                 <span 
                                     className="item-title"
-									style={{visibility: hoverState ? 'visible': 'hidden' , position: 'absolute'}}
+									style={{visibility: hoverState ? 'visible': 'hidden' }}
 								>Home</span>
 							</Typography>
 						</Button>
 				</li>
-				{/* <li className={`${activeNav === 'addUser' && 'activePath'} myElem sidebar-item`}>  */}
 				<li 
 					className={`
                         ${hoverState ? 'activePathOpen' : 'activePathClosed'}
                         myElem sidebar-item
-                    `}
+					`}
+					onClick={() => {
+						history.push('/app/form-builder')
+					}}
                 > 
                     <Button 
                         size="small"
@@ -86,8 +90,8 @@ export default function Navigation() {
 								<FontAwesomeIcon fixedWidth width="0" icon={faUserPlus} color="white"/>
 							</span>
 							<span className="item-title"
-								style={{visibility: hoverState ? 'visible': 'hidden' , position: 'absolute'}}
-							>Register New User</span>
+								style={{visibility: hoverState ? 'visible': 'hidden'}}
+							>Build New Form</span>
 						</Typography>
 					</Button>
 				</li>
@@ -106,7 +110,7 @@ export default function Navigation() {
 							<span className="icon"> 
 								<FontAwesomeIcon fixedWidth width="0" icon={faKey} color="white"/>
 							</span>
-							<span className="item-title" style={{visibility: hoverState ? 'visible': 'hidden' , position: 'absolute'}}>
+							<span className="item-title" style={{visibility: hoverState ? 'visible': 'hidden'}}>
                                 Generate Token
 							</span>
 						</Typography>
@@ -127,7 +131,7 @@ export default function Navigation() {
 							<span className="icon"> 
 								<FontAwesomeIcon fixedWidth width="0" icon={faSignOutAlt} color="white"/>
 							</span>
-							<span className="item-title" style={{visibility: hoverState ? 'visible': 'hidden' , position: 'absolute'}}>
+							<span className="item-title" style={{visibility: hoverState ? 'visible': 'hidden'}}>
                                 Sign Out
 							</span>
 						</Typography>

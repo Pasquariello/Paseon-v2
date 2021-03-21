@@ -38,6 +38,9 @@ border-radius: 0 50px 50px 0;
     white-space: nowrap;
     margin-left: 15px;
     font-size: 12px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
    }
 
 
@@ -90,7 +93,7 @@ button:focus {
   .sidenav {
     height: 100%; /* Full-height: remove this if you want "auto" height */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 1; /* Stay on top */
+    z-index: 99; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
     background: #353535;  /* fallback for old browsers */

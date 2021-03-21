@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux';
-import {getSingleForm} from 'src/actions/formActions';
-
-import { Box, TextField } from '@material-ui/core';
-
-
+import {getSingleForm, createForm, deleteForm} from 'src/actions/formActions';
+import { Box, Button, TextField } from '@material-ui/core';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import FormEditRow from "./FormEditRow";
 import FieldOptions from './FieldOptions'
-
 import shortid from 'shortid';
 import { Edit } from '@material-ui/icons';
 import EditField from './EditField';
@@ -33,17 +29,26 @@ const reorder = (list, startIndex, endIndex) => {
 function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
+  const formData = useSelector(state => state.forms.selected)
+  // const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
   
-const [dataList, setDataList] = useState([]);
-const [ isEdit, setIsEdit ] = useState(null);
+  const [dataList, setDataList] = useState([]);
+  const [isEdit, setIsEdit] = useState(null);
+  const [elemWidth, setElemWidth] = useState(false);
+  const [formTitle, setFormTitle] = useState('');
+
+  
+  let resultsRef = useRef();
 
 
   useEffect(() => {
+    const formElementsList = formData ? formData.fields : [];
+    const title = formData ? formData.name : '';
+    setFormTitle(title);
     if (formElementsList.length) {
         buildArrayMatrix(formElementsList);
     }
-  }, [formElementsList]);
+  }, [formData]);
 
   useEffect(() => {
     if (id) {
@@ -67,41 +72,33 @@ const [ isEdit, setIsEdit ] = useState(null);
         }
     });
 
- 
-    // transform above matrix into array of rows
-    // update column index to be sequential and set row to correct index
-    const formModel = tempArray.map((row, rowIndex) => {
-        return {
-            // id: `${rowIndex}`,
-            id: shortid.generate(),
-            subItems: row.map((col, colIndex) => {
-                console.log('COL', col)
-                return {
-                    ...col, 
-                    id: col._id.$oid,
-                    col: colIndex, 
-                    row: rowIndex
-                }
-            })
-        }
-    }) 
-
-    setDataList(formModel)
-
-    // Rebuild function
-    // const arr = []
-    // bar.map(row => {
-    //     return row.subItems.map(col => {
-    //         arr.push(col)
-    //         return col
-    //     })
-    // })
-    
-    // return tempArray
+    setDataList(formModel(tempArray))
   }
 
 
-
+    // transform above matrix into array of rows
+    // update column index to be sequential and set row to correct index
+    const formModel = (arr) => {
+      return arr.map((row, rowIndex) => {
+        return {
+          // id: `${rowIndex}`,
+          id: shortid.generate(),
+          subItems: row.map((formField, formFieldIndex) => {
+              console.log('formField', formField)
+              const { label, name, type } = formField
+              return {
+                  id: shortid.generate(),
+                  label,
+                  name,
+                  type,
+                  col: formFieldIndex, 
+                  row: rowIndex
+              }
+          })
+        }
+      }) 
+    }
+  
 
   const onDragEnd = (result) => {
     // dropped outside the list
@@ -168,10 +165,8 @@ const [ isEdit, setIsEdit ] = useState(null);
     }
   }
 
-
-  let resultsRef = useRef();
-
-  const addNewField = (name, type) => {
+  const addNewField = (newField) => {
+    const { name, type, label } = newField;
     console.log('name', name)
     const tempArray = dataList;
     const newTempArray = [
@@ -183,9 +178,10 @@ const [ isEdit, setIsEdit ] = useState(null);
                 {
                     id: shortid.generate(), 
                     name,
+                    label,
+                    type, 
                     row: dataList.length, 
                     col: 0, 
-                    type, 
                 }
             ] 
         }
@@ -204,7 +200,6 @@ const [ isEdit, setIsEdit ] = useState(null);
   } 
 
 
-  
   const addNewRow = (indexToAdd) => {
     const tempArray = dataList
     tempArray.splice(indexToAdd , 0, {subItems: []})
@@ -215,12 +210,10 @@ const [ isEdit, setIsEdit ] = useState(null);
     );                 
   }
 
-  const [elemWidth, setElemWidth] = useState(false)
-
   return (
-    <Box display="flex" height="100%" width="100%" style={{border: '1px solid red'}}>
+    <Box display="flex" height="100%" width="100%">
       {/* Panel Start */}
-      <Box style={{ width: '33%', border: '1px solid red', maxHeight: '100vh', position: 'relative'}}>
+      <Box p={2} style={{ width: '33%', maxHeight: '100vh', position: 'relative'}}>
         <Box 
           style={{
               // position: 'absolute',
@@ -242,8 +235,8 @@ const [ isEdit, setIsEdit ] = useState(null);
               id="form-title"
               label="Form Title"
               name="title"
-              autoFocus
-              // value={customField.name}
+              value={formTitle}
+              onChange={(e) => setFormTitle(e.target.value)}
               // onChange={(e) => setCustomField({ ...customField, name: e.target.value})}
           />
           {
@@ -260,10 +253,50 @@ const [ isEdit, setIsEdit ] = useState(null);
       </Box>
       {/* Panel End */}
  
-     
-
         {/* FORM DROP ZONE START */}
-        <Box style={{border: '1px solid purple'}} width="50%">  {/* 67% */}
+        <Box m={2} p={2} style={{border: '2px dashed #eee'}} width="50%">
+          <Button
+                onClick={() => {
+                    // this will re clean the array row and col values
+                    // array will need to be the value to 'save'/post back to the DB
+                    const destructuredFormFields = [];
+                    dataList.forEach((row, rowIndex) => {
+                          row.subItems.forEach((formField, formFieldIndex) => {
+                            const { label, name, type } = formField
+                            destructuredFormFields.push(
+                              {
+                                label,
+                                name,
+                                type,
+                                col: formFieldIndex,
+                                row: rowIndex,
+                              }
+                            )
+                        })
+                       
+                    });
+
+                    dispatch(createForm({
+                      name: 'Test',
+                      user_id: '5fe978e8cc7faa326371ff65',
+                      fields: destructuredFormFields
+                    }))
+                }}
+            >
+              Save
+          </Button>
+
+          {formData?._id.$oid
+            ? (
+              <Button
+              onClick={() => { dispatch(deleteForm(formData?._id.$oid)) }}
+              >
+                Delete
+              </Button>
+            ) 
+            : ''
+          }
+
             <DragDropContext onDragEnd={onDragEnd}  
                 onBeforeCapture={(e) => {
                     setElemWidth(e.draggableId)
@@ -274,78 +307,45 @@ const [ isEdit, setIsEdit ] = useState(null);
                         <div
                             ref={provided.innerRef}
                         >
-                            <button onClick={() => {addNewRow(0)}}>
-                                Add First Row
-                            </button>
 
-                            {dataList.map((row, index) => (
+                            {dataList.map((row, index) => {
+                              return (
                                 <div   
                                     key={row.id}
                                     ref={resultsRef} 
                                 >
-                                    {console.log('dataList', dataList)}
                                     <Draggable draggableId={row.id} index={index}> 
                                         {(provided, snapshot) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                            >
-                                                {console.log('= = provided', provided)}
-                                                {console.log('= = snapshot', snapshot)}
-                                                <FormEditRow
-                                                    parentDrag={{...provided.dragHandleProps}}
-                                                    elemWidth={elemWidth}
-                                                    rowIndex={index}
-                                                    addNewRow={(increment) => addNewRow(index + increment)}
-
-                                                    // addNewRow={(insertIndex) => addNewRow(index +insertIndex)}
-                                                    subItems={row.subItems}
-                                                    type={row.id}
-                                                    setIsEdit={setIsEdit}
-                                                    remove={(removeItemId, removeRowId) => {
-                                               
-
-                                                      const newSubList = row.subItems.filter(item => item.id !== removeItemId)
-
-                                                      const newDataList = dataList.map(row => {
-
-                                                        if (row.id === removeRowId) {
-
-                                                         return  {...row, subItems: newSubList}
-                                                        }
-                                                        return row
-                                                      })
-                                                      setDataList(newDataList);
-                                                    }}
-                                                />
-                                    
+                                            <div ref={provided.innerRef} {...provided.draggableProps}>
+                                              <FormEditRow
+                                                  parentDrag={{...provided.dragHandleProps}}
+                                                  elemWidth={elemWidth}
+                                                  rowIndex={index}
+                                                  addNewRow={(increment) => addNewRow(index + increment)}
+                                                  subItems={row.subItems}
+                                                  type={row.id}
+                                                  setIsEdit={setIsEdit}
+                                                  remove={(removeItemId, removeRowId) => {
+                                                    const newSubList = row.subItems.filter(item => item.id !== removeItemId)
+                                                    const newDataList = dataList.map(row => {
+                                                      if (row.id === removeRowId) {
+                                                        return  {...row, subItems: newSubList}
+                                                      }
+                                                      return row
+                                                    })
+                                                    setDataList(newDataList);
+                                                  }}
+                                              />
                                             </div>
                                         )}
                                     </Draggable>
                                 </div>
-                            ))}
+                            )})}
                             {provided.placeholder} 
                         </div>
                     )}
                 </Droppable>
             </DragDropContext>
-
-            <button
-                onClick={() => {
-                    // this will re clean the array row and col values
-                    // array will need to be the value to 'save'/post back to the DB
-                    const arr = [];
-
-                    dataList.map((row, rowIndex) => {
-                        return row.subItems.map((col, colIndex) => {
-                            arr.push({...col, col: colIndex, row: rowIndex})
-                            return col
-                        })
-                    });
-                }}
-            >
-                Save
-            </button>
         </Box>
         { /* FORM DROP ZONE END */}
     </Box>

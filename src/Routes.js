@@ -67,7 +67,9 @@ import React, {
         {
           exact: true,
           path: '/app/form-builder',
-          component: lazy(() => import('src/views/formBuilderView'))
+          // component: lazy(() => import('src/views/formBuilderView'))
+          component: lazy(() => import('src/views/formBuilderView/TestConcept'))
+
         },
         {
           exact: true,
@@ -77,7 +79,9 @@ import React, {
         {
           exact: true,
           path: '/app/form-builder/edit/:id',
-          component: lazy(() => import('src/views/formBuilderView'))
+          // component: lazy(() => import('src/views/formBuilderView'))
+          component: lazy(() => import('src/views/formBuilderView/TestConcept'))
+
         },
         // {
         //   component: () => <Redirect to="/404" />
