@@ -98,7 +98,8 @@ function FormBuilderView({ className, onSubmitSuccess, ...rest }) {
       {/* Panel End */}
  
         {/* FORM DROP ZONE START */}
-        <Box m={2} p={2} style={{border: '2px dashed #eee'}} width="50%">
+        {/* border: '2px dashed #eee' */}
+        <Box m={2} p={2} style={{minWidth: 600}} width="50%">
         
         <ActionControls 
             formTitle={formTitle}

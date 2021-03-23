@@ -5,11 +5,12 @@ const TextInput = () => {
 
     return (
         <TextField 
-            label="LABEL"
+            // label="LABEL"
             variant="outlined" 
             size="small"
             fullWidth
             disabled
+            style={{background: '#fff'}}
         />
     )
 }

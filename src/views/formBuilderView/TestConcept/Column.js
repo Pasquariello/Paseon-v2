@@ -4,16 +4,18 @@ import {
     Draggable, 
 } from 'react-beautiful-dnd';
 
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGripVertical, faArrowsAlt } from '@fortawesome/free-solid-svg-icons'
-import { Box, TextField, Button, Menu, MenuItem } from '@material-ui/core';
+import { Box, Typography,  TextField, Button, Menu, MenuItem } from '@material-ui/core';
 
 import CheckboxInput from 'src/components/formBuilderInputControls/checkboxInput';
 import SelectInput from 'src/components/formBuilderInputControls/selectInput';
 import TextAreaInput from 'src/components/formBuilderInputControls/textAreaInput';
 import TextInput from 'src/components/formBuilderInputControls/textInput';
 import RadioInput from 'src/components/formBuilderInputControls/radioInput';
-
+import './form.css';
 const grid = 8;
 
 
@@ -34,11 +36,14 @@ const Column = (props) => {
 
         return ({
             // some basic styles to make the items look a bit nicer
+            // border: '1px solid',
             userSelect: 'none',
             display: 'flex',
             padding: grid * 2,
-            background: isDragging ? 'lightgreen' : 'grey',
-            border: '1px solid  red',
+            // background: isDragging ? 'rgba(71, 174, 115, 0.5)' : '#fff',
+            border:  isDragging ? '1px solid rgba(95, 161, 224, 1)' : '',
+            borderRadius: 5,
+            // borderColor : isDragging ? 'rgba(95, 161, 224, 1)' : '#eee',
             ...draggableStyle,
             // MINWIDTH MUSHT BE SAME AS FIRST IF PART OF TERNARY
             width :  elemWidth === itemId ? 200 : division1,
@@ -57,7 +62,7 @@ const Column = (props) => {
      return obj[item.type]
     }
 
-
+    console.log('subItem', subItem)
 
     return (
         <Draggable  
@@ -79,20 +84,28 @@ const Column = (props) => {
                         )
                     }
                 > 
-                    <span {...provided2.dragHandleProps}>
-                        <FontAwesomeIcon
-                            icon={faArrowsAlt}
-                            style={{ float: "left" }}
-                        />
-                    </span>
+                    {/* <div 
+                        style={{display: 'flex', placeContent: 'center'}}
+                    > */}
+                        <div {...provided2.dragHandleProps} style={{ display: 'flex', alignItems: 'center'}}>
+                            <DragIndicatorIcon style={{color: 'rgb(221, 221, 221)'}}/>
+                        </div>
 
-                    <Box  style={{width: '100%'}}>
-                        {/* INPUT TYPE */}
-                        { renderInput(subItem) }
-                    </Box>
-                    <button
+                        <Box  style={{width: '100%'}}>
+                            {/* INPUT TYPE */}
+                            <Typography
+                                className="test"
+                                contentEditable='true'
+                                onInput={e => console.log('Text inside div', e.currentTarget.textContent)}
+                            >
+                                {subItem.label} 
+                            </Typography>
+                            { renderInput(subItem) }
+                        </Box>
+                    {/* </div> */}
+                    {/* <button
                         onClick={() => props.setIsEdit(subItem)}
-                    >Edit</button>
+                    >Edit</button> */}
                 </div>
             )}
         </Draggable>

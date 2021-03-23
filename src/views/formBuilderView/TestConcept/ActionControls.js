@@ -1,18 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {createForm, deleteForm} from 'src/actions/formActions';
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 
 
 
 function ActionControls({ formTitle, dataList }) {
   const dispatch = useDispatch();
   const selectedFormData = useSelector(state => state.forms.selected)
-  
+  const [isLoading, setIsLoading] = useState(false);
     return (
         <>
             <Button
-                onClick={() => {
+                onClick={ async () => {
+                    setIsLoading(true)
                     // this will re clean the array row and col values
                     // array will need to be the value to 'save'/post back to the DB
                     const destructuredFormFields = [];
@@ -32,14 +33,17 @@ function ActionControls({ formTitle, dataList }) {
                         
                     });
 
-                    dispatch(createForm({
+                    await dispatch(createForm({
                         name: formTitle || '',
                         user_id: '5fe978e8cc7faa326371ff65',
                         fields: destructuredFormFields
                     }))
+
+                    setIsLoading(false);
                 }}
             >
                 Save
+                {isLoading ? <CircularProgress /> : ''}
             </Button>
 
             {selectedFormData?._id.$oid
@@ -52,6 +56,10 @@ function ActionControls({ formTitle, dataList }) {
                 ) 
                 : ''
             }
+
+            <Button>
+                Preview
+            </Button>
 
         </>
     );

@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Row from "./Row";
 
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 
 const reorder = (list, startIndex, endIndex) => {
@@ -129,11 +132,11 @@ function RowList(props) {
                             <div   
                                 key={row.id}
                                 ref={resultsRef}
-                                style={{border: '2px solid green'}} 
                             >
                                 <Draggable draggableId={row.id} index={index}> 
                                     {(provided, snapshot) => (
                                         <div ref={provided.innerRef} {...provided.draggableProps}>
+        
                                             <Row
                                                 parentDrag={{...provided.dragHandleProps}}
                                                 elemWidth={elemWidth}

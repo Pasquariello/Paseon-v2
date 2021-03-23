@@ -43,7 +43,7 @@ function PanelControls({dataList, setDataList, isEdit, setIsEdit, formTitle, set
 
 
   return (
-      <Box p={2} style={{ width: '33%', maxHeight: '100vh', position: 'relative'}}>
+      <Box p={2} style={{ minWidth: '400px', width: '33%', maxHeight: '100vh', position: 'relative'}}>
         <Box 
           style={{
               top: '0',

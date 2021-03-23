@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { faHome, faUserPlus, faKey, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
+import { faHome, faUserPlus, faPlus, faKey, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -87,7 +87,7 @@ export default function Navigation() {
 							<span 
 								className="icon"
 							> 
-								<FontAwesomeIcon fixedWidth width="0" icon={faUserPlus} color="white"/>
+								<FontAwesomeIcon fixedWidth width="0" icon={faPlus} color="white"/>
 							</span>
 							<span className="item-title"
 								style={{visibility: hoverState ? 'visible': 'hidden'}}
@@ -95,27 +95,7 @@ export default function Navigation() {
 						</Typography>
 					</Button>
 				</li>
-
-				<li 
-					className={`
-                        ${hoverState ? 'activePathOpen' : 'activePathClosed'}
-                        myElem sidebar-item
-                    `}
-				> 
-					<Button
-                        size="small"
-						className="btn btn-link" 
-					>
-						<Typography >
-							<span className="icon"> 
-								<FontAwesomeIcon fixedWidth width="0" icon={faKey} color="white"/>
-							</span>
-							<span className="item-title" style={{visibility: hoverState ? 'visible': 'hidden'}}>
-                                Generate Token
-							</span>
-						</Typography>
-					</Button>
-				</li>
+				
 				<li 
 					className={`
                         ${hoverState ? 'activePathOpen' : 'activePathClosed'}
