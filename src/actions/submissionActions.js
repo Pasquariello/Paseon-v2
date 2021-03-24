@@ -18,10 +18,10 @@ export function getSubmissionData(form_id) {
   };
 }
 
-export function getFormSubmissionCount(user_id) {
+export function getFormSubmissionCount() {
   return async (dispatch) => {
     try {
-      const data = await submissionService.getFormSubmissionCount('5fe978e8cc7faa326371ff65'); 
+      const data = await submissionService.getFormSubmissionCount(); 
       console.log('DATA', data)
       dispatch({
         type: FETCH_FORM_SUBMISSIONS_COUNT,

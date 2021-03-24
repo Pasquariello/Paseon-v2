@@ -35,7 +35,6 @@ function ActionControls({ formTitle, dataList }) {
 
                     await dispatch(createForm({
                         name: formTitle || '',
-                        user_id: '5fe978e8cc7faa326371ff65',
                         fields: destructuredFormFields
                     }))
 

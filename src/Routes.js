@@ -32,6 +32,12 @@ import React, {
       path: '/login',
       component: lazy(() => import('src/views/auth/LoginView'))
     },
+    {
+      exact: true,
+      guard: GuestGuard,
+      path: '/create-account',
+      component: lazy(() => import('src/views/auth/createAccount'))
+    },
     // {
     //   exact: true,
     //   path: '/login-unprotected',
@@ -119,7 +125,7 @@ import React, {
                 <Guard>
                   <Layout>
                     {route.routes
-                      ? renderRoutes(route.routes)
+                    ? renderRoutes(route.routes)
                       : <Component {...props} />}
                   </Layout>
                 </Guard>

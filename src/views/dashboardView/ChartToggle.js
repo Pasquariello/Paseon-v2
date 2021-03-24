@@ -6,7 +6,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
- 
+import Container from '@material-ui/core/Container';
+
 import AnalyticsTable from './analytics';
 
 import { VictoryPie, VictoryChart, VictoryHistogram, VictoryBar, VictoryLabel} from "victory";
@@ -19,15 +20,17 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`scrollable-auto-tabpanel-${index}`}
-      aria-labelledby={`scrollable-auto-tab-${index}`}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+        {value === index && (
+            <Container>
+                <Box> 
+                    {children}
+                </Box>
+            </Container>
+        )}
     </div>
   );
 }
@@ -85,7 +88,7 @@ export default function ChartToggle({chartData}) {
           
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0} component={'div'}>
         <div 
             style={{    
             height: '350px',
@@ -100,7 +103,7 @@ export default function ChartToggle({chartData}) {
             />
         </div>
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1} component={'div'}>
       <div 
             style={{    
             height: '350px',

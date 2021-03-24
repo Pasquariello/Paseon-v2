@@ -7,10 +7,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    height: '100vh',
     justifyContent: 'center',
     minHeight: '100%',
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   }
 }));
 function LoadingScreen() {

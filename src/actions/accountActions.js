@@ -1,5 +1,5 @@
 // import axios from 'src/utils/axios';
-// import authService from 'src/services/authService';
+import authService from 'src/services/authService';
 // export const LOGIN_REQUEST = '@account/login-request';
 export const LOGIN_SUCCESS = '@account/login-success';
 export const LOGIN_FAILURE = '@account/login-failure';
@@ -10,6 +10,10 @@ export const UPDATE_PROFILE = '@account/update-profile';
 export const USER_REQUEST = '@account/login-request';
 export const USER_LOADED = '@account/login-request';
 export const AUTH_ERROR = '@account/login-request';
+export const CREATE_ACCOUNT = '@account/create-account-request';
+export const CREATE_ACCOUNT_FAILED = '@account/create-account-request-failed';
+export const CLEAR_ERROR_MESSAGE = '@account/clear-error-message';
+
 
 // export function loadUser() {
 //   return async (dispatch) => {
@@ -43,6 +47,35 @@ export function login(email, password) {
      // dispatch({ type: LOGIN_FAILURE });
       throw error;
     }
+  };
+}
+
+export function createAccount(accoutData) {
+  return async (dispatch) => {
+    try {
+      console.log('hi')
+      const data = await authService.createAccount(accoutData); 
+      dispatch({
+        type: CREATE_ACCOUNT,
+        payload: data.body
+      });
+    } catch (error) {
+      console.log('ERRRRR', error.response)
+      dispatch({
+        type: CREATE_ACCOUNT_FAILED,
+        payload: error.response.data.message || 'Failed'
+      });
+    }
+  };
+}
+
+
+export function clearAccountErrorMessage() {
+  return async (dispatch) => {
+      console.log('HELLO')
+      dispatch({
+        type: CLEAR_ERROR_MESSAGE,
+      });
   };
 }
 // export function setUserData(user, auth) {

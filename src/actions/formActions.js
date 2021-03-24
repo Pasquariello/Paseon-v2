@@ -8,9 +8,9 @@ export const DELETE_FORM ='@forms/delete-form';
 export function getForms() {
   return async (dispatch) => {
     try {
-      const user_id = '5fe978e8cc7faa326371ff65'; // TODO remove hardcoded value
+      // const user_id = '5fe978e8cc7faa326371ff65'; // TODO remove hardcoded value
 
-      const data = await formsService.getForms(user_id); 
+      const data = await formsService.getForms(); 
       dispatch({
         type: FETCH_FORMS,
         payload: data

@@ -37,15 +37,16 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
   const [chartDataList, setCharDataList] = useState([]);
   const [chartData, setChartData ] = useState([]);
   const [formListMenuOpen, setFormListMenuOpen] = useState(null);
+  const [checked, setChecked] = useState([]);
+
   const fullWidth = 100 - listWidth
 
-
-  const [checked, setChecked] = useState([]);
 
   useEffect(() => {
     dispatch(getForms());
     dispatch(getFormSubmissionCount());
   }, [dispatch]);
+
 
   useEffect(() => {
     if (formSubmissionCount && formList) {
@@ -69,7 +70,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
   return (
     <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0'}} p={4}>
-        <Box item my={2}>
+        <Box my={2}>
           <Typography variant="h6">Quick Statistics</Typography>
         </Box>
         <div style={{flex: '1 1 auto'}}>
@@ -143,7 +144,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
       <div style={{display: 'flex', alignItems:'flex-end', flex: '1 1 auto'}}>
         <Grid container spacing={8}>
           <Grid item lg={6} style={{width: '100%'}}>
-            <Box item my={2}>
+            <Box my={2}>
               <Typography variant="h6">Usage</Typography>
             </Box>
             <Card style={{height: '464px'}}>
@@ -157,10 +158,10 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
 
           <Grid item lg={6} style={{width: '100%'}}>
-            <Box item my={2} display="flex" justifyContent="space-between">
+            <Box my={2} display="flex" justifyContent="space-between">
               <Typography variant="h6">Form List</Typography>
               
-              <Link href="/app/form-builder" color="inherit" variant="outlined">
+              <Link href="/app/form-builder" color="inherit">
                 <Typography variant="h6">Add New</Typography>
               </Link>
               

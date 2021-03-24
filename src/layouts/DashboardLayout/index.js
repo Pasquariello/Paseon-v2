@@ -7,7 +7,7 @@ import {Box} from '@material-ui/core';
 const DashboardLayout = ({children}) => {
     
     return (
-        <div style={{ height: "100%"}}>
+        <div style={{ minHeight: "100"}}>
             <Navigation />
 
             <Box style={{ marginLeft: '4.25rem', height: '100%' }}>

@@ -37,6 +37,7 @@ function RowList(props) {
 
 
   const onDragEnd = (result) => {
+      console.log('RESULT', result)
     // dropped outside the list
     setElemWidth(false)
     if (!result.destination) {
@@ -123,8 +124,6 @@ function RowList(props) {
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
-                        style={{border: '2px solid green !important'}} 
-
                     >
 
                         {dataList.map((row, index) => {
