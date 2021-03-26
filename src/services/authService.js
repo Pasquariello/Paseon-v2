@@ -1,22 +1,33 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import getTokenObj from 'src/utils/getToken';
 
 class authService {
 
+    logout = () => {
+      this.setSession(null);
+    }
+
     createAccount = (body) => {
-      console.log('Hit createAccount');
-      return axios.post(`http://localhost:4000/account`, body )
+      return axios.post(`http://localhost:3001/user/signup`, body )
       .then(res => {
         console.log('res.data', res)
+        const token = res.data.token;
+        this.setSession(token);
+        return res;
+      }).catch(error => { 
+        throw error;
+      });
+    }
 
-        // TODO 
-        this.setSession({
-          userId: '5fe978e8cc7faa326371ff65', //res.data.body.id,
-          accessToken: 'token'
-        });
 
-        return res.data
+    loginWithEmailAndPassword = (body) => {
+      return axios.post(`http://localhost:3001/user/login`, body )
+      .then(res => {
+        console.log('res.data', res)
+        const token = res.data.token;
+        this.setSession(token);
+        return res
       }).catch(error => { 
         throw error;
       });
@@ -31,6 +42,34 @@ class authService {
         delete axios.defaults.headers.common.Authorization;
       }
     }
+
+
+    loginWithToken = () => new Promise((resolve, reject) => {
+      const tokenObj = getTokenObj();
+      const token = tokenObj && tokenObj.token;
+
+      console.log('loginWithToken', token);
+      const config = {
+        method: 'get',
+        url: 'http://localhost:3001/user/me',
+        headers: {
+          'Content-Type': 'application/json',
+          'token'       : `${token}`
+        }
+      };
+      
+      axios(config)
+        .then((response) => {
+          resolve(response)
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    })
+
+
+    isAuthenticated = () => !!getTokenObj()
+
 
   }
   

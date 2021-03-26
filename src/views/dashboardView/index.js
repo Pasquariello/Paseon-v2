@@ -161,7 +161,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
             <Box my={2} display="flex" justifyContent="space-between">
               <Typography variant="h6">Form List</Typography>
               
-              <Link href="/app/form-builder" color="inherit">
+              <Link onClick={() => history.push("/app/form-builder")} color="inherit">
                 <Typography variant="h6">Add New</Typography>
               </Link>
               

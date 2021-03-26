@@ -2,37 +2,64 @@ import {
     LOGIN_SUCCESS,
     CREATE_ACCOUNT,
     CREATE_ACCOUNT_FAILED, 
-    CLEAR_ERROR_MESSAGE,  
+    CLEAR_ERROR_MESSAGE, 
+    SILENT_LOGIN,
+    LOGOUT,
 } from '../actions/accountActions'
 
 const initialState = {
-    auth: true,
+    auth: false,
     user: null,
     errorMessage: ''
   };
   
 const accountReducer = (state = initialState, action) => {
     switch (action.type) {
+
+      case SILENT_LOGIN: {
+        const { user, auth } = action.payload;
+        return Object.assign({}, state, {
+            user,
+            auth
+        })
+      }
     
-      case LOGIN_SUCCESS:
+      case LOGIN_SUCCESS:{
+        const { user, auth } = action.payload;
+        console.log('REDUCER', user, auth)
         return Object.assign({}, state, {
-            auth: true
-      })
+          user,
+          auth
+        })
+      }
 
-      case CREATE_ACCOUNT:
+      case CREATE_ACCOUNT:{
+        const { user, auth } = action.payload;
         return Object.assign({}, state, {
-            user: action.payload
-      })
+          user,
+          auth
+        })
+      } 
 
-      case CREATE_ACCOUNT_FAILED:
+      case CREATE_ACCOUNT_FAILED: {
         return Object.assign({}, state, {
             errorMessage: action.payload
-      })
+        })
+      }
 
-      case CLEAR_ERROR_MESSAGE:
+      case CLEAR_ERROR_MESSAGE: {
         return Object.assign({}, state, {
             errorMessage: ''
-      })
+        })
+      }
+
+      case LOGOUT: {
+        return Object.assign({}, state, {
+            user: null,
+            auth: false,
+            errorMessage: '',
+        })
+      }
     
       default:
         return state;

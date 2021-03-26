@@ -36,15 +36,18 @@ export const CLEAR_ERROR_MESSAGE = '@account/clear-error-message';
 export function login(email, password) {
   return async (dispatch) => {
     try {
+
+      const res  = await authService.loginWithEmailAndPassword({email, password});
+      console.log('RES', res)
       dispatch({
         type: LOGIN_SUCCESS,
         payload: {
-          auth: true
+          user: res.data.user,
+          auth: res.status === 200 || false,
         }
       });
-      //dispatch(loadUser());
     } catch (error) {
-     // dispatch({ type: LOGIN_FAILURE });
+      dispatch({ type: LOGIN_FAILURE });
       throw error;
     }
   };
@@ -53,11 +56,14 @@ export function login(email, password) {
 export function createAccount(accoutData) {
   return async (dispatch) => {
     try {
-      console.log('hi')
-      const data = await authService.createAccount(accoutData); 
+      const res = await authService.createAccount(accoutData); 
+      console.log('res', res)
       dispatch({
         type: CREATE_ACCOUNT,
-        payload: data.body
+        payload: {
+          auth: res.status === 200 || false,
+          user: res.data.user
+        }
       });
     } catch (error) {
       console.log('ERRRRR', error.response)
@@ -72,29 +78,31 @@ export function createAccount(accoutData) {
 
 export function clearAccountErrorMessage() {
   return async (dispatch) => {
-      console.log('HELLO')
+      // console.log('HELLO')
       dispatch({
         type: CLEAR_ERROR_MESSAGE,
       });
   };
 }
-// export function setUserData(user, auth) {
-//   return (dispatch) => dispatch({
-//     type: SILENT_LOGIN,
-//     payload: {
-//       user,
-//       auth,
-//     }
-//   });
-// }
-// export function logout() {
-//   return async (dispatch) => {
-//     authService.logout();
-//     dispatch({
-//       type: LOGOUT
-//     });
-//   };
-// }
+
+export function setUserData(user, auth) {
+  return (dispatch) => dispatch({
+    type: SILENT_LOGIN,
+    payload: {
+      user,
+      auth,
+    }
+  });
+}
+
+export function logout() {
+  return async (dispatch) => {
+    authService.logout();
+    dispatch({
+      type: LOGOUT
+    });
+  };
+}
 // export function register() {
 //   return true;
 // }

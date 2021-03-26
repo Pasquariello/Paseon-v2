@@ -74,7 +74,10 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
-      <form className={classes.form} onSubmit={() => dispatch(login(email, password))}>
+      <form className={classes.form} onSubmit={(e) => {
+        e.preventDefault();
+        dispatch(login(email, password))
+      }}>
         <TextField
           variant="outlined"
           margin="normal"
@@ -100,10 +103,6 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        />
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
         />
         <Button
           type="submit"

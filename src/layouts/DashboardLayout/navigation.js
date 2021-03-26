@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { logout } from 'src/actions/accountActions';
 
-import { faHome, faUserPlus, faPlus, faKey, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
+import { faHome, faUserPlus, faUser, faPlus, faKey, faHammer, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -11,6 +13,8 @@ import './navigation.css';
 
 
 export default function Navigation() {
+	const dispatch = useDispatch();
+
 	// eslint-disable-next-line no-unused-vars
 	const [ activeNav, setActiveNav ] = useState('');
 	const history = useHistory();
@@ -87,13 +91,37 @@ export default function Navigation() {
 							<span 
 								className="icon"
 							> 
-								<FontAwesomeIcon fixedWidth width="0" icon={faPlus} color="white"/>
+								<FontAwesomeIcon fixedWidth width="0" icon={faHammer} color="white"/>
 							</span>
 							<span className="item-title"
 								style={{visibility: hoverState ? 'visible': 'hidden'}}
 							>Build New Form</span>
 						</Typography>
 					</Button>
+				</li>
+				<li 
+					className={`
+                        ${hoverState ? 'activePathOpen' : 'activePathClosed'}
+                        myElem sidebar-item
+					`}
+					onClick={()=>  {
+						history.push('/app/dashboard')
+						setActiveNav('home')
+					}}
+                > 
+						<Button size="small" className="btn btn-link">
+							<Typography>
+								<span 
+									className="icon"
+								> 
+									<FontAwesomeIcon fixedWidth width="0" icon={faUser} color="white"/>
+								</span>
+                                <span 
+                                    className="item-title"
+									style={{visibility: hoverState ? 'visible': 'hidden' }}
+								>Account Details</span>
+							</Typography>
+						</Button>
 				</li>
 				
 				<li 
@@ -105,7 +133,7 @@ export default function Navigation() {
                     <Button 
                         size="small"
 						className="btn btn-link" 
-						onClick={()=> console.log('SIGN OUT')}
+						onClick={()=> dispatch(logout())}
 					>
 						<Typography>
 							<span className="icon"> 

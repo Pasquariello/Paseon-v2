@@ -14,6 +14,7 @@ class submissionService {
   getFormSubmissionCount = () => {
 
     const tokenObj = getTokenObj();
+    console.log('getTokenObj', tokenObj);
     const user_id = tokenObj && tokenObj.userId;
     const token = tokenObj && tokenObj.accessToken;
 

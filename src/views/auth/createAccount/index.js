@@ -100,11 +100,11 @@ function CreateForm() {
     dispatch(clearAccountErrorMessage());
   }, [email.value, passwordOne.value, passwordTwo.value, firstName.value, lastName.value]);
 
-  useEffect(() => {
-    if (user && user.id){
-        history.push('/app/dashboard')
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user && user.id){
+  //       history.push('/app/dashboard')
+  //   }
+  // }, [user]);
 
 
   const [ isAccountValid, setIsAccountValid ] = useState(true);
@@ -124,7 +124,6 @@ function CreateForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('HI')
         const isFormValid = validatePassword();
         
         if (isFormValid) {
