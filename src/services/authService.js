@@ -63,6 +63,7 @@ class authService {
           resolve(response)
         })
         .catch((error) => {
+          this.logout()
           reject(error);
         });
     })

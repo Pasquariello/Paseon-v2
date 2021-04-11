@@ -15,7 +15,7 @@ class submissionService {
 
     const tokenObj = getTokenObj();
     console.log('getTokenObj', tokenObj);
-    const user_id = tokenObj && tokenObj.userId;
+    const user_id = tokenObj && tokenObj.user_id;
     const token = tokenObj && tokenObj.accessToken;
 
     return axios.get(`http://localhost:4000/form_submissions_count/${user_id}`)

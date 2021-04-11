@@ -2,10 +2,11 @@ import axios from 'axios';
 import getTokenObj from 'src/utils/getToken';
 
 class formsService {
-    getForms = () => {
+    getForms = async () => {
 
-      const tokenObj = getTokenObj();
-      const user_id = tokenObj && tokenObj.userId;
+      const tokenObj = await getTokenObj();
+      console.log('tokenObj', tokenObj)
+      const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
         
         return axios.get(`http://localhost:4000/form_list/${user_id}`)
@@ -25,7 +26,7 @@ class formsService {
     createForm = (body) => {
 
       const tokenObj = getTokenObj();
-      const user_id = tokenObj && tokenObj.userId;
+      const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
 
       return axios.post(`http://localhost:4000/form/${user_id}`, body )

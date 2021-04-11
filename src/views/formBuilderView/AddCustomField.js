@@ -1,29 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Box from '@material-ui/core/Box';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { Button, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import CheckboxControls from './InputTypes/Checkbox/CheckboxControls';
+
+
+import {useSelector, useDispatch} from 'react-redux';
+import {getSingleForm, createForm, deleteForm, addFormField, changeField} from 'src/actions/formActions';
 
 const AddCustomField = (props) => {
+    const formData = useSelector(state => state.forms.selected)
+    const dispatch = useDispatch()
     const {
         addNewField,
         customField,
         setCustomField,
+
+        selectedField,
+        fieldList,
+        setFieldList,
+        dataList,
+        setDataList
     } = props
+
+    console.log('FD', formData)
+    console.log('selectedField', selectedField)
+
+    // useEffect(() => {
+    //     org();
+    // }, [formData.fields])
+
+    const org = () => {
+        console.log('TAYLOR ')
+        const destructuredFormFields = [];
+        dataList.forEach((row, rowIndex) => {
+                row.subItems.forEach((formField, formFieldIndex) => {
+                const { label, name, type, id } = formField
+                destructuredFormFields.push(
+                    {
+                    id, 
+                    label,
+                    name,
+                    type,
+                    col: formFieldIndex,
+                    row: rowIndex,
+                    }
+                )
+            })
+            
+        });
+    
+        dispatch(changeField(destructuredFormFields))
+      }
+    
 
     return (
         <Box style={{width: '100%', maxHeight: '100vh', position: 'relative'}}>
             <Box 
             style={{
-                // position: 'absolute',
                 top: '0',
                 left: 0,
-                // right: 0,
                 margin: '0 auto',
                 textAlign: 'center',
-                // width: 'calc(33% - 4.25rem',
-                // padding: '24px',
                 whiteSpace: 'nowrap',
             }}
             >
@@ -32,10 +72,15 @@ const AddCustomField = (props) => {
                         marginTop: 50,
                     }}
                 > 
-         
+
                     <Typography>
                         Custom
                     </Typography>
+
+                    {
+                    formData && selectedField ? console.log('k', formData.fields.find(field => field.id === selectedField.id)) : ''
+
+                    }
 
                     <Box display="flex" justifyContent="space-around" width="100%" style={{flexWrap: 'wrap'}}>
                         <TextField
@@ -46,8 +91,41 @@ const AddCustomField = (props) => {
                             id="label"
                             label="Label"
                             name="label"
-                            value={customField.name}
-                            onChange={(e) => setCustomField({ ...customField, name: e.target.value})}
+
+                            // value={
+                            //     formData && selectedField ? formData.fields.find(field => field.id === selectedField.id).label : ''
+                            // }
+                            // value={customField.name}
+                            value={dataList[selectedField?.row]?.subItems[selectedField?.col].label || ''}
+                            onChange={(e) => {
+                                if ( selectedField ) {
+
+                              
+                                // const newList = fieldList.map(field => {
+                                //     if (field.id === selectedField.id) {
+                                //         return {...field, ['label']:  e.target.value}
+                                //     }
+                                //     return field
+                                // })
+                                // console.log('dataList', dataList)
+                             
+                                
+                                const newArray = dataList.map((row, rowIndex) => {
+                                    const newSubItems = row.subItems.map((col, colIndex) => {
+                                        if (col.id === selectedField.id) {
+                                            return {...col, ['label']:  e.target.value}
+                                        }
+                                        return col
+                                    })
+                                    return {...row, subItems: newSubItems}
+                                })
+                                // console.log(items); // ["B", "M", "X"]
+                                console.log('newArray', newArray); //  ["B", "J", "X"]
+                                setDataList(newArray)
+                                } else {
+                                    setCustomField({ ...customField, name: e.target.value})
+                                }
+                            }}
                         />
 
 
@@ -78,17 +156,15 @@ const AddCustomField = (props) => {
                             </Select>
                         </FormControl>
 
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="default-value"
-                            label="Default Value"
-                            name="defaultValue"
-                            value={customField.default}
-                            onChange={(e) => setCustomField({ ...customField, default: e.target.value})}
+                        {/* TESTING NEW COMPONENT CONTROLS */}
+
+                        <CheckboxControls 
+                            // handleChangeTextField={handleChangeTextField}
+                            // handleChangeOptions={handleChangeOptions}
+                            // handleChangeDefault={handleChangeDefault}
                         />
+
+                        {/* END */}
 
                         <Button
                             onClick={() => {

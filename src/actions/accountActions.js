@@ -38,7 +38,6 @@ export function login(email, password) {
     try {
 
       const res  = await authService.loginWithEmailAndPassword({email, password});
-      console.log('RES', res)
       dispatch({
         type: LOGIN_SUCCESS,
         payload: {
@@ -57,7 +56,6 @@ export function createAccount(accoutData) {
   return async (dispatch) => {
     try {
       const res = await authService.createAccount(accoutData); 
-      console.log('res', res)
       dispatch({
         type: CREATE_ACCOUNT,
         payload: {

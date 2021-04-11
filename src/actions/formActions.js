@@ -4,6 +4,11 @@ export const FETCH_FORMS = '@forms/fetch-forms';
 export const FETCH_SINLGE_FORM ='@forms/fetch-single-form';
 export const POST_FORM ='@forms/post-form';
 export const DELETE_FORM ='@forms/delete-form';
+export const ADD_FIELD ='@forms/add-field';
+export const UPDATE_LIST ='@forms/update-list';
+export const SELECT_FIELD ='@forms/select-field';
+
+
 
 export function getForms() {
   return async (dispatch) => {
@@ -25,7 +30,6 @@ export function getSingleForm(form_id) {
   return async (dispatch) => {
     try {
       const data = await formsService.getSingleForm(form_id); 
-      console.log('DATA', data)
       dispatch({
         type: FETCH_SINLGE_FORM,
         payload: data
@@ -40,7 +44,6 @@ export function createForm(formData) {
   return async (dispatch) => {
     try {
       const data = await formsService.createForm(formData); 
-      console.log('DATA', data)
       dispatch({
         type: POST_FORM,
         payload: data
@@ -68,4 +71,58 @@ export function deleteForm(formId) {
     }
   };
 }
+
+//OLD -delete
+// export function addFormField(field) {
+//   // console.log('ACTION', field)
+//   return async (dispatch) => {
+//       dispatch({
+//         type: ADD_FIELD,
+//         payload: {
+//           field
+//         },
+//       });
+//   };
+// }
+
+
+export function addNewFieldAction(arr) {
+  // console.log('ACTION', field)
+  return async (dispatch) => {
+      dispatch({
+        type: ADD_FIELD,
+        payload: {
+          arr
+        },
+      });
+  };
+}
+
+export function changeField(list) {
+  // const { name, value, id } = eventObj;
+  return async (dispatch) => {
+      dispatch({
+        type: UPDATE_LIST,
+        payload: {
+          list,
+        },
+      });
+  };
+}
+
+
+export function selectField(rowId, colId) {
+  // const { name, value, id } = eventObj;
+  return async (dispatch) => {
+      dispatch({
+        type: SELECT_FIELD,
+        payload: {
+          rowId, 
+          colId,
+        },
+      });
+  };
+}
+
+
 

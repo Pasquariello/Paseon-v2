@@ -127,7 +127,7 @@ function CreateForm() {
         const isFormValid = validatePassword();
         
         if (isFormValid) {
-            console.log('HIoo')
+            // console.log('HIoo')
 
             dispatch(createAccount({
                 email: email.value,

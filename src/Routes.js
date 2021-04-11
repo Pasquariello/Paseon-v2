@@ -74,7 +74,7 @@ import React, {
           exact: true,
           path: '/app/form-builder',
           // component: lazy(() => import('src/views/formBuilderView'))
-          component: lazy(() => import('src/views/formBuilderView/TestConcept'))
+          component: lazy(() => import('src/views/formBuilderView/myTestFolder2ORIG/'))
 
         },
         {
@@ -86,7 +86,7 @@ import React, {
           exact: true,
           path: '/app/form-builder/edit/:id',
           // component: lazy(() => import('src/views/formBuilderView'))
-          component: lazy(() => import('src/views/formBuilderView/TestConcept'))
+          component: lazy(() => import('src/views/formBuilderView/myTestFolder2ORIG/'))
 
         },
         // {

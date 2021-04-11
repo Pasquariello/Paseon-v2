@@ -1,0 +1,28 @@
+.test:focus {
+    outline: none;
+}
+
+
+.card-ghost {
+ 
+    border: 1px solid green;
+    width:300px;
+}
+
+.card-ghost-drop {
+    /* width: 200px; */
+}
+
+.cards-drop-preview {
+    background-color: rgba(150, 150, 200, 0.1);
+    border: 1px dashed #abc;
+    margin: 5px 45px 5px 5px;
+  }
+
+  .drop-preview {
+    background-color: rgba(150, 150, 200, 0.1);
+    border: 1px dashed #abc;
+    height: 100%;
+    /* margin: 5px; */
+  }
+  
