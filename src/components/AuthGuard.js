@@ -9,7 +9,6 @@ function AuthGuard({ children }) {
   const account = useSelector((state) => state.account);
 
   if (!account.auth) {
-    console.log('HI')
     return <Redirect to="/login" />;
   }
   

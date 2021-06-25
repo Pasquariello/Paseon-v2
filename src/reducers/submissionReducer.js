@@ -12,7 +12,6 @@ const initialState = {
 const submissionReducer = (state = initialState, action) => {
     switch (action.type) {
       case FETCH_FORM_SUBMISSIONS:
-          console.log('Action', action.payload)
         return Object.assign({}, state, {
             list: action.payload,
             selected: action.payload[0] // might need to make a conditional?

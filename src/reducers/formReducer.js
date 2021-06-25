@@ -16,23 +16,19 @@ const initialState = {
       fields: []
     },
     selectedField: null,
-
+  
     structuredForm: [
       {id: '11', subItems: []}
     ]
-  //   structuredForm: [
-  //     {id: '1', subItems: [{id: '11', name: 'name', label: 'name'}, {id: '12', name: 'phone', label: 'phone'}, {id: '101', name: 'phone', label: 'phone'}, {id: '100', name: 'phone', label: 'phone'}, {id: '10', name: 'phone', label: 'phone'}, {id: '13', name: 'phone', label: 'phone'}, {id: '14', name: 'phone', label: 'phone'}, {id: '15', name: 'phone', label: 'phone'}, {id: '16', name: 'phone', label: 'phone'}, {id: '17', name: 'phone', label: 'phone'}, {id: '18', name: 'phone', label: 'phone'}, {id: '19', name: 'phone', label: 'last'} ]},
-  //     {id: '2', subItems: [{id: '21', name: 'email', label: 'email'}, {id: '22', name: 'address', label: 'address'}]}
-  // ]
+
   };
   
 const formReducer = (state = initialState, action) => {
     switch (action.type) {
       case FETCH_FORMS: {
-          // console.log('Action', action.payload)
         return Object.assign({}, state, {
             list: action.payload,
-            selected: action.payload[0]
+            // selected: action.payload[0]
         });
       }
       
@@ -43,7 +39,6 @@ const formReducer = (state = initialState, action) => {
       }
 
       case POST_FORM:{
-        // console.log('Action', action.payload)
         // TODO - add new form to list
         return Object.assign({}, state, {
           list: [...state.list, action.payload.data],
@@ -51,10 +46,8 @@ const formReducer = (state = initialState, action) => {
       }  
 
       case DELETE_FORM: {
-        // console.log('Action', action.payload)
         // TODO - add new form to list
         const { id } = action.payload;
-        // console.log('ID', id)
         return Object.assign({}, state, {
           selected: null,
           list: state.list.filter(form => form._id.$oid !== id),
@@ -101,7 +94,6 @@ const formReducer = (state = initialState, action) => {
         
         const row = state.structuredForm.find(row => row.id === rowId)
         const field = row.subItems.find(col => col.id === colId)
-        console.log('RDUCER', field)
         return Object.assign({}, state, {
 
           selectedField: {

@@ -27,7 +27,6 @@ import { getSubmissionData } from '../../actions/submissionActions';
 
 
 function descendingComparator(a, b, orderBy) {
-  console.log('====a, b', a, b)
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -44,7 +43,6 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-  console.log('hhhh', array)
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -59,7 +57,6 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property);
   };
   const selectedForm = useSelector(state => state.forms.selected)
-  console.log('selectedForm', selectedForm)
 
 
 
@@ -87,7 +84,6 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.name)}
             >
               {headCell.label}
-          {console.log('ORDERBY', orderBy)}
               {orderBy === headCell.name ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -213,7 +209,6 @@ export default function AnalyticsTable() {
 
   useEffect(() => {
     const list = submissionsList.map(submission => {
-      console.log(submission)
       // return submission.values.map(val => {
       //   return {
       //     ...val
@@ -230,13 +225,10 @@ export default function AnalyticsTable() {
     setRows(list)
   },[submissionsList])
 
-  console.log('ROWS', rows)
-
   useEffect(() => {
     dispatch(getSubmissionData('5fe930205c09c62f1bc669e9'));
   }, [dispatch, selectedForm])
 
-  console.log('submissionsList', submissionsList)
 
 
   const headCells = selectedForm.fields.map(formItem => {
@@ -338,7 +330,6 @@ export default function AnalyticsTable() {
                   
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  // console.log('ROW', row._id.$oid)
                   return (
                     <TableRow
                       hover
@@ -355,7 +346,6 @@ export default function AnalyticsTable() {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      {console.log('===== row', row)}
                       {
                         headCells.map((col, index) => {
                         return ( <TableCell key={index}>{row[col.name]}</TableCell>)

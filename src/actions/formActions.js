@@ -72,22 +72,7 @@ export function deleteForm(formId) {
   };
 }
 
-//OLD -delete
-// export function addFormField(field) {
-//   // console.log('ACTION', field)
-//   return async (dispatch) => {
-//       dispatch({
-//         type: ADD_FIELD,
-//         payload: {
-//           field
-//         },
-//       });
-//   };
-// }
-
-
 export function addNewFieldAction(arr) {
-  // console.log('ACTION', field)
   return async (dispatch) => {
       dispatch({
         type: ADD_FIELD,

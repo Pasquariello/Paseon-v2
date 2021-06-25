@@ -11,7 +11,6 @@ class authService {
     createAccount = (body) => {
       return axios.post(`http://localhost:3001/user/signup`, body )
       .then(res => {
-        console.log('res.data', res)
         const token = res.data.token;
         this.setSession(token);
         return res;
@@ -24,7 +23,6 @@ class authService {
     loginWithEmailAndPassword = (body) => {
       return axios.post(`http://localhost:3001/user/login`, body )
       .then(res => {
-        console.log('res.data', res)
         const token = res.data.token;
         this.setSession(token);
         return res
@@ -48,7 +46,6 @@ class authService {
       const tokenObj = getTokenObj();
       const token = tokenObj && tokenObj.token;
 
-      console.log('loginWithToken', token);
       const config = {
         method: 'get',
         url: 'http://localhost:3001/user/me',

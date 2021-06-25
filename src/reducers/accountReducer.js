@@ -26,7 +26,6 @@ const accountReducer = (state = initialState, action) => {
     
       case LOGIN_SUCCESS:{
         const { user, auth } = action.payload;
-        // console.log('REDUCER', user, auth)
         return Object.assign({}, state, {
           user,
           auth

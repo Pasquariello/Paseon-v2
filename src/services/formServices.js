@@ -5,7 +5,6 @@ class formsService {
     getForms = async () => {
 
       const tokenObj = await getTokenObj();
-      console.log('tokenObj', tokenObj)
       const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
         
@@ -18,7 +17,6 @@ class formsService {
     getSingleForm = (form_id) => {
       return axios.get(`http://localhost:4000/form/${form_id}`)
       .then(res => {
-          console.log('res.data', res.data)
         return res.data
       });
     }

@@ -76,7 +76,6 @@ export function createAccount(accoutData) {
 
 export function clearAccountErrorMessage() {
   return async (dispatch) => {
-      // console.log('HELLO')
       dispatch({
         type: CLEAR_ERROR_MESSAGE,
       });
