@@ -265,7 +265,7 @@ const FormBuilderView = React.memo( ({formData }) => {
             onRowDrop={onRowDrop}
             onCardDrop={onCardDrop}
             getCardPayload={getCardPayload}
-            // dataList={obj.dataList.length ? obj.dataList : []}
+            dataList={obj.dataList.length ? obj.dataList : []}
         />
 
     

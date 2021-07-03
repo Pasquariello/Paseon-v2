@@ -8,9 +8,9 @@ import LoadingScreen from 'src/components/LoadingScreen';
 function AuthGuard({ children }) {
   const account = useSelector((state) => state.account);
 
-  if (!account.auth) {
-    return <Redirect to="/login" />;
-  }
+  // if (!account.auth) {
+  //   return <Redirect to="/login" />;
+  // }
   
   return <div>{children}</div>
 }

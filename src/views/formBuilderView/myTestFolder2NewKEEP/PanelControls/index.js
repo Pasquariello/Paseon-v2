@@ -56,32 +56,26 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
       <Box 
         p={2} 
         style={{
-          // minWidth: '400px', 
-          display: 'flex',
+          minWidth: '400px', 
+          width: '33%', 
           maxHeight: '100vh', 
-          position: 'relative',
-          flex: 1,
-
+          position: 'relative'
         }}
       >
         <Box 
           style={{
               top: '0',
-              // left: 0,
-
-              // position: 'absolute',
-              flex: 1,
+              left: 0,
               margin: '0 auto',
               textAlign: 'center',
               whiteSpace: 'nowrap',
-              border: '1px solid blue'
+              border: '1px solid red'
           }}
         >
 
 
 {/* Tab container Start */}
-
-{/* <AppBar position="static">
+<AppBar position="static">
   <Tabs value={value} onChange={handleChange} aria-label="wrapped label tabs example">
           <Tab
             value="one"
@@ -95,8 +89,8 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
           //  {...a11yProps('three')} 
            />
         </Tabs>
-</AppBar> */}
-      {/* <TabPanel value={value} index="one"> */}
+      </AppBar>
+      <TabPanel value={value} index="one">
         <FieldOptions
           setFieldList={setFieldList}
           addNewField={ addNewField }
@@ -108,8 +102,8 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
 
           editField={editField}
         />
-      {/* </TabPanel>
-      <TabPanel value={value} index="two"> */}
+      </TabPanel>
+      <TabPanel value={value} index="two">
         <CustomFieldAdd 
             editField={editField}
             addNewField={addNewField} 
@@ -119,18 +113,17 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
             fieldList={fieldList} 
             setFieldList={setFieldList} 
         />
-      {/* </TabPanel>
-      <TabPanel value={value} index="three"> */}
-      {/* <EditField setIsEdit={setIsEdit} />  */}
-      {/* </TabPanel> */}
-
+      </TabPanel>
+      <TabPanel value={value} index="three">
+      <EditField setIsEdit={setIsEdit} /> 
+      </TabPanel>
 {/* Tab container end */}
 
 
 
           <TextField
               variant="outlined"
-              margin="dense"
+              margin="normal"
               required
               fullWidth
               id="form-title"

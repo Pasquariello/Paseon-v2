@@ -33,15 +33,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as serviceWorker from 'src/serviceWorker';
-import { configureStore } from 'src/store';
+import { store } from 'src/store';
 // import { restoreSettings } from 'src/utils/settings';
 import App from 'src/App';
+console.log('STORE', store)
 // enableES5();
-const store = configureStore();
 ReactDOM.render(
   <Provider store={store}>
       <App />
   </Provider>,
   document.getElementById('root')
 );
-serviceWorker.unregister();
+// serviceWorker.unregister();
+

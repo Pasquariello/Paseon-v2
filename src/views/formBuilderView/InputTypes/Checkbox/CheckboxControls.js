@@ -51,7 +51,7 @@ const CheckboxControls = (props) => {
                 value={options.values.join('\n')}
                 onChange={handleChangeOptions}
             />
-            <FormControl margin="normal" variant="outlined" >
+            <FormControl margin="dense" variant="outlined" >
                 <InputLabel id="demo-simple-select-filled-label">Select Default</InputLabel>
                 <Select
                 labelId="demo-simple-select-filled-label"

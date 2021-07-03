@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import { useParams } from "react-router-dom";
 import {useSelector, useDispatch, connect } from 'react-redux';
-import {getSingleForm, createForm, deleteForm, addNewFieldAction, changeField} from 'src/actions/formActions';
+import {getSingleForm, createForm, deleteForm, addNewFieldAction, setFormStructure, changeField} from 'src/actions/formActions';
 import { Box, Button } from '@material-ui/core';
 import MyList from "./MyList";
 import shortid from 'shortid';
@@ -12,11 +12,15 @@ import FormFieldModel from 'src/models/formFieldModel';
 
 import {commonFields } from 'src/utils/commonFields';
 
+// NEW 
+import {addField, selectFormById, updateForm} from 'src/store/formsSlice'
+
+
 const applyDrag = (arr, dragResult) => {
   const { removedIndex, addedIndex, payload } = dragResult;
   if (removedIndex === null && addedIndex === null) return arr;
   const result = [...arr];
-  let itemToAdd = {...payload, id: shortid.generate() };
+  let itemToAdd = {...payload, id: payload.id || shortid.generate() };
   if (removedIndex !== null) {
     itemToAdd = result.splice(removedIndex, 1)[0];
   }
@@ -38,249 +42,219 @@ const generateItems = (count, creator) => {
 
 
 const FormBuilderView = React.memo( ({formData }) => {
-  const { id } = useParams();
+
   const dispatch = useDispatch();
-  const dataList = useSelector(state => state.forms.structuredForm)
+  const dataList = [];
+  
+  // const form = useSelector((state) => useSelector(state,  ));
+  const form = useSelector(state => state.forms)
+  const [id, setId] = useState();
+  useEffect(() => {
+   if (form.ids) {
+     setId(form.ids[0])
+    }
+  }, [form])
   // const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
-  const [ fieldList, setFieldList ] = useState(formData?.fields)
+  // const [ fieldList, setFieldList ] = useState(formData?.fields)
   const [isEdit, setIsEdit] = useState(null);
-  const [elemWidth, setElemWidth] = useState(false);
+  // const [elemWidth, setElemWidth] = useState(false);
   const [formTitle, setFormTitle] = useState('');
 
 
-  useEffect(() => {
+  
 
-    const formElementsList = formData ? formData.fields : [];
-    // const formElementsList = dataList || [];
-    console.log('formElementsList', formElementsList)
-    console.log('dataList', dataList)
 
-    // setFieldList(formData?.fields)
-    const title = formData ? formData.name : '';
-    setFormTitle(title);
-    if (formElementsList.length) {
-      console.log('formElementsList', formElementsList)
-        buildArrayMatrix(formElementsList);
+  const addNewField = (newField) => {
+    const { name, type, label, options } = newField;
+    const position = form?.fields?.length || 0
+    const formId = id || shortid.generate();
+    const columns = form?.row?.columns || []
+    const rows = form?.entities[id]?.rows || []
+
+    const item = {
+      id: shortid.generate(), 
+      name,
+      label,
+      type, 
+      options,
+      position: form?.fields?.columns.length || 0,
+      row: dataList.length, 
+      col: 0, 
+      width: 50
     }
- 
-  }, [formData]);
-
-  useEffect(() => {
-    if (id) {
-      console.log('ID', id)
-        dispatch(getSingleForm(id))
-    }
-  }, [dispatch, id])
-
-  const buildArrayMatrix = (array) => {
-    let tempArray = [];
-    const arrayCopy = array;
-
-    // Build Matrix from array list based on element row
-    arrayCopy.map((el, index) => {
-        if (tempArray[el.row]){
-            tempArray[el.row].splice(el.col, 0, el)
-            return el
-
-        } else {
-            tempArray.push([el])
-            return {...el, row: tempArray.length - 1 }
-        }
-    });
-    console.log('formModel(tempArray)', formModel(tempArray))
-    // this on is calling the name form 
-    dispatch(addNewFieldAction(formModel(tempArray)))
-  }
-
-
-    // transform above matrix into array of rows
-    // update column index to be sequential and set row to correct index
-    const formModel = (arr) => {
-      return arr.map((row, rowIndex) => {
-        return {
-          // id: `${rowIndex}`,
+    const newRow = {
           id: shortid.generate(),
-          subItems: row.map((formField, formFieldIndex) => {
-              const { label, name, type, _id, width } = formField
+          position,
+          formId: id || formId,
+          columns: [ ...columns, item.id]
+    }
+      const fieldsCopy = form?.entities[id]?.fields ? form.entities[id].fields : []
       
-              return {
-                  id: _id?.$oid ? _id?.$oid : formField.id, //shortid.generate(),
-                  label,
-                  name,
-                  type,
-                  col: formFieldIndex, 
-                  row: rowIndex,
-                  width,
-              }
-          })
-        }
-      }) 
-    }
   
-
-
-  const obj = {
-      type: "container",
-      props: {
-        orientation: "vertical"
-      },
-      dataList
-    //   dataList:  [
-    //     {id: '1', subItems: [{id: '11', name: 'name'}, {id: '12', name: 'phone'}]},
-    //     {id: '2', subItems: [{id: '21', name: 'email'}, {id: '22', name: 'address'}]}
-    // ]
-  }
-  const selectedField = useSelector(state => state.forms.selectedField)
-
-  const editField = (e) => {
-    console.log('HI')
-    if (selectedField) {
-
-      const newArray = dataList.map((row, rowIndex) => {
-        const newSubItems = row.subItems.map((col, colIndex) => {
-            if (col.id === selectedField.colId) {
-                console.log('colId', col.id)
-                return {...col, ['label']:  e?.target.value}
-            }
-            return col
-        })
-        return {...row, subItems: newSubItems}
-      })
-
-      console.log('NEW ARRAY', newArray)
-      dispatch(changeField(newArray))
-    }
-  }
-
-
-   const addNewField = (newField) => {
-      const { name, type, label, options } = newField;
   
-      const item = {
-        id: shortid.generate(), 
-        name,
-        label,
-        type, 
-        options,
-        row: dataList.length, 
-        col: 0, 
-        width: 50
+      const formFoo = {
+        id: id || formId,
+        title:  form?.title || '',
+        rows: [ ...rows, newRow.id],
+        row: newRow,
+        column: item
       }
-
-      const copy = [...dataList];
-      const lastIndex = dataList.length - 1;
-      copy.splice(lastIndex, 1, { ...dataList[lastIndex], subItems: [item]} )
-      
-      const fooTest = !dataList[lastIndex].subItems.length 
-        ?  copy
-        : [
-          ...dataList, 
-          {
-            id: shortid.generate(), 
-            subItems: [ item ] 
-          }
-        ]
-        console.log('fooTest', fooTest)
-      dispatch(addNewFieldAction(fooTest))
-    }
-  
+      dispatch(
+        addField(formFoo)
+      )    
+  }
+ 
   
     const onRowDrop = (dropResult) => {
-      const scene = Object.assign({}, obj);
-  
+      // const scene = Object.assign({}, obj);
+      
  
-        scene.dataList = applyDrag(scene.dataList, dropResult);
-        dispatch(addNewFieldAction(scene.dataList))
+        // scene.dataList = applyDrag(scene.dataList, dropResult);
+        // dispatch(addNewFieldAction(scene.dataList))
 
 
     }
-  
-    
-       const getCardPayload = (rowId, index) => {
-       
-        const foo = obj.dataList.filter(p => p.id === rowId)[0].subItems[
-          index - 1
-        ];
 
-        return obj.dataList.filter(p => p.id === rowId)[0].subItems[
-          index -1
-        ];
-      }
 
     const onCardDrop = (rowId, dropResult)  => {
      
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-        const scene = Object.assign({}, obj);
-        
-        const column = scene.dataList.filter(p => p.id === rowId)[0];
-        const rowIndex = scene.dataList.indexOf(column);
+        // const scene = Object.assign({}, obj);
 
-        const newColumn = Object.assign({}, column);
-        const dropResultCopy = {...dropResult, payload: {...dropResult.payload, row: rowIndex}}
-        newColumn.subItems = applyDrag(newColumn.subItems, dropResultCopy);
-        scene.dataList.splice(rowIndex, 1, newColumn);
-        dispatch(addNewFieldAction(scene.dataList))
+          // const column = scene.dataList.filter(p => p.id === rowId)[0];
+          const column =  form?.entities[id]?.rows.filter(id => id === rowId)[0];
+
+          // const rowIndex = scene.dataList.indexOf(column);
+          const rowIndex =  form?.entities[id]?.rows.indexOf(rowId);
+
+        // const newColumn = Object.assign({}, column);
+        // const dropResultCopy = {...dropResult, payload: {...dropResult.payload, row: rowIndex}}
+        // newColumn.subItems = applyDrag(newColumn.subItems, dropResultCopy);
+        // scene.dataList.splice(rowIndex, 1, newColumn);
+        // dispatch(addNewFieldAction(scene.dataList))
 
      
       }
     }
+  
+
+    // const onCardDrop = (rowId, dropResult)  => {
+    //   // console.log('ROWID', rowId)
+    //   // console.log('dropResult', dropResult)
+
+    //   if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+    //     const scene = Object.assign({}, obj);
+    //     console.log('SCENE', scene)
+    //     // const column = scene.dataList.filter(p => p.id === rowId)[0];
+    //     const column = scene.dataList[rowId]
+    //     console.log('column', column)
+    //     const colId = dropResult.payload.id
+    //     const myNewObj = {...scene.dataList, [rowId]: {...scene.dataList[rowId], columns: {...scene.dataList[rowId].columns, [colId]: dropResult.payload } } }
+    //     console.log('myNewObj', myNewObj)
+    //     // const rowIndex = scene.dataList.indexOf(column);
+
+    //     // const newColumn = Object.assign({}, column);
+    //     // const dropResultCopy = {...dropResult, payload: {...dropResult.payload, row: rowIndex}}
+    //     // newColumn.subItems = applyDrag(newColumn.subItems, dropResultCopy);
+    //     // scene.dataList.splice(rowIndex, 1, newColumn);
+        
+    //     // dispatch(addNewFieldAction(scene.dataList))
+    //     // dispatch(addNewFieldAction(myNewObj))
+
+     
+    //   }
+    // }
+
   
 
     const [commonFieldsState, setCommonFieldsState] = useState(commonFields)
 
   return (
  
-    <Box display="flex" height="100%" width="">
+    <Box display="flex" 
+      style={{
+      // border: '1px solid', flex: 1, height: '100%', overflow: 'hidden'
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+      }}>
+        <Box 
+        
+        style={{
+          backgroundColor: 'green',
+          // flex:2,
+          display: 'flex',
+          overflow: 'hidden',
+          height: '100%',
+        }}>
+          <Box flexDirection="column" style={{
+            backgroundColor: 'yellow',
+            flex: 0,
+          }}>
 
-      {/* Panel Start */}
-      <PanelControls
-            addNewField={addNewField}
-            fieldList={dataList}
-
-            isEdit={isEdit}
-            setIsEdit={setIsEdit}
-            formTitle={formTitle || ''}
-            setFormTitle={setFormTitle}
-
-            commonFields={commonFieldsState}
-
-            handleOnDrop={e => {
-              return setCommonFieldsState( applyDrag(commonFieldsState, e) )
-            } }
-
-            editField={editField}
-
-      />  
-      {/* Panel End */}
- 
-        {/* FORM DROP ZONE START */}
-        <Box m={2} p={2} style={{minWidth: '750px'}}>
-
-        <ActionControls 
-            formTitle={formTitle}
-            dataList={obj.dataList}
-        />
-
-        <MyList
-            onRowDrop={onRowDrop}
-            onCardDrop={onCardDrop}
-            getCardPayload={getCardPayload}
-            dataList={obj.dataList.length ? obj.dataList : []}
-        />
-
-    
-        </Box>
-        { /* FORM DROP ZONE END */}
+            <PanelControls
+              addNewField={addNewField}
+              fieldList={dataList}
+              isEdit={isEdit}
+              setIsEdit={setIsEdit}
+              formTitle={formTitle || ''}
+              setFormTitle={setFormTitle}
+              commonFields={commonFieldsState}
+              handleOnDrop={e => {
+                return setCommonFieldsState( applyDrag(commonFieldsState, e) )
+              } }
+              // editField={editField}
+            /> 
+          </Box>
+  
+          <Box 
+            flexDirection="column" 
+            style={{
+              flex: 1,
+              display: 'flex',
+              overflow: 'hidden',
+              height: '100%'
+            }}
+          >
+            <ActionControls 
+                formTitle={formTitle}
+                dataList={[]}
+            />
+              <Box
+                m={2}
+                style={{
+                  background: 'red',
+                  overflow: 'auto',
+                  height: '100%',
+                  border: '1px dashed',
+                  flex: "1 1 auto",
+                  overflowY: "auto",
+                  minHeight: "0px",
+                }}
+                
+              >
+                <MyList
+                    onRowDrop={onRowDrop}
+                    onCardDrop={onCardDrop}
+                    dataList={dataList}
+                    rows={form?.entities?.[id]?.fields || []}
+                    addNewField={addNewField}
+                    // dataList={obj.dataList.length ? obj.dataList : []}
+                />
+              </Box>
+          </Box>
+        </Box> 
     </Box>
   );
 });
 
-function mapStateToProps(state) {
-  const { forms } = state
-  return { formData: forms.selected }
-}
+// function mapStateToProps(state) {
+//   const { forms } = state
+//   return { formData: forms.selected }
+// }
 
-export default connect(mapStateToProps)(FormBuilderView);
+// export default connect(mapStateToProps)(FormBuilderView);
+export default FormBuilderView;
 
 // TODO list 
 /*

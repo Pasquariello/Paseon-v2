@@ -4,6 +4,7 @@ import {
     POST_FORM,
     DELETE_FORM,
     ADD_FIELD,
+    SET_FORM,
     UPDATE_LIST,
     SELECT_FIELD
   } from '../actions/formActions'
@@ -18,8 +19,49 @@ const initialState = {
     selectedField: null,
   
     structuredForm: [
-      {id: '11', subItems: []}
-    ]
+      // {id: '11', subItems: [1, 2]},
+      {rowId: '11', columnId: [{colId: '1'}, {colId: '2'}]},
+      {rowId: '21', columnId: [{colId: '1'}, {colId: '2'}]}
+
+    ],
+
+    structuredForm2: {
+      '11': {
+        id: '11',
+        columns: {
+          '1': {
+            id: '1',
+            label: 'First Name',
+            name: '',
+            type: '',
+          },
+          '2': {
+            id: '2',
+            label: 'Last Name',
+            name: '',
+            type: '',
+          },
+        }
+      },
+
+      '21': {
+        id: '21',
+        columns: {
+          '3': {
+            id: '3',
+            label: 'Phone',
+            name: '',
+            type: '',
+          },
+        '4': {
+            id: '4',
+            label: 'Email',
+            name: '',
+            type: '',
+          },
+        }
+      }
+    }
 
   };
   
@@ -67,13 +109,19 @@ const formReducer = (state = initialState, action) => {
       // }
 
       case ADD_FIELD: {
+        const { obj } = action.payload;
+        return Object.assign({}, state, {
+          structuredForm2: obj
+        });
+      }
+      
+      case SET_FORM: {
         const { arr } = action.payload;
-        console.log('reducer', arr)
         return Object.assign({}, state, {
           structuredForm: arr
         });
       }
-      
+
 
       case UPDATE_LIST: {
         const { list } = action.payload;

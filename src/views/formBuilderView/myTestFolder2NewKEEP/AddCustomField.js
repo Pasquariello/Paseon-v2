@@ -5,17 +5,15 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import CheckboxControls from './InputTypes/Checkbox/CheckboxControls';
-import { selectColumnById, updateFieldDetails } from 'src/store/columnsSlice';
 
 
 import {useSelector, useDispatch} from 'react-redux';
 import {changeField} from 'src/actions/formActions';
 
 const AddCustomField = (props) => {
-    const selectedField = useSelector(state => state.forms.selectedField);
-    const column = useSelector((state) => selectColumnById(state, selectedField));
+    const selectedField = useSelector(state => state.forms.selectedField)
+    const dataList = useSelector(state => state.forms.structuredForm)
 
-    // const dataList = useSelector(state => state.forms.structuredForm)
     const dispatch = useDispatch()
     
     const {
@@ -26,9 +24,19 @@ const AddCustomField = (props) => {
         editField,
     } = props
 
+    console.log(editField)
+
+    // find row 
+    const foo = dataList.find(row => row.id === selectedField?.rowId);
+
+    // find col 
+    const bar = foo?.subItems.find(col => col.id === selectedField?.colId);
+
+    
 
     const handleChangeOptions = (event) => {
         const { value } = event.target;
+        console.log('value', value)
         setCustomField({ ...customField, options: {...customField.options, values: value.split('\n')} })
     }
 
@@ -60,21 +68,39 @@ const AddCustomField = (props) => {
                         Custom
                     </Typography>
 
-                    <Box display="flex" justifyContent="space-around" flexDirection="column">
+                    <Box display="flex" justifyContent="space-around" width="100%" style={{flexWrap: 'wrap'}}>
                         <TextField
+                            dense
                             variant="outlined"
+                            margin="normal"
                             required
-                            margin="dense"
                             fullWidth
                             id="label"
                             label="Label"
                             name="label"
-                            value={column?.label || ''}
+                            value={
+                                bar?.label || 
+                                customField.name
+                            }
                             onChange={(e) => {
-                                if (column) { 
-                                    dispatch(
-                                        updateFieldDetails({id: column.id, field: 'label', value: e.target.value})
-                                    )
+                                if ( selectedField ) {
+                                    console.log('YO')
+                                    //  editField(e)
+
+                                const newArray = dataList.map((row, rowIndex) => {
+                                    const newSubItems = row.subItems.map((col, colIndex) => {
+                                        if (col.id === selectedField.colId) {
+                                            return {...col, ['label']:  e.target.value}
+                                        }
+                                        return col
+                                    })
+                                    return {...row, subItems: newSubItems}
+                                })
+
+                                dispatch(changeField(newArray))
+                                
+                                } else {
+                                   setCustomField({ ...customField, name: e.target.value})
                                 }
                             }}
                         />
@@ -84,13 +110,10 @@ const AddCustomField = (props) => {
                             variant="outlined" 
                             fullWidth
                             required
-                            margin="dense"
-
                             // className={classes.formControl}
                         >
                             <InputLabel id="field-type-label">Field Type</InputLabel>
                             <Select
-
                             labelId="field-type-label"
                             id="field-type"
                             // value={age}
@@ -123,6 +146,7 @@ const AddCustomField = (props) => {
 
                         <Button
                             onClick={() => {
+                                console.log('Add New Field', customField)
                                 addNewField(customField)
                             }} 
                         >

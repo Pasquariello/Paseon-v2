@@ -3,7 +3,6 @@ import {  TextField } from '@material-ui/core';
 
 const TextInput = React.memo( (props) => {
     const { fieldData } = props;
-    console.log('fieldData', fieldData)
     return (
         <TextField 
             // label="LABEL"

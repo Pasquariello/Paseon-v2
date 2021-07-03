@@ -18,6 +18,14 @@ const CheckboxControls = (props) => {
         options,
     } = props
 
+    console.log('OPTIONS', options)
+    // const [ options, setOptions ] = useState({
+    //     defaults: [],
+    //     values: [],
+    //     required: false,
+    // })
+
+
     const handleChangeTextField = (event) => {
         const { name, value } = event.target;
         // setOptions({...options, [name]: value })
@@ -49,7 +57,7 @@ const CheckboxControls = (props) => {
                 value={options.values.join('\n')}
                 onChange={handleChangeOptions}
             />
-            <FormControl margin="dense" variant="outlined" >
+            <FormControl margin="normal" variant="outlined" >
                 <InputLabel id="demo-simple-select-filled-label">Select Default</InputLabel>
                 <Select
                 labelId="demo-simple-select-filled-label"

@@ -8,6 +8,8 @@ export const ADD_FIELD ='@forms/add-field';
 export const UPDATE_LIST ='@forms/update-list';
 export const SELECT_FIELD ='@forms/select-field';
 
+export const SET_FORM = '@forms/set-form';
+
 
 
 export function getForms() {
@@ -72,10 +74,32 @@ export function deleteForm(formId) {
   };
 }
 
-export function addNewFieldAction(arr) {
+export function addNewFieldActionOld(arr) {
   return async (dispatch) => {
       dispatch({
         type: ADD_FIELD,
+        payload: {
+          arr
+        },
+      });
+  };
+}
+
+export function addNewFieldAction(obj) {
+  return async (dispatch) => {
+      dispatch({
+        type: ADD_FIELD,
+        payload: {
+          obj
+        },
+      });
+  };
+}
+
+export function setFormStructure(arr) {
+  return async (dispatch) => {
+      dispatch({
+        type: SET_FORM,
         payload: {
           arr
         },

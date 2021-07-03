@@ -2,7 +2,7 @@ import React from 'react';
 import { Draggable } from "react-smooth-dnd";
 import './form.css';
 
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import TuneIcon from '@material-ui/icons/Tune';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -10,8 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import {selectField} from 'src/store/formsSlice';
-import { selectColumnById, updateFieldDetails } from 'src/store/columnsSlice';
+import {selectField} from 'src/actions/formActions';
 
 import CheckboxInput from 'src/components/formBuilderInputControls/checkboxInput';
 import SelectInput from 'src/components/formBuilderInputControls/selectInput';
@@ -24,39 +23,43 @@ import './form.css';
 const Column = React.memo( (props) => {
     const {
         colWidth,
+        isDragging
     } = props
 const dispatch = useDispatch()
 
     const {
-        columnId
-        // fieldId,
-        // label,
-        // rowId,
-        // rowLength,
-        // //new
-        // subItem
+        fieldId,
+        colIndex,
+        label,
+        rowId,
+        type,
+        currentIsDragging,
+        rowSnapshotIsDraggingOver,
+        rowLength,
+
+        //new
+        subItem
 
     } = props;
-    const column = useSelector((state) => selectColumnById(state, columnId));
 
-    const {id, label, type} = column;
-    // const widthSettings = colWidth ? 100 / (rowLength + 1) : 100 / rowLength;
+
+    const widthSettings = colWidth ? 100 / (rowLength + 1) : 100 / rowLength;
     
 
-    // const renderInput = () => {
-    //     const obj = {
-    //         text: <TextInput fieldData={column}/>,
-    //         textArea: <TextAreaInput fieldData={column}/>,
-    //         checkbox: <CheckboxInput fieldData={column} />,
-    //         radio: <RadioInput fieldData={column} />,
-    //         // select: <SelectInput fieldData={column} />,
-    //     }
-    //     return obj[type]
-    // }
+    const renderInput = () => {
+        const obj = {
+            text: <TextInput fieldData={subItem}/>,
+            textArea: <TextAreaInput fieldData={subItem}/>,
+            checkbox: <CheckboxInput fieldData={subItem} />,
+            radio: <RadioInput fieldData={subItem} />,
+            select: <SelectInput fieldData={subItem} />,
+        }
+        return obj[subItem.type]
+    }
 
     return (
         <Draggable 
-        key={id} 
+        key={fieldId} 
         style={{
          
         }}
@@ -72,10 +75,10 @@ const dispatch = useDispatch()
             }}
         >
             <div>
-            <button  onClick={() => dispatch(selectField(columnId))} > select</button>
+            <button  onClick={() => dispatch(selectField(rowId, fieldId))} > select</button>
             <p>{label}</p>
-            <p>{columnId}</p>
-            {/* { renderInput() }  */}
+            <p>{fieldId}</p>
+            { renderInput() } 
             </div>
 
              <div style={{
@@ -102,7 +105,7 @@ const dispatch = useDispatch()
         </Draggable>
      
     );
-}, )
+})
 
 export default Column
 

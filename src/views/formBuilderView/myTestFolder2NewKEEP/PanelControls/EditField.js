@@ -22,7 +22,7 @@ const EditField = (props) => {
 
 
     return (
-        <Box style={{width: '33%', border: '1px solid', maxHeight: '100vh', position: 'relative'}}>
+        <Box style={{width: '33%', border: '1px solid red', maxHeight: '100vh', position: 'relative'}}>
             <IconButton aria-label="close" onClick={() => setIsEdit()}>
                 <CloseIcon />
             </IconButton>
