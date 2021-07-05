@@ -73,6 +73,8 @@ const dispatch = useDispatch()
         >
             <div>
             <button  onClick={() => dispatch(selectField(columnId))} > select</button>
+            {/* Temporary */}
+            POSITION: {column.position}
             <p>{label}</p>
             <p>{columnId}</p>
             {/* { renderInput() }  */}

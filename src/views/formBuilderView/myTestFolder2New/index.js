@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import {useSelector, useDispatch, connect } from 'react-redux';
 import {getSingleForm, createForm, deleteForm, addNewFieldAction, setFormStructure, changeField} from 'src/actions/formActions';
 import { Box, Button } from '@material-ui/core';
-import MyList from "./MyList";
+import FormDnDSandbox from "./FormDnDSandbox";
 import shortid from 'shortid';
 import PanelControls from "./PanelControls";
 import ActionControls from './ActionControls';
@@ -13,7 +13,7 @@ import FormFieldModel from 'src/models/formFieldModel';
 import {commonFields } from 'src/utils/commonFields';
 
 // NEW 
-import {addField, selectFormById, updateForm} from 'src/store/formsSlice'
+import {addField, selectFormById} from 'src/store/formsSlice'
 
 
 const applyDrag = (arr, dragResult) => {
@@ -49,6 +49,7 @@ const FormBuilderView = React.memo( ({formData }) => {
   // const form = useSelector((state) => useSelector(state,  ));
   const form = useSelector(state => state.forms)
   const [id, setId] = useState();
+  
   useEffect(() => {
    if (form.ids) {
      setId(form.ids[0])
@@ -67,6 +68,7 @@ const FormBuilderView = React.memo( ({formData }) => {
   const addNewField = (newField) => {
     const { name, type, label, options } = newField;
     const position = form?.fields?.length || 0
+    console.log(form)
     const formId = id || shortid.generate();
     const columns = form?.row?.columns || []
     const rows = form?.entities[id]?.rows || []
@@ -83,15 +85,16 @@ const FormBuilderView = React.memo( ({formData }) => {
       width: 50
     }
     const newRow = {
-          id: shortid.generate(),
-          position,
-          formId: id || formId,
-          columns: [ ...columns, item.id]
+        id: shortid.generate(),
+        position: rows.length,
+        formId: id || formId,
+        columns: [ ...columns, item.id]
     }
-      const fieldsCopy = form?.entities[id]?.fields ? form.entities[id].fields : []
+
+    const fieldsCopy = form?.entities[id]?.fields ? form.entities[id].fields : []
       
   
-  
+    console.log('rows', rows)
       const formFoo = {
         id: id || formId,
         title:  form?.title || '',
@@ -104,68 +107,6 @@ const FormBuilderView = React.memo( ({formData }) => {
       )    
   }
  
-  
-    const onRowDrop = (dropResult) => {
-      // const scene = Object.assign({}, obj);
-      
- 
-        // scene.dataList = applyDrag(scene.dataList, dropResult);
-        // dispatch(addNewFieldAction(scene.dataList))
-
-
-    }
-
-
-    const onCardDrop = (rowId, dropResult)  => {
-     
-      if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-        // const scene = Object.assign({}, obj);
-
-          // const column = scene.dataList.filter(p => p.id === rowId)[0];
-          const column =  form?.entities[id]?.rows.filter(id => id === rowId)[0];
-
-          // const rowIndex = scene.dataList.indexOf(column);
-          const rowIndex =  form?.entities[id]?.rows.indexOf(rowId);
-
-        // const newColumn = Object.assign({}, column);
-        // const dropResultCopy = {...dropResult, payload: {...dropResult.payload, row: rowIndex}}
-        // newColumn.subItems = applyDrag(newColumn.subItems, dropResultCopy);
-        // scene.dataList.splice(rowIndex, 1, newColumn);
-        // dispatch(addNewFieldAction(scene.dataList))
-
-     
-      }
-    }
-  
-
-    // const onCardDrop = (rowId, dropResult)  => {
-    //   // console.log('ROWID', rowId)
-    //   // console.log('dropResult', dropResult)
-
-    //   if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-    //     const scene = Object.assign({}, obj);
-    //     console.log('SCENE', scene)
-    //     // const column = scene.dataList.filter(p => p.id === rowId)[0];
-    //     const column = scene.dataList[rowId]
-    //     console.log('column', column)
-    //     const colId = dropResult.payload.id
-    //     const myNewObj = {...scene.dataList, [rowId]: {...scene.dataList[rowId], columns: {...scene.dataList[rowId].columns, [colId]: dropResult.payload } } }
-    //     console.log('myNewObj', myNewObj)
-    //     // const rowIndex = scene.dataList.indexOf(column);
-
-    //     // const newColumn = Object.assign({}, column);
-    //     // const dropResultCopy = {...dropResult, payload: {...dropResult.payload, row: rowIndex}}
-    //     // newColumn.subItems = applyDrag(newColumn.subItems, dropResultCopy);
-    //     // scene.dataList.splice(rowIndex, 1, newColumn);
-        
-    //     // dispatch(addNewFieldAction(scene.dataList))
-    //     // dispatch(addNewFieldAction(myNewObj))
-
-     
-    //   }
-    // }
-
-  
 
     const [commonFieldsState, setCommonFieldsState] = useState(commonFields)
 
@@ -233,14 +174,8 @@ const FormBuilderView = React.memo( ({formData }) => {
                 }}
                 
               >
-                <MyList
-                    onRowDrop={onRowDrop}
-                    onCardDrop={onCardDrop}
-                    dataList={dataList}
-                    rows={form?.entities?.[id]?.fields || []}
-                    addNewField={addNewField}
-                    // dataList={obj.dataList.length ? obj.dataList : []}
-                />
+                {/* TODO - rename */}
+                <FormDnDSandbox/>
               </Box>
           </Box>
         </Box> 

@@ -84,7 +84,7 @@ const FieldOptions = (props) => {
             onDrop={handleOnDrop}
         >
         {
-          commonFields.map((field ,i) => {
+          commonFields.map((field, i) => {
             return (
               <Draggable key={i}>
                 <div 

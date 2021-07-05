@@ -20,7 +20,8 @@ import { useDispatch } from 'react-redux';
 // import { Link as RouterLink } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
-import { login } from 'src/actions/accountActions';
+// import { login } from 'src/actions/accountActions';
+import { login } from 'src/store/accountSlice';
 
 function Copyright() {
   return (
@@ -76,7 +77,7 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
       </Typography>
       <form className={classes.form} onSubmit={(e) => {
         e.preventDefault();
-        dispatch(login(email, password))
+        dispatch(login({email, password}))
       }}>
         <TextField
           variant="outlined"

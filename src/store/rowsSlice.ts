@@ -27,7 +27,11 @@ export const slice = createSlice({
         rowsAdapter.addOne(state, action.payload);
     },
     moveCol(state, action) {
-        rowsAdapter.setAll(state, action.payload);
+        rowsAdapter.setAll(state, action.payload.updatedRows);
+    }, 
+    moveRow(state, action) {
+      console.log(' action.payload.row',  action.payload)
+      rowsAdapter.setAll(state,  action.payload)
     }
   },
   extraReducers: (builder) => {
@@ -39,7 +43,7 @@ export const slice = createSlice({
 });
 
 
-export const { addNewField, moveCol } = slice.actions;
+export const { addNewField, moveCol, moveRow } = slice.actions;
 export const {
   selectById: selectRowById,
   selectIds: selectRowIds,

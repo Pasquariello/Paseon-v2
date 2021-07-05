@@ -5,6 +5,11 @@ import {
   addField,
   //  updateForm
   } from "./formsSlice";
+  
+  import { 
+    moveCol,
+    //  updateForm
+  } from "./rowsSlice";
 
 
 export interface Column {
@@ -32,15 +37,16 @@ export const slice = createSlice({
         changes:  {...state.entities[id], [field]: value}
       }
       columnsAdapter.updateOne(state, data);
-  },
-
-
-
-
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(addField, (state, action) => {
         columnsAdapter.addOne(state, action.payload.column)  
+    });
+    builder.addCase(moveCol, (state, action) => {
+      columnsAdapter.updateMany(state, 
+        action.payload.updatedColumns
+      )
     });
   }
 });

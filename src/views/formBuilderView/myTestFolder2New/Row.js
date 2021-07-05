@@ -67,7 +67,10 @@ const handleClick = (event) => {
 
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                     <div style={{marginRight: 10}}>
-
+                    {/* TEMPORARY */}
+                    POSITION: {row.position}
+                    <br></br>
+                    ID: {row.id}
                         <DragIndicatorIcon />
                         </div> 
                         <AddBoxIcon
@@ -147,6 +150,7 @@ const handleClick = (event) => {
                     }}
                 >
                     {row?.columns?.length ? row.columns.map((columnId) => {
+                        console.log('Row columnId', columnId)
                         return (
                              <Column 
                                 key={columnId}

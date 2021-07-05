@@ -23,10 +23,16 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useHistory } from 'react-router-dom';
 
 
+// NEW 
+import {selectAllForms, fetchForms} from 'src/store/formsSlice'
+
 function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
   const dispatch = useDispatch();
-  const formList = useSelector(state => state.forms.list)
+  // const formList = useSelector(state => state.forms.list)
+  // const formList = useSelector(selectAllForms(state));
+  const formList = useSelector((state) => selectAllForms(state));
+  console.log('formList', formList)
   const formSubmissionCount = useSelector(state => state.submissions.form_submission_count)
   const history = useHistory();
 
@@ -43,7 +49,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
 
   useEffect(() => {
-    dispatch(getForms());
+    dispatch(fetchForms());
     dispatch(getFormSubmissionCount());
   }, [dispatch]);
 

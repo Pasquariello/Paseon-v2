@@ -19,15 +19,17 @@ import { configureStore } from '@reduxjs/toolkit';
 import formReducer from './formsSlice';
 import columnsReducer from './columnsSlice';
 import rowsReducer from './rowsSlice';
+import accountReduxer from './accountSlice';
+
 
 import submissions from 'src/reducers/submissionReducer';
 
 export const store = configureStore({
   reducer: {
+    account: accountReduxer,
     forms: formReducer,
     columns: columnsReducer,
     rows: rowsReducer,
-
     submissions: submissions
   }
 });
