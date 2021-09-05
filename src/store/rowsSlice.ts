@@ -1,6 +1,7 @@
 import { createSlice, createEntityAdapter, EntityState, EntityId } from "@reduxjs/toolkit";
 // import { fetchForm } from "../articles/articlesSlice";
 import { addField, 
+  fetchFormData
   // updateForm
 } from "./formsSlice";
 
@@ -11,7 +12,12 @@ export interface Row {
     id: string;
     position: number;
     formId: EntityId;
-    columns: Array<EntityState<Column>>,
+    columns: Array<Column>,
+    // columns: Array<EntityState<Column>>,
+    // columns: Array<string>,
+        // columns: Array<string>,
+
+
   }
 
 const rowsAdapter = createEntityAdapter<Row>();
@@ -28,10 +34,17 @@ export const slice = createSlice({
     },
     moveCol(state, action) {
         rowsAdapter.setAll(state, action.payload.updatedRows);
+        // Do I need this!? 
+        // rowsAdapter.updateMany(state, action.payload.updatedRowsNew);
+
     }, 
     moveRow(state, action) {
-      console.log(' action.payload.row',  action.payload)
+      console.log('action.payload.row',  action.payload)
       rowsAdapter.setAll(state,  action.payload)
+    },
+    addRow(state, action) {
+      console.log('action.payload.row',  action.payload)
+      rowsAdapter.addOne(state,  action.payload)
     }
   },
   extraReducers: (builder) => {
@@ -39,11 +52,18 @@ export const slice = createSlice({
         console.log(' action.payload.row',  action.payload.row)
         rowsAdapter.addOne(state, action.payload.row)
     });
+
+    builder.addCase(fetchFormData.fulfilled, (state, action) => {
+      const rows = action.payload.rows.sort((a, b) => (a.position > b.position) ? 1 : -1);  
+      rowsAdapter.setAll(state, rows);
+      // state.loading = false;
+
+    });
   }
 });
 
 
-export const { addNewField, moveCol, moveRow } = slice.actions;
+export const { addNewField, moveCol, moveRow, addRow } = slice.actions;
 export const {
   selectById: selectRowById,
   selectIds: selectRowIds,

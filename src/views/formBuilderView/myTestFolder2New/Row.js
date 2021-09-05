@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
 import { Container, Draggable } from "react-smooth-dnd";
@@ -15,17 +15,26 @@ import { Button, Menu, MenuItem } from '@material-ui/core';
 
 import { selectRowById } from 'src/store/rowsSlice';
 import shortid from 'shortid';
-import {addNewField} from 'src/store/rowsSlice';
+import {selectColumnById, selectColumn, selectAllColumns, selectColumnIds, selectColumnEntities}  from 'src/store/columnsSlice';
 
 const Row = React.memo( (props) => {
     const dispatch = useDispatch();
-  
 
     
-    const { rowId, rowIndex, onCardDrop} = props
+    const { rowId, rowIndex, 
+        onCardDrop,
+        setIsDragging,
+    } = props
     // const row = useSelector(state => state.forms.structuredForm.find(row => row.id === rowId))
     const row = useSelector((state) => selectRowById(state, rowId));
+    const columns = row?.columns ? row.columns : [];
+    // const columns = row?.columns ? row?.columns.map(col => {
+    //     return col.sort((a, b) => (a.position > b.position) ? 1 : -1)
+    // }) : [];
+   
 
+
+    // const onCardDrop =  useMemo(() => (rowId, dropResult)  => {
 
 
         // const row = props.row;
@@ -50,18 +59,21 @@ const handleClick = (event) => {
     const [anchorEl, setAnchorEl] = useState(null);
     
     const [ colWidth, setColWidth ] = useState(false);
-    const [ isDragging, setIsDragging ] = useState(false)
+    // const [ isDragging, setIsDragging ] = useState(false)
     const [ isDisabled, setIsDisabled] = useState(false)
     // const rowLength = Object.keys(row?.columns).length //row.subItems?.length 
+  
+
 
 
     return (
+        <>
         <Draggable key={rowId}  className="column-drag-handle">
             {/* <Button onClick={() => {
                 dispatch(addNewField({id: 1, position: 1}))
             }}>add</Button> */}
             <div 
-                style={{position: 'relative', border: '1px solid #eee', display: 'flex', margin: 10, padding: 20,  overflowX: 'auto',
+                style={{position: 'relative', background: 'white', border: '1px solid #eee', display: 'flex', margin: 10, padding: 20,  overflowX: 'auto',
                 }}
             >
 
@@ -98,16 +110,15 @@ const handleClick = (event) => {
                     // }}
                     // onDragEnd={e => console.log("drag end", e)}
                     onDrop={e => {
-                        setColWidth(false)
-                        setIsDragging(false)
                         return onCardDrop(rowId, e)
+
                     }}
-                    getChildPayload={index =>{
-                        return row.columns[index]
-                        // Object.entries(row.columns)[index]
-                      //  getCardPayload(index)
-
-
+                    getChildPayload={(index) =>{
+                        return {
+                            id: row.columns[index],
+                            type: 'col',
+                            body: null,
+                        }                   
                     }}
                     dragClass="card-ghost"
                     onDragEnter={() => {
@@ -127,16 +138,19 @@ const handleClick = (event) => {
                         className: 'drop-preview' 
                     }}
                     onDragStart={() => {
-                        // setIsDragging(rowId)
-                        // console.log('HIT')
+                        // setIsDragging('col')
                     }}
+                    foo="test"
                     dropPlaceholderAnimationDuration={200}
-                    // shouldAcceptDrop={(a, b, c) => {
-                    //     const widthSum = row.subItems.reduce((a, b) => a + (b['width'] || 0), 0);
-                    //     const foo = row.subItems.filter(col => col.id === b.id)
-                    //     if (widthSum >= 100 && !foo.length || a.groupName !== 'col' ) return false
+                    shouldAcceptDrop={(a, b, c) => {
+                        // console.log('accetp', a, b, c)
+                        return b?.type === 'col'
+                        // const widthSum = row.columns.reduce((a, b) => a + (b['width'] || 0), 0);
+                        // const foo = row.columns.filter(col => col.id === b.id)
+                        // console.log('widthSum', widthSum)
+                        // if (widthSum >= 100 && !foo.length || a.groupName !== 'col' ) return false
                     //     return true;
-                    // }}
+                    }}
                     index={rowIndex}
                 
                     style={{
@@ -149,8 +163,11 @@ const handleClick = (event) => {
                         display: 'flex',
                     }}
                 >
-                    {row?.columns?.length ? row.columns.map((columnId) => {
-                        console.log('Row columnId', columnId)
+                    {/* // DEPENDING ON HOW PASSING COLUMN! */}
+                    {/* {columns?.length ? columns.map((columnId) => { */}
+                        {/* // console.log('columnId', columnId) */}
+                    {columns?.length ? columns.map((column) => {
+                        const columnId = column.id
                         return (
                              <Column 
                                 key={columnId}
@@ -175,6 +192,7 @@ const handleClick = (event) => {
                     </Container>
             </div>
             </Draggable>
+            </>
    
     );
 })

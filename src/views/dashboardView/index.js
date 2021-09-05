@@ -21,6 +21,7 @@ import { getFormSubmissionCount } from 'src/actions/submissionActions';
 import ChartToggle from './ChartToggle';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useHistory } from 'react-router-dom';
+import largeTriangles from './largeTriangles.svg';
 
 
 // NEW 
@@ -75,7 +76,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
   };
 
   return (
-    <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0'}} p={4}>
+    <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0',}} p={4}>
         <Box my={2}>
           <Typography variant="h6">Quick Statistics</Typography>
         </Box>

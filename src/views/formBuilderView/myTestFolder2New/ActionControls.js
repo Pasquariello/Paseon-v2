@@ -8,11 +8,17 @@ import { Button, CircularProgress } from '@material-ui/core';
 function ActionControls({ formTitle, dataList }) {
   const dispatch = useDispatch();
   const selectedFormData = useSelector(state => state.forms.selected)
+
+  const form = useSelector(state => state.forms)
+    console.log('form', form)
   const [isLoading, setIsLoading] = useState(false);
     return (
         <>
             <Button
                 onClick={ async () => {
+                    console.log('form', form)
+             
+                    return
                     setIsLoading(true)
                     // this will re clean the array row and col values
                     // array will need to be the value to 'save'/post back to the DB
@@ -41,7 +47,7 @@ function ActionControls({ formTitle, dataList }) {
                     setIsLoading(false);
                 }}
             >
-                Save
+                Save DUDE
                 {isLoading ? <CircularProgress /> : ''}
             </Button>
 

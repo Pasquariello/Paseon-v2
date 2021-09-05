@@ -26,7 +26,12 @@ function TabPanel(props) {
 }
 
 function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle, 
-  addNewField, fieldList, setFieldList, commonFields, handleOnDrop, editField
+  addNewField, 
+  fieldList, 
+  setFieldList, 
+  commonFields, 
+  editField,
+  setIsDragging
  }) {
   let resultsRef = useRef();
 
@@ -102,9 +107,9 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
           addNewField={ addNewField }
           fieldList={fieldList}
           isEdit={isEdit}
-          
+          // setIsDragging={setIsDragging}
           commonFields={commonFields}
-          handleOnDrop={handleOnDrop}
+          // handleOnDrop={handleOnDrop}
 
           editField={editField}
         />

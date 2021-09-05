@@ -61,11 +61,7 @@ const FormBuilderView = React.memo( ({formData }) => {
   // const [elemWidth, setElemWidth] = useState(false);
   const [formTitle, setFormTitle] = useState('');
 
-
-  
-
-
-  const addNewField = (newField) => {
+   const  addNewField = (newField) => {
     const { name, type, label, options } = newField;
     const position = form?.fields?.length || 0
     console.log(form)
@@ -88,13 +84,15 @@ const FormBuilderView = React.memo( ({formData }) => {
         id: shortid.generate(),
         position: rows.length,
         formId: id || formId,
-        columns: [ ...columns, item.id]
+        // DEPENDING ON HOW PASSING COLUMN!
+        // columns: [ ...columns, item.id]
+        columns: [ ...columns, item]
+
     }
 
     const fieldsCopy = form?.entities[id]?.fields ? form.entities[id].fields : []
       
   
-    console.log('rows', rows)
       const formFoo = {
         id: id || formId,
         title:  form?.title || '',
@@ -122,8 +120,6 @@ const FormBuilderView = React.memo( ({formData }) => {
         <Box 
         
         style={{
-          backgroundColor: 'green',
-          // flex:2,
           display: 'flex',
           overflow: 'hidden',
           height: '100%',
@@ -141,9 +137,7 @@ const FormBuilderView = React.memo( ({formData }) => {
               formTitle={formTitle || ''}
               setFormTitle={setFormTitle}
               commonFields={commonFieldsState}
-              handleOnDrop={e => {
-                return setCommonFieldsState( applyDrag(commonFieldsState, e) )
-              } }
+              // setIsDragging={setIsDragging}
               // editField={editField}
             /> 
           </Box>
@@ -154,7 +148,7 @@ const FormBuilderView = React.memo( ({formData }) => {
               flex: 1,
               display: 'flex',
               overflow: 'hidden',
-              height: '100%'
+              // height: '100%'
             }}
           >
             <ActionControls 
@@ -164,18 +158,17 @@ const FormBuilderView = React.memo( ({formData }) => {
               <Box
                 m={2}
                 style={{
-                  background: 'red',
                   overflow: 'auto',
-                  height: '100%',
                   border: '1px dashed',
-                  flex: "1 1 auto",
                   overflowY: "auto",
                   minHeight: "0px",
                 }}
                 
               >
                 {/* TODO - rename */}
-                <FormDnDSandbox/>
+                <FormDnDSandbox
+                  addNewField={addNewField}
+                  />
               </Box>
           </Box>
         </Box> 

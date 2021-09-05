@@ -1,8 +1,11 @@
 import { createSlice, createEntityAdapter, EntityId} from "@reduxjs/toolkit";
+import Column from "src/views/formBuilderView/myTestFolder2New/Column";
+import Row from "src/views/formBuilderView/myTestFolder2New/Row";
 // import { fetchForm } from "../articles/articlesSlice";
 import { RootState } from '.';
 import { 
   addField,
+  fetchFormData,
   //  updateForm
   } from "./formsSlice";
   
@@ -13,12 +16,12 @@ import {
 
 
 export interface Column {
-    id: number;
+    id: string;
     name: string;
     label: string,
     type: string,
     formId: EntityId;
-    rowId: EntityId;
+    // rowId: EntityId;
     position: number;
   }
 
@@ -27,8 +30,15 @@ const columnsAdapter = createEntityAdapter<Column>();
 
 export const slice = createSlice({
   name: "columns",
-  initialState:  columnsAdapter.getInitialState(),
+  initialState:  columnsAdapter.getInitialState({
+    selectedColumn: {},
+  }),
   reducers: {
+    selectColumn(state, action){
+      const id = action.payload;
+      console.log('state', state.entities[id])
+      state.selectedColumn = state.entities[id] || {}
+    },
     updateFieldDetails(state, action) {
 
       const {id, field, value} = action.payload;
@@ -36,6 +46,7 @@ export const slice = createSlice({
         id,
         changes:  {...state.entities[id], [field]: value}
       }
+      console.log('data', data)
       columnsAdapter.updateOne(state, data);
     },
   },
@@ -44,16 +55,50 @@ export const slice = createSlice({
         columnsAdapter.addOne(state, action.payload.column)  
     });
     builder.addCase(moveCol, (state, action) => {
-      columnsAdapter.updateMany(state, 
-        action.payload.updatedColumns
-      )
+      // if (action.payload.newColumn){
+      //   columnsAdapter.addOne(state, 
+      //     action.payload.newColumn
+      //   )
+      // } else {
+        columnsAdapter.upsertMany(state, 
+          action.payload.newTest
+        )
+        // columnsAdapter.updateMany(state, 
+        //   action.payload.newTest
+        // )
+      // }
+  
+    });
+
+    builder.addCase(fetchFormData.fulfilled, (state, action) => {
+      console.log('col action.payload', action.payload)
+      // const cols = action.payload.columns.sort((a, b) => (a.position > b.position) ? 1 : -1);
+      // IF NEED TO FLATTEN ALL COLS
+      // const cols = action.payload.rows
+      //   .map(row => row.columns.sort((a, b) => (a.position > b.position) ? 1 : -1)
+      //   )
+      //   .reduce(
+      //     (arr, elem) => arr.concat(elem), []
+      //   )
+      //same as above just no sort
+      // since  columns are build by looping through row we dont need to worry about sorting here
+        const cols = action.payload.rows
+        .map(row => row.columns)
+        .reduce(
+          (arr, elem) => arr.concat(elem), []
+        )
+      
+      console.log('ADDED COL', cols)
+      columnsAdapter.setAll(state, cols);
+      // state.loading = false;
+
     });
   }
 });
 
 const reducer = slice.reducer;
 export default reducer;
-export const { updateFieldDetails } = slice.actions;
+export const { updateFieldDetails, selectColumn } = slice.actions;
 
 export const {
   selectById: selectColumnById,

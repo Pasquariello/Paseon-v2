@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Container, Draggable } from "react-smooth-dnd";
+import {useDispatch, useSelector} from 'react-redux';
+import { selectRowById, addNewField } from 'src/store/rowsSlice';
+import {addField, selectFormById} from 'src/store/formsSlice'
+
+import shortid from 'shortid';
 
 import Box from '@material-ui/core/Box';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -48,6 +53,7 @@ const Item = styled.div`
 
 
 const FieldOptions = (props) => {
+    const dispatch = useDispatch();
     const {
         addNewField,
         isEdit,
@@ -58,7 +64,6 @@ const FieldOptions = (props) => {
 
         commonFields,
         dataList,
-        handleOnDrop,
 
         editField,
     } = props
@@ -76,12 +81,34 @@ const FieldOptions = (props) => {
     })
 
     return (
-        <>
+     
         <Container 
             groupName="col" 
             behaviour="copy" 
-            getChildPayload={i => commonFields[i]} 
-            onDrop={handleOnDrop}
+            onDragStart={(e) => {
+                console.log('e', e)
+                // setIsDragging('col');
+                // addNewField(e.payload.body)
+                // console.log('dude')
+                // const formFoo = {
+                //     id: shortid.generate()|| formId,
+                //     title:  form?.title || '',
+                //     rows: [ ...rows, newRow.id],
+                //     row: newRow,
+                //     column: item
+                //   }
+                //   dispatch(
+                //     addField(formFoo)
+                //   ) 
+                // dispatch(
+                //     addNewField({id:1, position: 0, })
+                // )
+            }}
+            getChildPayload={i => ({id: commonFields[i].id, body: commonFields[i], type: 'col' })} 
+            onDrop={(e) => {
+                console.log('FILED OPTIONS ON DROP', e)
+                // addNewField(commonFields[i])
+            }}
         >
         {
           commonFields.map((field, i) => {
@@ -106,19 +133,18 @@ const FieldOptions = (props) => {
             );
           })
         }
-      </Container>
-
-        {/* <CustomFieldAdd 
-            editField={editField}
-            addNewField={addNewField} 
-            customField={customField} 
-            setCustomField={setCustomField} 
-            selectedField={selectedField} 
-            fieldList={fieldList} 
-            setFieldList={setFieldList} 
-        /> */}
-     </>
+      </Container>     
     )
 }
 
 export default FieldOptions
+
+{/* <CustomFieldAdd 
+editField={editField}
+addNewField={addNewField} 
+customField={customField} 
+setCustomField={setCustomField} 
+selectedField={selectedField} 
+fieldList={fieldList} 
+setFieldList={setFieldList} 
+/> */}

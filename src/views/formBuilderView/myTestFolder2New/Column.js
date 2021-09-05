@@ -39,45 +39,47 @@ const dispatch = useDispatch()
     } = props;
     const column = useSelector((state) => selectColumnById(state, columnId));
 
-    const {id, label, type} = column;
+    const {id, label, type} = column || {id: '', label: '', type: 'text'};
     // const widthSettings = colWidth ? 100 / (rowLength + 1) : 100 / rowLength;
     
 
-    // const renderInput = () => {
-    //     const obj = {
-    //         text: <TextInput fieldData={column}/>,
-    //         textArea: <TextAreaInput fieldData={column}/>,
-    //         checkbox: <CheckboxInput fieldData={column} />,
-    //         radio: <RadioInput fieldData={column} />,
-    //         // select: <SelectInput fieldData={column} />,
-    //     }
-    //     return obj[type]
-    // }
+    const renderInput = () => {
+        const obj = {
+            text: <TextInput fieldData={column}/>,
+            textArea: <TextAreaInput fieldData={column}/>,
+            checkbox: <CheckboxInput fieldData={column} />,
+            radio: <RadioInput fieldData={column} />,
+            // select: <SelectInput fieldData={column} />,
+        }
+        return obj[type]
+    }
 
     return (
         <Draggable 
-        key={id} 
-        style={{
-         
-        }}
+            key={id} 
+            style={{
+            
+            }}
 
         >
         <div
             className="draggable-item-horizontal"
             style={{
                 border: '1px solid red',
-                width: '300px',
+                // width: '300px',
                 display: "flex",
+                flex: 1,
                 justifyContent: 'space-between'
             }}
         >
             <div>
             <button  onClick={() => dispatch(selectField(columnId))} > select</button>
             {/* Temporary */}
+            {console.log(column)}
             POSITION: {column.position}
             <p>{label}</p>
             <p>{columnId}</p>
-            {/* { renderInput() }  */}
+            { renderInput() } 
             </div>
 
              <div style={{
