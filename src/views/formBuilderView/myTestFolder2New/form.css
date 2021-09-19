@@ -7,13 +7,14 @@
  
     border: 1px solid pink;
     width:100%;
-    overflow:auto
+    overflow:auto;
+
+
 }
 
 .card-ghost-drop {
     width:100%;
-    overflow:auto
-    /* width: 200px; */
+    overflow:auto;
 }
 
 .cards-drop-preview {
@@ -51,9 +52,11 @@
     height: 100px;
     /* padding: 10px; */
     /* line-height: 100px; */
-    text-align: center;
+    /* text-align: center; */
     width : 200px;
     display: block;
+    /* background-color: #fff; */
+
     background-color: #fff;
     outline: 0;
     border: 1px solid rgba(0,0,0,.125);

@@ -6,12 +6,12 @@ const TextInput = React.memo( (props) => {
     return (
         <TextField 
             // label="LABEL"
-            label={fieldData.label}
+            label={fieldData?.label || ''}
             variant="outlined" 
             size="small"
             fullWidth
             disabled
-            style={{background: '#fff'}}
+            style={{background: 'blue '}}
         />
     )
 })

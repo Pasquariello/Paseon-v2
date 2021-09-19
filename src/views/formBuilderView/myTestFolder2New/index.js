@@ -13,7 +13,7 @@ import FormFieldModel from 'src/models/formFieldModel';
 import {commonFields } from 'src/utils/commonFields';
 
 // NEW 
-import {addField, selectFormById} from 'src/store/formsSlice'
+import {addField} from 'src/store/formDetailsSlice'
 
 
 const applyDrag = (arr, dragResult) => {
@@ -48,6 +48,10 @@ const FormBuilderView = React.memo( ({formData }) => {
   
   // const form = useSelector((state) => useSelector(state,  ));
   const form = useSelector(state => state.forms)
+  const {rows, columns} = useSelector(state => state.formDetails);
+  const formDetails = useSelector(state => state.formDetails);
+  // console.log('formDetails', formDetails)
+
   const [id, setId] = useState();
   
   useEffect(() => {
@@ -66,8 +70,8 @@ const FormBuilderView = React.memo( ({formData }) => {
     const position = form?.fields?.length || 0
     console.log(form)
     const formId = id || shortid.generate();
-    const columns = form?.row?.columns || []
-    const rows = form?.entities[id]?.rows || []
+    // const columns = form?.row?.columns || []
+    // const rows = form?.entities[id]?.rows || []
 
     const item = {
       id: shortid.generate(), 
@@ -75,31 +79,47 @@ const FormBuilderView = React.memo( ({formData }) => {
       label,
       type, 
       options,
-      position: form?.fields?.columns.length || 0,
+      position: form?.fields?.columns.length || 0, // TAYLOR todo - mograte to formDetails
       row: dataList.length, 
       col: 0, 
       width: 50
     }
+    console.log('rows', rows)
     const newRow = {
         id: shortid.generate(),
-        position: rows.length,
+        position: rows?.length || 0,
         formId: id || formId,
         // DEPENDING ON HOW PASSING COLUMN!
-        // columns: [ ...columns, item.id]
-        columns: [ ...columns, item]
+        columns: [ item.id]
+        // columns: [ ...columns, item]
 
     }
 
     const fieldsCopy = form?.entities[id]?.fields ? form.entities[id].fields : []
       
   
+      // const formFoo = {
+      //   id: id || formId,
+      //   title:  form?.title || '',
+      //   rows: [ ...rows, newRow.id],
+      //   row: newRow,
+      //   column: item,
+      //   columns:  [ ...columns, item],
+      // }
+    console.log('COLUMNS', columns)
       const formFoo = {
         id: id || formId,
-        title:  form?.title || '',
-        rows: [ ...rows, newRow.id],
+        name: form?.title || '',
+        rows: [ ...rows, newRow],
+        columns: [ ...columns, item],  
+
         row: newRow,
-        column: item
+        column: item,
       }
+
+      console.log('formFoo', formFoo)
+
+
       dispatch(
         addField(formFoo)
       )    
@@ -148,6 +168,8 @@ const FormBuilderView = React.memo( ({formData }) => {
               flex: 1,
               display: 'flex',
               overflow: 'hidden',
+              alignItems: 'center',
+
               // height: '100%'
             }}
           >
@@ -161,7 +183,8 @@ const FormBuilderView = React.memo( ({formData }) => {
                   overflow: 'auto',
                   border: '1px dashed',
                   overflowY: "auto",
-                  minHeight: "0px",
+                  width: '50%',
+                  // minHeight: "0px",
                 }}
                 
               >

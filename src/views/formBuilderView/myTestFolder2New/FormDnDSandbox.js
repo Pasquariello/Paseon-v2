@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addNewFieldAction} from 'src/actions/formActions';
 
 import { Container } from "react-smooth-dnd";
-import {selectAllRows, moveCol, moveRow, addRow} from 'src/store/rowsSlice';
-import {addField, fetchFormData, selectFormById} from 'src/store/formsSlice'
+import {fetchFormData, moveRow, moveCol} from 'src/store/formDetailsSlice';
+
 import {Button } from '@material-ui/core';
 
 
@@ -35,24 +35,17 @@ const applyDrag = (arr, dragResult) => {
 
 const  FormDnDSandbox = React.memo((props) => {
     const dispatch = useDispatch() 
-    const rowsArray = useSelector((state) => selectAllRows(state));
-    const rowEntities  = useSelector(state => state.rows.entities);
 
+    const {rowEntities} = useSelector(state => state.formDetails);
 
-    // useEffect(() => {
-    //   if(!form || !form?.rows.length){
-    //     //todo - update here
-    //     // addNewField({name: '', label: '', })
-    //     dispatch(addNewField({id: shortid.generate(), position: 0, columns: []}));
-    //   }
-    // },[])
+    const rowsArray = useSelector(state => state.formDetails.rows);
 
 
     // Gets run twice - for the row the card left and for the row the card is dropped
     const onCardDrop = (rowId, dropResult)  => {
-      console.log('rowId', rowId)
+      // console.log('rowId', rowId)
 
-      console.log('dropResult', dropResult)
+      // console.log('dropResult', dropResult)
       // if (!dropResult.addedIndex && !dropResult.removedIndex){
       //   return
       // }
@@ -63,44 +56,23 @@ const  FormDnDSandbox = React.memo((props) => {
         const dropResultCopy = {...dropResult}
         //new 
         const newCol = applyDrag(row.columns, dropResultCopy);
-        const updatedRow = {...row, columns: newCol};
+        const updatedRow = {...row, columns: newCol}
+        const updatedColumns = updatedRow.columns.map((column, index) => ({
+          id: column,
+          changes: {
+            ...dropResult.payload.body,
+            position: index
+          }
+        }));
+        console.log('UPDATED COL', updatedColumns)
 
-        const updatedRowsNew = [{
-          id: rowId,
-          changes: updatedRow.columns
-        }]
 
         const data = {
-          updatedRows: {...rowEntities, [rowId]: updatedRow}, //rowsCopy,
-          newColumn: dropResult.payload.body,
-          updatedRowsNew: updatedRowsNew,
-          newTest: updatedRow.columns.map((column, index) => {
-            // DEPENDING ON HOW PASSING COLUMN!
-            // if (column === dropResultCopy.payload.id) {
-              if (column.id === dropResultCopy.payload.id) {
-              return {
-                id: dropResultCopy.payload.id,
-                ...dropResultCopy.payload.body,
-                position: index
-              }
-            } else {
-              return {
-                // DEPENDING ON HOW PASSING COLUMN!
-                // id: column,
-                id: column.id,
-                position: index
-              }
-            }
-            
-          }),
-          updatedColumns: updatedRow.columns.map((column, index) => ({
-            id: column,
-            changes: {
-              ...dropResult.payload.body,
-              position: index
-            },
-          })),
+          updatedRow,
+          updatedColumns,
         };
+
+        console.log('DATA', data)
 
         dispatch(moveCol(data));
       }
@@ -128,12 +100,10 @@ const  FormDnDSandbox = React.memo((props) => {
         ...row,
         position: index,
       }));
+
       dispatch(moveRow(data));
     }
 
-       {/* <Button onClick={() => {
-            dispatch(fetchFormData())
-          }}>Test Get Form</Button> */}
     return ( 
         <Container
         // TAYLOR - DO I NEED TO REMOVE!?

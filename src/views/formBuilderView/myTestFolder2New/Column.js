@@ -10,9 +10,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import {selectField} from 'src/store/formsSlice';
-import { selectColumnById, updateFieldDetails } from 'src/store/columnsSlice';
-
 import CheckboxInput from 'src/components/formBuilderInputControls/checkboxInput';
 import SelectInput from 'src/components/formBuilderInputControls/selectInput';
 import TextAreaInput from 'src/components/formBuilderInputControls/textAreaInput';
@@ -28,7 +25,7 @@ const Column = React.memo( (props) => {
 const dispatch = useDispatch()
 
     const {
-        columnId
+        columnId,
         // fieldId,
         // label,
         // rowId,
@@ -37,11 +34,14 @@ const dispatch = useDispatch()
         // subItem
 
     } = props;
-    const column = useSelector((state) => selectColumnById(state, columnId));
-
+    // const column = useSelector((state) => selectColumnById(state, columnId));
+    const column = useSelector((state) => state.formDetails.columnEntities[columnId]);
+    console.log('column', column);
+    if (column) {
+        console.log('column.position', column.position);
+    }
     const {id, label, type} = column || {id: '', label: '', type: 'text'};
     // const widthSettings = colWidth ? 100 / (rowLength + 1) : 100 / rowLength;
-    
 
     const renderInput = () => {
         const obj = {
@@ -58,28 +58,39 @@ const dispatch = useDispatch()
         <Draggable 
             key={id} 
             style={{
-            
             }}
 
         >
         <div
             className="draggable-item-horizontal"
             style={{
-                border: '1px solid red',
-                // width: '300px',
+                // border: '1px solid red',
+                width: '300px',
+                // width: '100%',
                 display: "flex",
+                height: '100%',
                 flex: 1,
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                alignItems: 'space-between',
+                background: 'red'
             }}
         >
-            <div>
-            <button  onClick={() => dispatch(selectField(columnId))} > select</button>
+            <div 
+                style={{
+                    flex: 1,
+                    // justifyContent: 'center',
+                    display: "flex",
+                    // height: '100%',
+                    // flex: 1,
+                    // justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}>
             {/* Temporary */}
-            {console.log(column)}
-            POSITION: {column.position}
-            <p>{label}</p>
-            <p>{columnId}</p>
-            { renderInput() } 
+            {/* <button  onClick={() => dispatch(selectField(columnId))} > select</button> */}
+            POSITION: {column ? column.position : 'MISSING POS'}
+            {/* <p>{columnId}</p> */}
+            {/* <p>{label}</p> */}
+                { renderInput() } 
             </div>
 
              <div style={{

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Container, Draggable } from "react-smooth-dnd";
 import {useDispatch, useSelector} from 'react-redux';
-import { selectRowById, addNewField } from 'src/store/rowsSlice';
-import {addField, selectFormById} from 'src/store/formsSlice'
 
 import shortid from 'shortid';
 

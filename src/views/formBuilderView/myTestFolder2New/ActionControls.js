@@ -10,13 +10,15 @@ function ActionControls({ formTitle, dataList }) {
   const selectedFormData = useSelector(state => state.forms.selected)
 
   const form = useSelector(state => state.forms)
+  const formDetails = useSelector(state => state.formDetails)
+
     console.log('form', form)
   const [isLoading, setIsLoading] = useState(false);
     return (
         <>
             <Button
                 onClick={ async () => {
-                    console.log('form', form)
+                    console.log('formDetails', formDetails)
              
                     return
                     setIsLoading(true)

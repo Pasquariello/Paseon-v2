@@ -12,10 +12,7 @@ import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 import { Button, Menu, MenuItem } from '@material-ui/core';
-
-import { selectRowById } from 'src/store/rowsSlice';
 import shortid from 'shortid';
-import {selectColumnById, selectColumn, selectAllColumns, selectColumnIds, selectColumnEntities}  from 'src/store/columnsSlice';
 
 const Row = React.memo( (props) => {
     const dispatch = useDispatch();
@@ -26,8 +23,13 @@ const Row = React.memo( (props) => {
         setIsDragging,
     } = props
     // const row = useSelector(state => state.forms.structuredForm.find(row => row.id === rowId))
-    const row = useSelector((state) => selectRowById(state, rowId));
+    // const row = useSelector((state) => selectRowById(state, rowId));
+    // const columns = row?.columns ? row.columns : [];
+
+
+    const row = useSelector((state) => state.formDetails.rowEntities[rowId]);
     const columns = row?.columns ? row.columns : [];
+ 
     // const columns = row?.columns ? row?.columns.map(col => {
     //     return col.sort((a, b) => (a.position > b.position) ? 1 : -1)
     // }) : [];
@@ -62,7 +64,7 @@ const handleClick = (event) => {
     // const [ isDragging, setIsDragging ] = useState(false)
     const [ isDisabled, setIsDisabled] = useState(false)
     // const rowLength = Object.keys(row?.columns).length //row.subItems?.length 
-  
+
 
 
 
@@ -73,7 +75,14 @@ const handleClick = (event) => {
                 dispatch(addNewField({id: 1, position: 1}))
             }}>add</Button> */}
             <div 
-                style={{position: 'relative', background: 'white', border: '1px solid #eee', display: 'flex', margin: 10, padding: 20,  overflowX: 'auto',
+                style={{
+                    position: 'relative', 
+                    background: 'white', 
+                    border: '1px solid #eee', 
+                    display: 'flex',
+                     margin: 10, 
+                     padding: 20, 
+                 overflowX: 'auto',
                 }}
             >
 
@@ -81,8 +90,8 @@ const handleClick = (event) => {
                     <div style={{marginRight: 10}}>
                     {/* TEMPORARY */}
                     POSITION: {row.position}
-                    <br></br>
-                    ID: {row.id}
+                    {/* <br></br> */}
+                    {/* ID: {row.id} */}
                         <DragIndicatorIcon />
                         </div> 
                         <AddBoxIcon
@@ -115,7 +124,8 @@ const handleClick = (event) => {
                     }}
                     getChildPayload={(index) =>{
                         return {
-                            id: row.columns[index],
+                            id: columns[index],
+                            // id: row.columns[index],
                             type: 'col',
                             body: null,
                         }                   
@@ -139,8 +149,8 @@ const handleClick = (event) => {
                     }}
                     onDragStart={() => {
                         // setIsDragging('col')
+                        
                     }}
-                    foo="test"
                     dropPlaceholderAnimationDuration={200}
                     shouldAcceptDrop={(a, b, c) => {
                         // console.log('accetp', a, b, c)
@@ -156,11 +166,12 @@ const handleClick = (event) => {
                     style={{
                      
                         width: '100%', 
-
+                        // background: 'red',
                         minHeight: '100px',
                         padding: 0,
                         margin: 0,
                         display: 'flex',
+                        // flex: 1,
                     }}
                 >
                     {/* // DEPENDING ON HOW PASSING COLUMN! */}
@@ -169,9 +180,10 @@ const handleClick = (event) => {
                     {columns?.length ? columns.map((column) => {
                         const columnId = column.id
                         return (
+                       
                              <Column 
-                                key={columnId}
-                                columnId={columnId}
+                                key={column}
+                                columnId={column}
                                 // subItem={subItem}
                                 // key={subItem.id}
                                 // label={subItem.label}
