@@ -90,7 +90,8 @@ const FormBuilderView = React.memo( ({formData }) => {
         position: rows?.length || 0,
         formId: id || formId,
         // DEPENDING ON HOW PASSING COLUMN!
-        columns: [ item.id]
+        columns: [ item.id],
+        colCount: 1,
         // columns: [ ...columns, item]
 
     }
@@ -106,7 +107,6 @@ const FormBuilderView = React.memo( ({formData }) => {
       //   column: item,
       //   columns:  [ ...columns, item],
       // }
-    console.log('COLUMNS', columns)
       const formFoo = {
         id: id || formId,
         name: form?.title || '',

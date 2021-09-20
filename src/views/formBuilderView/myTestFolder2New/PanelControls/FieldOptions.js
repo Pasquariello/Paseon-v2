@@ -81,7 +81,7 @@ const FieldOptions = (props) => {
     return (
      
         <Container 
-            groupName="col" 
+            groupName="rowContainer" 
             behaviour="copy" 
             onDragStart={(e) => {
                 console.log('e', e)

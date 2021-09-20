@@ -10,17 +10,27 @@ import './form.css';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { IconButton, Typography, Menu, MenuItem,  ButtonGroup } from '@material-ui/core';
 import shortid from 'shortid';
 
-const Row = React.memo( (props) => {
-    const dispatch = useDispatch();
+import RowSettingsModal from './rowSettingsModal';
 
-    
-    const { rowId, rowIndex, 
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+
+import {incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
+
+const Row = React.memo( (props) => {
+    const { 
+        rowId, 
+        rowIndex, 
         onCardDrop,
-        setIsDragging,
+        handleIncrement,
+        handleDecrement,
     } = props
     // const row = useSelector(state => state.forms.structuredForm.find(row => row.id === rowId))
     // const row = useSelector((state) => selectRowById(state, rowId));
@@ -29,47 +39,18 @@ const Row = React.memo( (props) => {
 
     const row = useSelector((state) => state.formDetails.rowEntities[rowId]);
     const columns = row?.columns ? row.columns : [];
- 
-    // const columns = row?.columns ? row?.columns.map(col => {
-    //     return col.sort((a, b) => (a.position > b.position) ? 1 : -1)
-    // }) : [];
-   
 
-
-    // const onCardDrop =  useMemo(() => (rowId, dropResult)  => {
-
-
-        // const row = props.row;
-
-// Start
-// const [anchorEl, setAnchorEl] = useState(null);
-
-const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = (increment) => {
-  
-
-     const insertIndex = rowIndex + increment <= 0 ? 0 : rowIndex + increment
+    const rowColumnCount = row?.colCount || 1;
     
-     props.addNewRow(insertIndex)
-     setAnchorEl(null);
-  };
-// end
-
-    const [anchorEl, setAnchorEl] = useState(null);
-    
-    const [ colWidth, setColWidth ] = useState(false);
-    // const [ isDragging, setIsDragging ] = useState(false)
-    const [ isDisabled, setIsDisabled] = useState(false)
-    // const rowLength = Object.keys(row?.columns).length //row.subItems?.length 
-
-
 
 
     return (
         <>
+        {/* <RowSettingsModal 
+            open={settingsModalOpen} 
+            handleClose={() => setSettingsModalOpen(false)}
+            rowId={rowId}
+        /> */}
         <Draggable key={rowId}  className="column-drag-handle">
             {/* <Button onClick={() => {
                 dispatch(addNewField({id: 1, position: 1}))
@@ -89,15 +70,15 @@ const handleClick = (event) => {
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
                     <div style={{marginRight: 10}}>
                     {/* TEMPORARY */}
-                    POSITION: {row.position}
+                    {/* POSITION: {row.position} */}
                     {/* <br></br> */}
                     {/* ID: {row.id} */}
                         <DragIndicatorIcon />
                         </div> 
                         <AddBoxIcon
-                            onClick={handleClick}
+                            // onClick={handleClick}
                         />
-                        <Menu
+                        {/* <Menu
                             id="simple-menu"
                             anchorEl={anchorEl}
                             keepMounted
@@ -106,102 +87,158 @@ const handleClick = (event) => {
                             >
                             <MenuItem onClick={() => handleClose(-1)}>Insert Above</MenuItem>
                             <MenuItem onClick={() => handleClose(1)}>Insert Below</MenuItem>
-                        </Menu>
+                        </Menu> */}
+                        {/* <SettingsIcon onClick={() => handleToggleRowSettingsModal()}/>  */}
                         <DeleteOutlineIcon/>
                 </div>
+                
+              <div style={{flex: 1}}>
+             
+                <Typography style={{ fontSize: 10 }}>Column Count</Typography>
+                <div>
+                    <IconButton size="small" onClick={() => handleDecrement(rowId, rowColumnCount, row.columns.length)}><RemoveIcon style={{ fontSize: 16 }}/></IconButton>
+                        <Typography variant="caption" style={{ fontSize: 12 }}>{rowColumnCount}</Typography>
+                    <IconButton size="small" onClick={() => handleIncrement(rowId, rowColumnCount)}><AddIcon style={{ fontSize: 16 }}/></IconButton>
+                </div>
+          
 
+                        
               <Container
-                    groupName="col"
+                    groupName="rowContainer"
                     orientation="horizontal"
-                     // onDragStart={e => {
-                    //     console.log("drag started", e)
-                    //     console.log('start row id', rowId)
-                    // }}
-                    // onDragEnd={e => console.log("drag end", e)}
-                    onDrop={e => {
-                        return onCardDrop(rowId, e)
-
-                    }}
+                    onDrop={e => onCardDrop(rowId, e)}
                     getChildPayload={(index) =>{
                         return {
                             id: columns[index],
-                            // id: row.columns[index],
                             type: 'col',
-                            body: null,
                         }                   
                     }}
                     dragClass="card-ghost"
-                    onDragEnter={() => {
-
-                        // // setColWidth(true)
-                        // if (rowLength  >= 2) setIsDisabled(true);
-                        // else setIsDisabled(false);
-                    }}
-                    onDragLeave={() => {
-                        // setColWidth(false)
-
-                    }}
-                    // onDropReady={p => console.log('Drop ready: ', p)}
                     dropPlaceholder={{                      
                         animationDuration: 150,
                         showOnTop: true,
                         className: 'drop-preview' 
                     }}
-                    onDragStart={() => {
-                        // setIsDragging('col')
-                        
-                    }}
                     dropPlaceholderAnimationDuration={200}
-                    shouldAcceptDrop={(a, b, c) => {
-                        // console.log('accetp', a, b, c)
-                        return b?.type === 'col'
+               
+                    shouldAcceptDrop={(sourceContainerOptions, payload) => {                     
+                        if (row.columns.includes(payload.id)) {
+                            return true;
+                        }
+
+                        if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
+                            return false;
+                        } 
+                        return true
+                        // return payload?.type === 'col'
                         // const widthSum = row.columns.reduce((a, b) => a + (b['width'] || 0), 0);
                         // const foo = row.columns.filter(col => col.id === b.id)
                         // console.log('widthSum', widthSum)
                         // if (widthSum >= 100 && !foo.length || a.groupName !== 'col' ) return false
-                    //     return true;
+                        // return true;
                     }}
                     index={rowIndex}
                 
                     style={{
-                     
                         width: '100%', 
-                        // background: 'red',
+                        flex: 1,
                         minHeight: '100px',
                         padding: 0,
                         margin: 0,
                         display: 'flex',
-                        // flex: 1,
+                        border: '1px dashed'
                     }}
                 >
+
+                    {/* {
+                       [...Array(rowColumnCount)].map((e, i) => {
+                           return (
+                                
+                                    columns[i] ? (
+                                        <Column 
+                                            key={columns[i]}
+                                            columnId={columns[i]}
+                                            width={100 / row?.colCount || 1}
+                                        />
+                                    ): (
+                                    //     <div 
+                                    //     style={{
+                                    //         flex: 1,
+                                    //         border: '1px dashed'
+                                    //     }}
+                                    // >
+            
+                                    // </div>
+                                    // )
+                                    // (
+                                       
+                                    <Container    
+                                        groupName="col"
+                                        onDrop={e => onCardDrop(rowId, e)}
+                                        getChildPayload={(index) =>{
+                                            return {
+                                                id: columns[index],
+                                                type: 'col',
+                                            }                   
+                                        }}
+                                        dragClass="card-ghost"
+                                        dropPlaceholder={{                      
+                                            animationDuration: 150,
+                                            showOnTop: false,
+                                            className: 'drop-preview-2' 
+                                        }}
+                                        dropPlaceholderAnimationDuration={200}
+                                        style={{
+                                            flex: 1,
+                                            border: '1px dashed'
+                                        }}
+                                        shouldAcceptDrop={(sourceContainerOptions, payload) => {
+                 
+                                            if (row.columns.includes(payload.id)) {
+                                                return true;
+                                            }
+                    
+                                            if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
+                                                return false;
+                                            } 
+                                    
+                                        
+                                            return payload?.type === 'col'
+                                            // const widthSum = row.columns.reduce((a, b) => a + (b['width'] || 0), 0);
+                                            // const foo = row.columns.filter(col => col.id === b.id)
+                                            // console.log('widthSum', widthSum)
+                                            // if (widthSum >= 100 && !foo.length || a.groupName !== 'col' ) return false
+                                            // return true;
+                                        }}
+                                    ></Container>
+                                    )
+                                
+                           )
+                       })
+                    } */}
+
+                    
+                      
+                    
+               
+                    
                     {/* // DEPENDING ON HOW PASSING COLUMN! */}
                     {/* {columns?.length ? columns.map((columnId) => { */}
-                        {/* // console.log('columnId', columnId) */}
-                    {columns?.length ? columns.map((column) => {
-                        const columnId = column.id
-                        return (
-                       
-                             <Column 
-                                key={column}
-                                columnId={column}
-                                // subItem={subItem}
-                                // key={subItem.id}
-                                // label={subItem.label}
-                                // rowId={rowId}
-
-                                // colWidth={colWidth}
-                                // // isDragging={isDragging}
-                                // subItem={subItem}
-
-                                // fieldId={subItem.id}
-                                // colIndex={colIndex}
-                                // type={subItem.type}
-                                // rowLength={row.subItems?.length || 0} 
-                            />
-                        )
-                    }) : ''}
-                    
+                    {/* // console.log('columnId', columnId) */}
+                    {
+                        columns?.length ? columns.map((column) => {                     
+                            return (
+                        
+                                <Column 
+                                    key={column}
+                                    columnId={column}
+                                    width={100 / row?.colCount || 1}
+                                />
+                            )
+                        }) : null
+                    }                    
                     </Container>
+                    </div>
             </div>
             </Draggable>
             </>

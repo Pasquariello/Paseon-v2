@@ -2,16 +2,16 @@ import React from 'react'
 import {  TextField } from '@material-ui/core';
 
 const TextInput = React.memo( (props) => {
-    const { fieldData } = props;
+    const { label } = props;
     return (
         <TextField 
             // label="LABEL"
-            label={fieldData?.label || ''}
+            label={label || ''}
             variant="outlined" 
             size="small"
             fullWidth
             disabled
-            style={{background: 'blue '}}
+            // style={{background: 'blue'}}
         />
     )
 })

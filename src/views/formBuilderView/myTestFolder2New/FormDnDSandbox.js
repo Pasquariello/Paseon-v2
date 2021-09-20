@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addNewFieldAction} from 'src/actions/formActions';
 
 import { Container } from "react-smooth-dnd";
-import {fetchFormData, moveRow, moveCol} from 'src/store/formDetailsSlice';
+import {fetchFormData, moveRow, moveCol, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
 import {Button } from '@material-ui/core';
 
@@ -64,7 +64,6 @@ const  FormDnDSandbox = React.memo((props) => {
             position: index
           }
         }));
-        console.log('UPDATED COL', updatedColumns)
 
 
         const data = {
@@ -72,7 +71,6 @@ const  FormDnDSandbox = React.memo((props) => {
           updatedColumns,
         };
 
-        console.log('DATA', data)
 
         dispatch(moveCol(data));
       }
@@ -104,11 +102,27 @@ const  FormDnDSandbox = React.memo((props) => {
       dispatch(moveRow(data));
     }
 
+    const handleIncrement = (id, currentColumnCount) => {
+      if (currentColumnCount < 3) {
+        dispatch(incrementRowColCount(id));
+
+      }
+    }
+
+    const handleDecrement = (id, currentRowColumnCountSettings, currentColumnCount) => {
+      console.log('currentColumnCount',currentColumnCount)
+      console.log('currentRowColumnCountSettings', currentRowColumnCountSettings)
+
+      if (currentRowColumnCountSettings > 1 && currentColumnCount < currentRowColumnCountSettings) {
+        dispatch(decrementRowColCount(id));
+      }
+    }
+
     return ( 
         <Container
         // TAYLOR - DO I NEED TO REMOVE!?
         // groupName="col"
-        // style={{background: '#f6f6f6'}}
+        style={{background: '#f6f6f6'}}
           orientation="vertical"
           onDrop={onRowDrop}
           getChildPayload={index =>rowsArray[index]}
@@ -133,6 +147,8 @@ const  FormDnDSandbox = React.memo((props) => {
                         rowId={row.id}
                         onCardDrop={onCardDrop}
                         addNewField={props.addNewField}
+                        handleIncrement={handleIncrement}
+                        handleDecrement={handleDecrement}
                     />    
             );
           }) : ''}

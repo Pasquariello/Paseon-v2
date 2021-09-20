@@ -28,6 +28,7 @@ export const fetchFormData = createAsyncThunk('formDetails/fetchFormData', async
         position: 0,
         formId: 'form1',
         columns: ['col0'],
+        colCount: 1,
       },
     ],
     columns: [
@@ -65,7 +66,7 @@ export const slice = createSlice({
       columns: [] as Array<any>,
       rows: [] as Array<any>,
       columnEntities: {} as any,
-      rowEntities: {},
+      rowEntities: {}  as any,
   },
   reducers: {
     addField(state, action) {
@@ -106,36 +107,16 @@ export const slice = createSlice({
 
       updatedColumns.forEach((col: any) => {
         const colId =  col.id;
-        const foo: any = state.columnEntities[colId]
-       state.columnEntities = {
-         ...state.columnEntities, 
-         [col.id]: {
+        const foo: any = state.columnEntities[colId];
+        state.columnEntities = {
+          ...state.columnEntities, 
+          [col.id]: {
             ...foo,
             ...col.changes
           }
         }
       });
-
-      //
-      
-      // const obj = action.payload.updatedRowEntities
-      // let rows = Object.keys(obj).map((k) => obj[k])
-
-      // state.rows = rows;
-      // state.rowEntities = action.payload.updatedRowEntities;
-
-      // const cols = rows
-      // .map(row => row.columns)
-      // .reduce(
-      //   (arr, elem) => arr.concat(elem), []
-      // )
-      // const columnEntities = arrayToObject(cols);
-
-      // state.columnEntities = columnEntities;
-      // let columns = Object.keys(obj).map((k) => obj[k])
-      // state.columns = columns
-
-  }, 
+    }, 
 
     updateForm(state, action) {
         // formDetailsAdapter.updateOne(state, action.payload)
@@ -143,6 +124,36 @@ export const slice = createSlice({
     selectField(state, action) {
       state.selectedField = action.payload;
     },
+
+    incrementRowColCount(state, action) {
+      const rowId = action.payload
+      const row = state.rowEntities[rowId];
+      console.log('row', row)
+      const updatedRowEntities: any =  {
+        ...state.rowEntities, 
+        [rowId]: {...row, colCount: row.colCount + 1 } 
+      }
+      // const updatedRowArray = Object.keys(updatedRowEntities).map((k) => updatedRowEntities[k])
+// 
+      state.rowEntities = updatedRowEntities;
+      // state.rows = updatedRowArray;
+
+    },
+    decrementRowColCount(state, action) {
+      const rowId = action.payload
+      const row = state.rowEntities[rowId];
+      const updatedRowEntities: any =  {
+        ...state.rowEntities, 
+        [rowId]: {...row, colCount: row.colCount - 1 } 
+      }
+      // const updatedRowArray = Object.keys(updatedRowEntities).map((k) => updatedRowEntities[k])
+
+      state.rowEntities = updatedRowEntities;
+      // state.rows = updatedRowArray;
+    },
+
+    // incrementRowColCount, decrementRowColCount
+
   },
   extraReducers:(builder) => {
     builder.addCase(fetchFormData.fulfilled, (state, action) => {
@@ -173,4 +184,6 @@ export const {
   moveCol,
   moveRow,
   selectField,
+  incrementRowColCount,
+  decrementRowColCount
 } = slice.actions;
