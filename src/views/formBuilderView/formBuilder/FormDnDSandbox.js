@@ -9,7 +9,7 @@ import {addNewFieldAction} from 'src/actions/formActions';
 import { Container } from "react-smooth-dnd";
 import {fetchFormData, moveRow, moveCol, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
-import {Button } from '@material-ui/core';
+import {Button } from '@mui/material';
 
 
 

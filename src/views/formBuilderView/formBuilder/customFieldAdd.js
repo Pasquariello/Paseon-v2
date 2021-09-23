@@ -1,21 +1,23 @@
 import React from 'react';
 
-import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import Box from '@mui/material/Box';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import CheckboxControls from './InputTypes/Checkbox/CheckboxControls';
-import { selectColumnById, updateFieldDetails } from 'src/store/columnsSlice';
+
+import { updateFieldDetails} from 'src/store/formDetailsSlice';
+
 
 
 import {useSelector, useDispatch} from 'react-redux';
 import {changeField} from 'src/actions/formActions';
 
-const AddCustomField = (props) => {
-    const selectedField = useSelector(state => state.forms.selectedField);
-    const column = useSelector((state) => selectColumnById(state, selectedField));
+const CustomFieldAdd = (props) => {
+    const {selectedField} = useSelector(state => state.formDetails);
+     console.log('selectedField', selectedField)
+    const column = useSelector(state => state.formDetails.columnEntities[selectedField]);
 
-    // const dataList = useSelector(state => state.forms.structuredForm)
     const dispatch = useDispatch()
     
     const {
@@ -23,7 +25,6 @@ const AddCustomField = (props) => {
         customField,
         setCustomField,
 
-        editField,
     } = props
 
 
@@ -50,11 +51,7 @@ const AddCustomField = (props) => {
                 whiteSpace: 'nowrap',
             }}
             >
-                <Box 
-                    style={{ 
-                        marginTop: 50,
-                    }}
-                > 
+                <Box> 
 
                     <Typography>
                         Custom
@@ -62,6 +59,7 @@ const AddCustomField = (props) => {
 
                     <Box display="flex" justifyContent="space-around" flexDirection="column">
                         <TextField
+                            size="small"
                             variant="outlined"
                             required
                             margin="dense"
@@ -85,6 +83,7 @@ const AddCustomField = (props) => {
                             fullWidth
                             required
                             margin="dense"
+                            size="small"
 
                             // className={classes.formControl}
                         >
@@ -136,4 +135,4 @@ const AddCustomField = (props) => {
     )
 }
 
-export default AddCustomField
+export default CustomFieldAdd

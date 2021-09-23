@@ -1,9 +1,9 @@
 import React from 'react';
 import TopBar from './TopBar';
 import Navigation from './navigation';
-import {Box} from '@material-ui/core';
+import {Box} from '@mui/material';
 
-// import Container from '@material-ui/core/Container';
+// import Container from '@mui/material/Container';
 
 const DashboardLayout = ({children}) => {
     

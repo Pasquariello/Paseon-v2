@@ -7,20 +7,20 @@ import Column from './Column';
 
 import './form.css';
 
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import SettingsIcon from '@material-ui/icons/Settings';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import SettingsIcon from '@mui/icons-material/Settings';
 
-import { IconButton, Typography, Menu, MenuItem,  ButtonGroup } from '@material-ui/core';
+import { IconButton, Typography, Menu, MenuItem,  ButtonGroup } from '@mui/material';
 import shortid from 'shortid';
 
 import RowSettingsModal from './rowSettingsModal';
 
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import {incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
@@ -121,7 +121,7 @@ const Row = React.memo( (props) => {
                     }}
                     dropPlaceholderAnimationDuration={200}
                
-                    shouldAcceptDrop={(sourceContainerOptions, payload) => {                     
+                    shouldAcceptDrop={(sourceContainerOptions, payload) => { 
                         if (row.columns.includes(payload.id)) {
                             return true;
                         }
@@ -129,8 +129,7 @@ const Row = React.memo( (props) => {
                         if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
                             return false;
                         } 
-                        return true
-                        // return payload?.type === 'col'
+                        return payload?.type === 'col'
                         // const widthSum = row.columns.reduce((a, b) => a + (b['width'] || 0), 0);
                         // const foo = row.columns.filter(col => col.id === b.id)
                         // console.log('widthSum', widthSum)
@@ -140,13 +139,11 @@ const Row = React.memo( (props) => {
                     index={rowIndex}
                 
                     style={{
-                        width: '100%', 
-                        flex: 1,
+                        // flex: 1,
                         minHeight: '100px',
                         padding: 0,
-                        margin: 0,
                         display: 'flex',
-                        border: '1px dashed'
+                        border: '1px dashed',
                     }}
                 >
 

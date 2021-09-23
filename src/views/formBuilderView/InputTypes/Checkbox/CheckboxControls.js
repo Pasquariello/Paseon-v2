@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { Input, ListItemText, Checkbox, Button, IconButton, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import Box from '@mui/material/Box';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { Input, ListItemText, Checkbox, Button, IconButton, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const CheckboxControls = (props) => {

@@ -6,7 +6,7 @@ import { faHome, faUserPlus, faUser, faPlus, faKey, faHammer, faSignOutAlt} from
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {Box, IconButton, Card, Paper, CardContent, Typography, Grid, CardActions, Button, Link} from '@material-ui/core';
+import {Box, IconButton, Card, Paper, CardContent, Typography, Grid, CardActions, Button, Link} from '@mui/material';
 import { useHistory } from 'react-router';
 
 import './navigation.css';

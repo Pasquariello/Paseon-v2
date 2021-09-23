@@ -3,22 +3,26 @@ import { Draggable } from "react-smooth-dnd";
 import './form.css';
 
 import {useSelector, useDispatch} from 'react-redux';
+import {selectField} from 'src/store/formDetailsSlice';
 
-import TuneIcon from '@material-ui/icons/Tune';
-import DeleteIcon from '@material-ui/icons/Delete';
+import TuneIcon from '@mui/icons-material/Tune';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 import CheckboxInput from 'src/components/formBuilderInputControls/checkboxInput';
 import SelectInput from 'src/components/formBuilderInputControls/selectInput';
 import TextAreaInput from 'src/components/formBuilderInputControls/textAreaInput';
 import TextInput from 'src/components/formBuilderInputControls/textInput';
 import RadioInput from 'src/components/formBuilderInputControls/radioInput';
+
+
 import './form.css';
 
 
 const Column = React.memo( (props) => {
+    const dispatch = useDispatch();
     const {
         colWidth,
     } = props
@@ -58,7 +62,7 @@ const Column = React.memo( (props) => {
         <Draggable 
             key={id} 
             style={{
-                width: WIDTH
+                width: WIDTH,
                 // flex: 1
             }}
 
@@ -75,6 +79,7 @@ const Column = React.memo( (props) => {
                 justifyContent: 'space-between',
                 alignItems: 'space-between',
                 padding: 10,
+                // width: WIDTH
                 // background: 'red'
             }}
         >
@@ -89,7 +94,7 @@ const Column = React.memo( (props) => {
                     alignItems: 'center',
                 }}>
             {/* Temporary */}
-            {/* <button  onClick={() => dispatch(selectField(columnId))} > select</button> */}
+            {/* <button  onClick={() => dispatch(selectField(columnId))} >select</button> */}
             {/* POSITION: {column ? column.position : 'MISSING POS'} */}
             {/* <p>{columnId}</p> */}
             {/* <p>{label}</p> */}
@@ -102,12 +107,12 @@ const Column = React.memo( (props) => {
                 }}>
  
                     <Tooltip title="Tune Properties">
-                        <IconButton aria-label="tune">
+                        <IconButton  onClick={() => dispatch(selectField(columnId))} aria-label="tune" size="large">
                             <TuneIcon/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Edit Field">
-                        <IconButton aria-label="edit">
+                        <IconButton aria-label="edit" size="large">
                             <DeleteIcon/>
                         </IconButton>
                     </Tooltip>
@@ -118,7 +123,6 @@ const Column = React.memo( (props) => {
 
            
         </Draggable>
-     
     );
 }, )
 

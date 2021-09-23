@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getForms } from 'src/actions/formActions';
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Checkbox, Divider, Link, List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import { Box, Checkbox, Divider, Link, List, ListItem, ListItemText, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { deleteForm } from 'src/actions/formActions';
@@ -11,7 +11,7 @@ import { deleteForm } from 'src/actions/formActions';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
 }));
 

@@ -1,11 +1,8 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-// import MomentUtils from '@date-io/moment';
-import {
-  createStyles,
-  makeStyles,
-} from '@material-ui/core';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 // import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import Auth from 'src/components/Auth';
 import Routes from 'src/Routes';

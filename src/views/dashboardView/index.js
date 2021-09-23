@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import {Box, IconButton, Card, Paper, CardContent, Typography, Grid, CardActions, Button, Menu, MenuItem} from '@material-ui/core';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import {Box, IconButton, Card, Paper, CardContent, Typography, Grid, CardActions, Button, Menu, MenuItem} from '@mui/material';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ListPanel from './ListPanel';
 import ListPanelHeader from './ListPanelHeader';
 import DetailsPanel from './DetailsPanel';
 import DetailsPanelHeader from './DetailsPanelHeader';
 
 import Drawer from 'src/components/Drawer';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import Collapse from '@material-ui/core/Collapse';
+import Collapse from '@mui/material/Collapse';
 
 import { VictoryPie } from "victory";
-import { Link } from '@material-ui/core';
+import { Link } from '@mui/material';
 
 import {useSelector, useDispatch} from 'react-redux';
 import { getForms } from 'src/actions/formActions';
 import { getFormSubmissionCount } from 'src/actions/submissionActions';
 import ChartToggle from './ChartToggle';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useHistory } from 'react-router-dom';
 import largeTriangles from './largeTriangles.svg';
 

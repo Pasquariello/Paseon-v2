@@ -1,6 +1,6 @@
 import { createSlice, createEntityAdapter, EntityId} from "@reduxjs/toolkit";
-import Column from "src/views/formBuilderView/myTestFolder2New/Column";
-import Row from "src/views/formBuilderView/myTestFolder2New/Row";
+import Column from "src/views/formBuilderView/formBuilder/Column";
+import Row from "src/views/formBuilderView/formBuilder/Row";
 // import { fetchForm } from "../articles/articlesSlice";
 import { RootState } from '.';
 import { 

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import {Box, IconButton} from '@material-ui/core';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import {Box, IconButton} from '@mui/material';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ListPanel from './ListPanel';
 import ListPanelHeader from './ListPanelHeader';
 import DetailsPanel from './DetailsPanel';
 import DetailsPanelHeader from './DetailsPanelHeader';
 
 import Drawer from 'src/components/Drawer';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import Collapse from '@material-ui/core/Collapse';
+import Collapse from '@mui/material/Collapse';
 
 
 function DashboardView({ className, onSubmitSuccess, ...rest }) {
@@ -22,66 +22,64 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
   const [ listWidth, setListWidth ] = useState(OPEN_WIDTH)
   const fullWidth = 100 - listWidth
 
-  return (
-    <>
-     {/* <Drawer/> */}
-    <Box display="flex" >
-        <Box width={`${listWidth}%`}>
-          {/* <Collapse in={listWidth !== OPEN_WIDTH}> */}
+  return <>
+   {/* <Drawer/> */}
+  <Box display="flex" >
+      <Box width={`${listWidth}%`}>
+        {/* <Collapse in={listWidth !== OPEN_WIDTH}> */}
 
-            <ListPanelHeader />
-            <ListPanel />
-          {/* </Collapse> */}
+          <ListPanelHeader />
+          <ListPanel />
+        {/* </Collapse> */}
 
+          <Box
+            style={{
+              zIndex: 999,
+              position: 'fixed',
+              left: 0,
+              width: `${listWidth}%`,
+              // bottom: 95,
+            }}
+          >
             <Box
+              boxShadow={4}
               style={{
-                zIndex: 999,
-                position: 'fixed',
-                left: 0,
-                width: `${listWidth}%`,
-                // bottom: 95,
+                borderRadius: 45,
+                float: 'right',
+                position: 'absolute',
+                right: -20,
+                background: '#F4F6F8',
               }}
             >
-              <Box
-                boxShadow={4}
-                style={{
-                  borderRadius: 45,
-                  float: 'right',
-                  position: 'absolute',
-                  right: -20,
-                  background: '#F4F6F8',
+              <IconButton
+                onClick={() => {
+                  if (listWidth === OPEN_WIDTH) {
+                    setListWidth(CLOSED_WIDTH);
+                  } else {
+                    setListWidth(OPEN_WIDTH);
+                  }
                 }}
-              >
-                <IconButton
-                  onClick={() => {
-                    if (listWidth === OPEN_WIDTH) {
-                      setListWidth(CLOSED_WIDTH);
-                    } else {
-                      setListWidth(OPEN_WIDTH);
-                    }
-                  }}
-                >
+                size="large">
 
-                { listWidth === OPEN_WIDTH ? <ArrowBackIosIcon  width="16px" fontSize="small" /> : <ArrowForwardIosIcon fontSize="inherit" /> }
+              { listWidth === OPEN_WIDTH ? <ArrowBackIosIcon  width="16px" fontSize="small" /> : <ArrowForwardIosIcon fontSize="inherit" /> }
 
-                  {/* <img
-                    width="16px"
-                    alt="Logo"
-                    src="/static/code.svg"
-                  /> */}
-                </IconButton>
-              </Box>
+                {/* <img
+                  width="16px"
+                  alt="Logo"
+                  src="/static/code.svg"
+                /> */}
+              </IconButton>
             </Box>
-        </Box>
-        <Box width={`${fullWidth}%`}>
-            <DetailsPanelHeader />
+          </Box>
+      </Box>
+      <Box width={`${fullWidth}%`}>
+          <DetailsPanelHeader />
 
-            <DetailsPanel/>
-        </Box>
+          <DetailsPanel/>
+      </Box>
 
-    </Box>
-    </>
-  );
+  </Box>
+  </>;
 }
 
 export default DashboardView;

@@ -4,7 +4,7 @@ import { RootState } from '.';
 import {Row} from './rowsSlice';
 import formsService from 'src/services/formServices';
 
-import {buildArrayMatrix} from 'src/views/formBuilderView/myTestFolder2New/formBuilderUtilities.js';
+import {buildArrayMatrix} from 'src/views/formBuilderView/formBuilder/formBuilderUtilities.js';
 interface FormData {
     id: string;
     user_id: string;
@@ -162,7 +162,7 @@ export const slice = createSlice({
     },
     selectField(state, action) {
       state.selectedField = action.payload;
-  },
+    },
   },
   extraReducers:(builder) => {
     builder.addCase(fetchForms.pending, (state) => {

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { Button, IconButton, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import Box from '@mui/material/Box';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { Button, IconButton, Paper, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { set } from 'nprogress';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const EditField = (props) => {
@@ -23,11 +23,11 @@ const EditField = (props) => {
 
     return (
         <Box style={{width: '33%', border: '1px solid', maxHeight: '100vh', position: 'relative'}}>
-            <IconButton aria-label="close" onClick={() => setIsEdit()}>
+            <IconButton aria-label="close" onClick={() => setIsEdit()} size="large">
                 <CloseIcon />
             </IconButton>
         </Box>
-    )
+    );
 }
 
 export default EditField

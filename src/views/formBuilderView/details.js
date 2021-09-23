@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import {useSelector, useDispatch} from 'react-redux';
 import { getSingleForm } from '../../actions/formActions';
 import { useParams } from "react-router-dom";

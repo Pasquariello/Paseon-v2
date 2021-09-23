@@ -125,6 +125,19 @@ export const slice = createSlice({
       state.selectedField = action.payload;
     },
 
+    updateFieldDetails(state, action) {
+
+      const {id, field, value} = action.payload;
+      // const data = {
+      //   id,
+      //   changes:  {...state.columnEntities[id], [field]: value}
+      // }
+      console.log('action.payload', action.payload)
+    
+      state.columnEntities = {...state.columnEntities, [id]: value};
+    },
+
+
     incrementRowColCount(state, action) {
       const rowId = action.payload
       const row = state.rowEntities[rowId];
@@ -184,6 +197,7 @@ export const {
   moveCol,
   moveRow,
   selectField,
+  updateFieldDetails,
   incrementRowColCount,
   decrementRowColCount
 } = slice.actions;

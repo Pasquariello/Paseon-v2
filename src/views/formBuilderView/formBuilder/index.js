@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo} from 'react';
-import { useParams } from "react-router-dom";
-import {useSelector, useDispatch, connect } from 'react-redux';
-import {getSingleForm, createForm, deleteForm, addNewFieldAction, setFormStructure, changeField} from 'src/actions/formActions';
-import { Box, Button } from '@material-ui/core';
+import React, { useState, useEffect} from 'react';
+// import { useParams } from "react-router-dom";
+import {useSelector, useDispatch } from 'react-redux';
+import { Box, IconButton } from '@mui/material';
 import FormDnDSandbox from "./FormDnDSandbox";
 import shortid from 'shortid';
 import PanelControls from "./PanelControls";
 import ActionControls from './ActionControls';
 
-import FormFieldModel from 'src/models/formFieldModel';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-import {commonFields } from 'src/utils/commonFields';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 // NEW 
 import {addField} from 'src/store/formDetailsSlice'
@@ -125,8 +124,11 @@ const FormBuilderView = React.memo( ({formData }) => {
       )    
   }
  
+  const [controlPanelOpen, setControlPanelOpen] = useState(true);
 
-    const [commonFieldsState, setCommonFieldsState] = useState(commonFields)
+  const toggleControlPanel = () => {
+    setControlPanelOpen(!controlPanelOpen);
+  }
 
   return (
  
@@ -136,41 +138,75 @@ const FormBuilderView = React.memo( ({formData }) => {
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
+        flex: 1
       }}>
         <Box 
-        
-        style={{
-          display: 'flex',
-          overflow: 'hidden',
-          height: '100%',
-        }}>
-          <Box flexDirection="column" style={{
-            backgroundColor: 'yellow',
-            flex: 0,
-          }}>
+          style={{
+            display: 'flex',
+            overflow: 'hidden',
+            // height: '100%',
+            width: '100%',
+            flex: 1,
 
-            <PanelControls
-              addNewField={addNewField}
-              fieldList={dataList}
-              isEdit={isEdit}
-              setIsEdit={setIsEdit}
-              formTitle={formTitle || ''}
-              setFormTitle={setFormTitle}
-              commonFields={commonFieldsState}
-              // setIsDragging={setIsDragging}
-              // editField={editField}
-            /> 
-          </Box>
+          }}
+        >
+
+          <div 
+            style={{
+              backgroundColor: '#ddd',
+              borderRight: '1px solid',
+              position: 'relative',
+            }}
+          >
+             <div style={{
+              position: 'absolute',
+              right: -26,
+              bottom: 10,
+            }}>
+              <IconButton 
+                style={{background: '#d9d', color: '#fff'}} variant="contained"
+                onClick={toggleControlPanel}
+              >
+                { 
+                  controlPanelOpen 
+                  ? <KeyboardArrowLeftIcon fontSize="large"/> 
+                  : <KeyboardArrowRightIcon fontSize="large"/>
+                }
+                
+              </IconButton>
+            </div>
+            <Box 
+              flexDirection="column" 
+              style={{
+                overflowY: 'scroll',
+                width: controlPanelOpen ? 350 : 0,
+                position: 'relative',
+
+              }}
+            >
+            
+
+              <PanelControls
+                addNewField={addNewField}
+                fieldList={dataList}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
+                formTitle={formTitle || ''}
+                setFormTitle={setFormTitle}
+                // setIsDragging={setIsDragging}
+                // editField={editField}
+              /> 
+            </Box>
+          </div>
   
           <Box 
+            m={2}
             flexDirection="column" 
             style={{
               flex: 1,
               display: 'flex',
               overflow: 'hidden',
               alignItems: 'center',
-
-              // height: '100%'
             }}
           >
             <ActionControls 
@@ -178,13 +214,11 @@ const FormBuilderView = React.memo( ({formData }) => {
                 dataList={[]}
             />
               <Box
-                m={2}
                 style={{
                   overflow: 'auto',
                   border: '1px dashed',
                   overflowY: "auto",
                   width: '50%',
-                  // minHeight: "0px",
                 }}
                 
               >

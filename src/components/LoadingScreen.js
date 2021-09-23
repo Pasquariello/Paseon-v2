@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import NProgress from 'nprogress';
-import { Box, LinearProgress, makeStyles } from '@material-ui/core';
+import { Box, LinearProgress } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'center',
-    backgroundColor: theme.palette.background.default,
+    // backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexDirection: 'column',
     height: '100vh',
     justifyContent: 'center',
     minHeight: '100%',
-    padding: theme.spacing(3),
+    // padding: theme.spacing(3),
   }
 }));
 function LoadingScreen() {
