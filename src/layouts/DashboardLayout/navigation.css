@@ -65,12 +65,14 @@ button:focus {
    
      .logoFont{
       margin-left: 20px;
+      align-items: center;
      
     }
 
     .navWrap{
       margin-bottom: 25px;
       white-space: nowrap;
+      display: flex;
     }
 
  

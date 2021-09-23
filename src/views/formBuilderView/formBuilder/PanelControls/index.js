@@ -13,13 +13,12 @@ import { useTheme } from '@mui/material/styles';
 import {useDispatch, useSelector} from 'react-redux';
 
 
-
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
   ({ theme }) => ({
     textTransform: 'none',
     fontWeight: theme.typography.fontWeightRegular,
-    fontSize: theme.typography.pxToRem(15),
-    marginRight: theme.spacing(1),
+    fontSize: theme.typography.pxToRem(12),
+    marginRight: theme.spacing(0),
     color: 'rgba(000, 000, 000, 0.4)',
     '&.Mui-selected': {
       color: '#000',

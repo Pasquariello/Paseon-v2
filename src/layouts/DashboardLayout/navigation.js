@@ -10,6 +10,7 @@ import {Box, IconButton, Card, Paper, CardContent, Typography, Grid, CardActions
 import { useHistory } from 'react-router';
 
 import './navigation.css';
+import logo from 'src/assets/images/PaseonLogo_BlackBackground.png';
 
 
 export default function Navigation() {
@@ -39,13 +40,15 @@ export default function Navigation() {
 							<div className="toggle-btn type11"></div>
 						</span>
 					</Button>
-					<span className="logoFont"
+					{/* <span className="logoFont"
 						style={{visibility: hoverState ? 'visible': 'hidden', position: 'absolute', color: 'white'}}
 					>
+						<div style={{background: 'red', display: 'flex', alignItems: 'center'}}>
                         <Link href="/app/dashboard" color="inherit">
-						    <Typography variant="h5">Paseon</Typography>
+							<img width={100} src={logo}/>
                         </Link>
-					</span>
+						</div>
+					</span> */}
        
 				</div>
 

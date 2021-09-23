@@ -22,6 +22,7 @@ import ChartToggle from './ChartToggle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useHistory } from 'react-router-dom';
 import largeTriangles from './largeTriangles.svg';
+import logo from 'src/assets/images/PaseonLogo_WhiteBackground.png';
 
 
 // NEW 
@@ -77,8 +78,16 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
   return (
     <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0',}} p={4}>
-        <Box my={2}>
-          <Typography variant="h6">Quick Statistics</Typography>
+        
+  
+        
+        <Box my={2} display="flex" justifyContent="space-between" >
+          <Box display="flex" alignItems="flex-end">
+            <Typography variant="h6">Quick Statistics</Typography>
+          </Box>
+          <Box display="flex" alignItems="flex-end">
+            <img width={100} src={logo} style={{marginBottom:"-15px"}} alt="Paseon Logo"/>
+          </Box>
         </Box>
         <div style={{flex: '1 1 auto'}}>
           <Grid container spacing={4}>
