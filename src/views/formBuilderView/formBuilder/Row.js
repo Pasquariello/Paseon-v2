@@ -313,7 +313,6 @@ const Row = React.memo( (props) => {
                     {/* // console.log('columnId', columnId) */}
                     {
                         columns?.length ? columns.map((column, index) => {      
-                            console.log('column', column)
                             return (
                         
                                 <Column 

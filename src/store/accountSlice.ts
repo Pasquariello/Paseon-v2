@@ -39,16 +39,16 @@ export const slice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
-        state.loading = true;
-      });
-      builder.addCase(login.fulfilled, (state, action) => {
-        accountAdapter.setAll(state, action.payload.user);
-        state.auth = action.payload.auth
-        state.loading = false;
-      });
-      builder.addCase(login.rejected, (state) => {
-        state.loading = false;
-      });
+      state.loading = true;
+    });
+    builder.addCase(login.fulfilled, (state, action) => {
+      accountAdapter.setAll(state, action.payload.user);
+      state.auth = action.payload.auth
+      state.loading = false;
+    });
+    builder.addCase(login.rejected, (state) => {
+      state.loading = false;
+    });
   }
 });
 

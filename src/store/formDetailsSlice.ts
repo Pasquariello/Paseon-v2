@@ -103,11 +103,8 @@ export const slice = createSlice({
           const index = state.columns.findIndex((stateColumn) => stateColumn.id === colId);
           state.columnEntities[colId] = {...state.columnEntities[colId], row: row.position}
           state.columns[index] = {...state.columns[index], row: row.position}
-        })
-      })
-
-      
-
+        });
+      });
       // rowsAdapter.setAll(state,  action.payload)
     },
 

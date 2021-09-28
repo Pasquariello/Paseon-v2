@@ -32,7 +32,7 @@ const Column = React.memo( (props) => {
         width,
 
         rowIndex,
-        colIndex
+        colIndex,
     } = props;
     const WIDTH = `${width}%`
     // const column = useSelector((state) => state.formDetails.columnEntities[columnId]);
@@ -45,8 +45,8 @@ const Column = React.memo( (props) => {
     const renderInput = useCallback(() => {
         console.log('renderInput')
             const obj = {
-                text: <p>{label}</p>
-                // text: <TextInput label={label || ''}/>,
+                // text: <p>hello</p>
+                text: <TextInput label={label || ''}/>,
                 // text: <TextInput fieldData={column}/>,
                 // textArea: <TextAreaInput fieldData={column}/>,
                 // checkbox: <CheckboxInput fieldData={column} />,
@@ -62,7 +62,7 @@ const Column = React.memo( (props) => {
 
     return (
         <Draggable 
-            // key={id} 
+            key={id} 
             // style={{
             //     width: WIDTH,
             // }}
@@ -97,7 +97,7 @@ const Column = React.memo( (props) => {
 
             {/* TODO useCallback */}
             {/* https://itnext.io/6-tips-for-better-react-performance-4329d12c126b */}
-                {/* { label ? renderInput() : null }  */}
+                { label ? renderInput() : null } 
 
             </div>
 
@@ -108,7 +108,20 @@ const Column = React.memo( (props) => {
                 }}
                 >
  
-                    
+                    <Tooltip title="Tune Properties">
+                        <IconButton  
+                        //  {/* TODO useCallback */}
+                        // https://itnext.io/6-tips-for-better-react-performance-4329d12c126b
+                        // onClick={() => dispatch(selectField(columnId))}
+                         aria-label="tune" size="large">
+                            <TuneIcon/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit Field">
+                        <IconButton aria-label="edit" size="large">
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Tooltip>
                     
                 </div>
         </div>
