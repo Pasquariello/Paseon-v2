@@ -46,18 +46,22 @@ const FormBuilderView = React.memo( ({formData }) => {
   const dataList = [];
   
   // const form = useSelector((state) => useSelector(state,  ));
-  const form = useSelector(state => state.forms)
+  const {id} = useSelector(state => state.formDetails);
+  const form = useSelector(state => state.formDetails);
+  console.log('HERE FORM', form)
+  console.log('HERE id', id)
+
   const {rows, columns} = useSelector(state => state.formDetails);
   const formDetails = useSelector(state => state.formDetails);
   // console.log('formDetails', formDetails)
 
-  const [id, setId] = useState();
+  // const [id, setId] = useState();
   
-  useEffect(() => {
-   if (form.ids) {
-     setId(form.ids[0])
-    }
-  }, [form])
+  // useEffect(() => {
+  //  if (form.ids) {
+  //    setId(form.ids[0])
+  //   }
+  // }, [form])
   // const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
   // const [ fieldList, setFieldList ] = useState(formData?.fields)
   const [isEdit, setIsEdit] = useState(null);
@@ -88,14 +92,13 @@ const FormBuilderView = React.memo( ({formData }) => {
         id: shortid.generate(),
         position: rows?.length || 0,
         formId: id || formId,
-        // DEPENDING ON HOW PASSING COLUMN!
-        columns: [ item.id],
         colCount: 1,
-        // columns: [ ...columns, item]
+        // DEPENDING ON HOW PASSING COLUMN!
+        // columns: [ item.id],
+        columns: [ ...columns, item]
 
     }
 
-    const fieldsCopy = form?.entities[id]?.fields ? form.entities[id].fields : []
       
   
       // const formFoo = {
@@ -222,6 +225,7 @@ const FormBuilderView = React.memo( ({formData }) => {
                 }}
                 
               >
+                {id}
                 {/* TODO - rename */}
                 <FormDnDSandbox
                   addNewField={addNewField}

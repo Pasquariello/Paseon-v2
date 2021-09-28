@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback} from 'react';
 
 import {useSelector, useDispatch} from 'react-redux';
 import { Container, Draggable } from "react-smooth-dnd";
@@ -22,28 +22,112 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-import {incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
+import {incrementRowColCount, decrementRowColCount, moveCol} from 'src/store/formDetailsSlice';
+
+
+// todo move to util file and delete
+const applyDrag = (arr, dragResult) => {
+    const { removedIndex, addedIndex, payload } = dragResult;
+    if (removedIndex === null && addedIndex === null) return arr;
+    const result = [...arr];
+  
+    let itemToAdd = payload.id || shortid.generate();
+  
+    if (removedIndex !== null) {
+  
+      itemToAdd = result.splice(removedIndex, 1)[0];
+    }
+  
+    if (addedIndex !== null) {
+  
+      result.splice(addedIndex, 0, itemToAdd);
+    }
+  
+    return result;
+  };
+
 
 const Row = React.memo( (props) => {
     const { 
         rowId, 
         rowIndex, 
         onCardDrop,
-        handleIncrement,
-        handleDecrement,
+        // handleIncrement,
+        // handleDecrement,
     } = props
     // const row = useSelector(state => state.forms.structuredForm.find(row => row.id === rowId))
     // const row = useSelector((state) => selectRowById(state, rowId));
     // const columns = row?.columns ? row.columns : [];
 
+    const dispatch = useDispatch();
+    // const row = useSelector((state) => state.formDetails.rowEntities[rowId]);
+    const row = useSelector((state) => state.formDetails.rows[rowIndex]);
 
-    const row = useSelector((state) => state.formDetails.rowEntities[rowId]);
     const columns = row?.columns ? row.columns : [];
 
     const rowColumnCount = row?.colCount || 1;
+
+    // const [rowColumnCount, setRowColumnCount] = useState(row?.colCount || 1);
     
 
+    const handleIncrement =  useCallback(() => {
+        if (rowColumnCount < 3) {
+          dispatch(incrementRowColCount(rowIndex));
+        // setRowColumnCount(rowColumnCount + 1)
 
+  
+        }
+      }, [dispatch, rowColumnCount, rowIndex]);
+
+      const handleDecrement = useCallback( () => {  
+        if (rowColumnCount > 1 && row.columns.length < rowColumnCount) {
+          dispatch(decrementRowColCount(rowIndex));
+        //   setRowColumnCount(rowColumnCount - 1)
+        }
+      }, [dispatch, row.columns.length, rowColumnCount, rowIndex])
+
+      const handleOnCardDrop = useCallback( (e) => {  
+        onCardDrop(rowIndex, e)
+      }, [onCardDrop, rowIndex])
+
+
+    //   const onCardDrop = (dropResult)  => {
+    //     // console.log('rowId', rowId)
+  
+    //     // console.log('dropResult', dropResult)
+    //     // if (!dropResult.addedIndex && !dropResult.removedIndex){
+    //     //   return
+    //     // }
+      
+    //     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+  
+    //     //   const row = rowEntities[rowId];
+    //       const dropResultCopy = {...dropResult}
+    //       //new 
+    //       const newCol = applyDrag(row.columns, dropResultCopy);
+    //       const updatedRow = {...row, columns: newCol}
+    //       const updatedColumns = updatedRow.columns.map((column, index) => ({
+    //         id: column,
+    //         changes: {
+    //           ...dropResult.payload.body,
+    //           position: index
+    //         }
+    //       }));
+  
+  
+    //       const data = {
+    //         updatedRow,
+    //         updatedColumns,
+    //       };
+  
+  
+    //       dispatch(moveCol(data));
+    //     }
+       
+    //   }
+
+    // const handleChange = useCallback(() => props.callback(props.id), [props.id]);
+   
     return (
         <>
         {/* <RowSettingsModal 
@@ -63,7 +147,7 @@ const Row = React.memo( (props) => {
                     display: 'flex',
                      margin: 10, 
                      padding: 20, 
-                 overflowX: 'auto',
+                    overflowX: 'auto',
                 }}
             >
 
@@ -96,9 +180,13 @@ const Row = React.memo( (props) => {
              
                 <Typography style={{ fontSize: 10 }}>Column Count</Typography>
                 <div>
-                    <IconButton size="small" onClick={() => handleDecrement(rowId, rowColumnCount, row.columns.length)}><RemoveIcon style={{ fontSize: 16 }}/></IconButton>
+                    <IconButton size="small" 
+                    onClick={handleDecrement}
+                    ><RemoveIcon style={{ fontSize: 16 }}/></IconButton>
                         <Typography variant="caption" style={{ fontSize: 12 }}>{rowColumnCount}</Typography>
-                    <IconButton size="small" onClick={() => handleIncrement(rowId, rowColumnCount)}><AddIcon style={{ fontSize: 16 }}/></IconButton>
+                    <IconButton size="small" 
+                        onClick={handleIncrement}
+                    ><AddIcon style={{ fontSize: 16 }}/></IconButton>
                 </div>
           
 
@@ -106,7 +194,8 @@ const Row = React.memo( (props) => {
               <Container
                     groupName="rowContainer"
                     orientation="horizontal"
-                    onDrop={e => onCardDrop(rowId, e)}
+                    // onDrop={(e) => onCardDrop(rowIndex, e)}
+                    onDrop={handleOnCardDrop}
                     getChildPayload={(index) =>{
                         return {
                             id: columns[index],
@@ -223,13 +312,16 @@ const Row = React.memo( (props) => {
                     {/* {columns?.length ? columns.map((columnId) => { */}
                     {/* // console.log('columnId', columnId) */}
                     {
-                        columns?.length ? columns.map((column) => {                     
+                        columns?.length ? columns.map((column, index) => {      
+                            console.log('column', column)
                             return (
                         
                                 <Column 
-                                    key={column}
-                                    columnId={column}
-                                    width={100 / row?.colCount || 1}
+                                    key={column.id}
+                                    columnId={column.id}
+                                    rowIndex={rowIndex || 0}
+                                    colIndex={index}
+                                    width={100 / row?.columns.length || 1}
                                 />
                             )
                         }) : null

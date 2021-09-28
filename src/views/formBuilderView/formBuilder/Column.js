@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { Draggable } from "react-smooth-dnd";
 import './form.css';
 
@@ -30,48 +30,48 @@ const Column = React.memo( (props) => {
     const {
         columnId,
         width,
-        // fieldId,
-        // label,
-        // rowId,
-        // rowLength,
-        // //new
-        // subItem
 
+        rowIndex,
+        colIndex
     } = props;
     const WIDTH = `${width}%`
-    // const column = useSelector((state) => selectColumnById(state, columnId));
-    const column = useSelector((state) => state.formDetails.columnEntities[columnId]);
+    // const column = useSelector((state) => state.formDetails.columnEntities[columnId]);
+    const column = useSelector((state) => state.formDetails.rows[rowIndex].columns[colIndex]);
 
     const {id, label, type} = column || {id: '', label: '', type: 'text'};
     // const widthSettings = colWidth ? 100 / (rowLength + 1) : 100 / rowLength;
 
-    const renderInput = () => {
-        const obj = {
-            // text: <p>hello</p>
-            text: <TextInput label={column?.label || ''}/>,
-            // text: <TextInput fieldData={column}/>,
-            // textArea: <TextAreaInput fieldData={column}/>,
-            // checkbox: <CheckboxInput fieldData={column} />,
-            // radio: <RadioInput fieldData={column} />,
-            // select: <SelectInput fieldData={column} />,
-        }
-        return obj[type]
-    }
+
+    const renderInput = useCallback(() => {
+        console.log('renderInput')
+            const obj = {
+                text: <p>{label}</p>
+                // text: <TextInput label={label || ''}/>,
+                // text: <TextInput fieldData={column}/>,
+                // textArea: <TextAreaInput fieldData={column}/>,
+                // checkbox: <CheckboxInput fieldData={column} />,
+                // radio: <RadioInput fieldData={column} />,
+                // select: <SelectInput fieldData={column} />,
+            }
+            return obj[type]
+    }, [label, type]);
+
+    
+
+    
 
     return (
         <Draggable 
-            key={id} 
-            style={{
-                width: WIDTH,
-                // flex: 1
-            }}
+            // key={id} 
+            // style={{
+            //     width: WIDTH,
+            // }}
 
         >
         <div
             className="draggable-item-horizontal"
             style={{
-                // border: '1px solid red',
-                // width: '300px',
+             
                 width: '100%',
                 display: "flex",
                 height: '100%',
@@ -79,43 +79,36 @@ const Column = React.memo( (props) => {
                 justifyContent: 'space-between',
                 alignItems: 'space-between',
                 padding: 10,
-                // width: WIDTH
-                // background: 'red'
+          
             }}
         >
             <div 
                 style={{
                     flex: 1,
-                    // justifyContent: 'center',
                     display: "flex",
-                    // height: '100%',
-                    // flex: 1,
-                    // justifyContent: 'space-between',
                     alignItems: 'center',
-                }}>
+                }}
+            >
             {/* Temporary */}
             {/* <button  onClick={() => dispatch(selectField(columnId))} >select</button> */}
             {/* POSITION: {column ? column.position : 'MISSING POS'} */}
             {/* <p>{columnId}</p> */}
             {/* <p>{label}</p> */}
-                { renderInput() } 
+
+            {/* TODO useCallback */}
+            {/* https://itnext.io/6-tips-for-better-react-performance-4329d12c126b */}
+                {/* { label ? renderInput() : null }  */}
+
             </div>
 
-             <div style={{
+             <div 
+             style={{
                     display: 'flex',
                     flexDirection: 'column'
-                }}>
+                }}
+                >
  
-                    <Tooltip title="Tune Properties">
-                        <IconButton  onClick={() => dispatch(selectField(columnId))} aria-label="tune" size="large">
-                            <TuneIcon/>
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Field">
-                        <IconButton aria-label="edit" size="large">
-                            <DeleteIcon/>
-                        </IconButton>
-                    </Tooltip>
+                    
                     
                 </div>
         </div>

@@ -49,7 +49,7 @@ function ActionControls({ formTitle, dataList }) {
                     setIsLoading(false);
                 }}
             >
-                Save DUDE
+                Save
                 {isLoading ? <CircularProgress /> : ''}
             </Button>
 

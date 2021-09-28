@@ -10,9 +10,10 @@ import { Container } from "react-smooth-dnd";
 import {fetchFormData, moveRow, moveCol, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
 import {Button } from '@mui/material';
+import {List} from 'react-virtualized';
 
 
-
+// todo move to util file and delete
 const applyDrag = (arr, dragResult) => {
   const { removedIndex, addedIndex, payload } = dragResult;
   if (removedIndex === null && addedIndex === null) return arr;
@@ -40,9 +41,9 @@ const  FormDnDSandbox = React.memo((props) => {
 
     const rowsArray = useSelector(state => state.formDetails.rows);
 
-
+  
     // Gets run twice - for the row the card left and for the row the card is dropped
-    const onCardDrop = (rowId, dropResult)  => {
+    const onCardDrop = (rowIndex, dropResult)  => {
       // console.log('rowId', rowId)
 
       // console.log('dropResult', dropResult)
@@ -52,16 +53,20 @@ const  FormDnDSandbox = React.memo((props) => {
     
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
 
-        const row = rowEntities[rowId];
+        // const row = rowEntities[rowId];
+        const row = rowsArray[rowIndex];
         const dropResultCopy = {...dropResult}
         //new 
         const newCol = applyDrag(row.columns, dropResultCopy);
-        const updatedRow = {...row, columns: newCol}
+        const updatedCols = newCol.map(col =>( {...col, row: rowIndex} ));
+        const updatedRow = {...row, columns: updatedCols}
+        console.log('updatedRow', updatedRow)
+
         const updatedColumns = updatedRow.columns.map((column, index) => ({
           id: column,
           changes: {
-            ...dropResult.payload.body,
-            position: index
+            col: index,
+            row: updatedRow.position,
           }
         }));
 
@@ -69,8 +74,8 @@ const  FormDnDSandbox = React.memo((props) => {
         const data = {
           updatedRow,
           updatedColumns,
+          rowIndex
         };
-
 
         dispatch(moveCol(data));
       }
@@ -93,11 +98,22 @@ const  FormDnDSandbox = React.memo((props) => {
     
 
   // }
-      const updatedFormRows = applyDrag(rowsArray, dropResult);
-      const data = updatedFormRows.map((row, index) => ({
+      const updatedRow = applyDrag(rowsArray, dropResult);
+
+      const data = updatedRow.map((row, index) => ({
         ...row,
         position: index,
       }));
+      console.log('updatedRow', updatedRow)
+      // const updatedColumns = updatedRow.columns.map((column, index) => ({
+      //   id: column,
+      //   changes: {
+      //     col: index,
+      //     row: updatedRow.position,
+      //   }
+      // }));
+      // 
+      // console.log('updatedColumns', updatedColumns)
 
       dispatch(moveRow(data));
     }
@@ -118,6 +134,20 @@ const  FormDnDSandbox = React.memo((props) => {
       }
     }
 
+    const renderRow = (row, rowIndex) => {
+      console.log(row)
+      return (
+
+              <Row  
+                rowIndex={row.index}
+                key={row.index}
+                rowId={row.index}
+                onCardDrop={onCardDrop}
+              />    
+      );
+
+    }
+
     return ( 
         <Container
         // TAYLOR - DO I NEED TO REMOVE!?
@@ -133,6 +163,17 @@ const  FormDnDSandbox = React.memo((props) => {
             className: 'cards-drop-preview'
           }}
         >
+                      {/* {rowsArray ? rowsArray.map((row, rowIndex) => {
+return (
+          <List
+    width={300}
+    height={300}
+    rowCount={rowsArray.length}
+    rowHeight={100}
+    rowRenderer={renderRow}
+  />
+  );
+}) : ''} */}
           {/* DO NOT ADD ANY ELEMS AS CHILDREN THIS WILL BREAK ROW DND */}
           {/* ! Important Comment button below out when not in use! */}
           {/* <Button onClick={() => {
@@ -146,9 +187,9 @@ const  FormDnDSandbox = React.memo((props) => {
                         key={row.id}
                         rowId={row.id}
                         onCardDrop={onCardDrop}
-                        addNewField={props.addNewField}
-                        handleIncrement={handleIncrement}
-                        handleDecrement={handleDecrement}
+                        // addNewField={props.addNewField}
+                        // handleIncrement={handleIncrement}
+                        // handleDecrement={handleDecrement}
                     />    
             );
           }) : ''}

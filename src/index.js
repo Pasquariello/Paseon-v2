@@ -9,7 +9,7 @@ import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/
 
 import makeStyles from '@mui/styles/makeStyles';
 
-const theme = createTheme();
+const theme = createTheme({});
 
 const useStyles = makeStyles((theme) => {
   root: {
@@ -19,9 +19,11 @@ const useStyles = makeStyles((theme) => {
 
 
 ReactDOM.render(
-  <Provider store={store}>
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
       <App />
-  </Provider>,
+    </Provider>
+  </ThemeProvider>,
   document.getElementById('root')
 );
 
