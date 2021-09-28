@@ -15,7 +15,6 @@ import {changeField} from 'src/actions/formActions';
 
 const CustomFieldAdd = (props) => {
     const {selectedField} = useSelector(state => state.formDetails);
-     console.log('selectedField', selectedField)
     const column = useSelector(state => state.formDetails.columnEntities[selectedField]);
 
     const dispatch = useDispatch()

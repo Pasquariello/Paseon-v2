@@ -7,7 +7,6 @@ class formsService {
       const tokenObj = await getTokenObj();
       const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
-        console.log('getForms user_id', user_id)
         return axios.get(`http://localhost:4000/form_list/${user_id}`)
         .then(res => {
           return res.data
@@ -29,7 +28,6 @@ class formsService {
 
       return axios.post(`http://localhost:4000/form/${user_id}`, body )
       .then(res => {
-          console.log('res.data', res.data)
         return res.data
       });
     }
@@ -37,7 +35,6 @@ class formsService {
     deleteForm = (form_id) => {
       return axios.delete(`http://localhost:4000/form/${form_id}`)
       .then(res => {
-          console.log('res.data', res.data)
         return res.data
       });
     }

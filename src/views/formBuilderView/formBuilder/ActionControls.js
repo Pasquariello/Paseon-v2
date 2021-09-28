@@ -12,13 +12,11 @@ function ActionControls({ formTitle, dataList }) {
   const form = useSelector(state => state.forms)
   const formDetails = useSelector(state => state.formDetails)
 
-    console.log('form', form)
   const [isLoading, setIsLoading] = useState(false);
     return (
         <>
             <Button
                 onClick={ async () => {
-                    console.log('formDetails', formDetails)
              
                     return
                     setIsLoading(true)

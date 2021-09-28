@@ -70,8 +70,6 @@ export const slice = createSlice({
   },
   reducers: {
     addField(state, action) {
-      console.log('ACTIVE FIELD')
-      console.log(' action.payload', action.payload)
       // this is if  array of row and array of col
       // const rowId = action.payload.row.id;
       // const colId = action.payload.column.id;
@@ -92,7 +90,6 @@ export const slice = createSlice({
 
     },
     moveRow(state, action) {
-      console.log('action.payload.row',  action.payload)
       state.rows = action.payload;
       const rowEntities = arrayToObject(action.payload);
       state.rowEntities = rowEntities;
@@ -113,7 +110,6 @@ export const slice = createSlice({
       const updatedRowEntities: any =  {...state.rowEntities, [rowId]: action.payload.updatedRow}
       const updatedRowArray = Object.keys(updatedRowEntities).map((k) => updatedRowEntities[k])
       const index = action.payload.rowIndex;
-      console.log('action.payload', action.payload)
       // state.rows = action.payload.updatedRow;
       state.rows[index] = action.payload.updatedRow
 

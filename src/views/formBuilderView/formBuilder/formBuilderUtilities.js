@@ -15,7 +15,6 @@ arrayCopy.map((el, index) => {
         return {...el, row: tempArray.length - 1 }
     }
 });
-console.log('formModel(tempArray)', formModel(tempArray))
 // this on is calling the name form 
 // dispatch(addNewFieldAction(formModel(tempArray)))
 return formModel(tempArray)

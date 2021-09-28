@@ -34,7 +34,6 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
   // const formList = useSelector(state => state.forms.list)
   // const formList = useSelector(selectAllForms(state));
   const formList = useSelector((state) => selectAllForms(state));
-  console.log('formList', formList)
   const formSubmissionCount = useSelector(state => state.submissions.form_submission_count)
   const history = useHistory();
 

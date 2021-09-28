@@ -60,7 +60,6 @@ const  FormDnDSandbox = React.memo((props) => {
         const newCol = applyDrag(row.columns, dropResultCopy);
         const updatedCols = newCol.map(col =>( {...col, row: rowIndex} ));
         const updatedRow = {...row, columns: updatedCols}
-        console.log('updatedRow', updatedRow)
 
         const updatedColumns = updatedRow.columns.map((column, index) => ({
           id: column,
@@ -83,7 +82,6 @@ const  FormDnDSandbox = React.memo((props) => {
     }
 
     const onRowDrop = (dropResult) => {
-      console.log('onRowDrop', dropResult) 
   // TAYLOR - flexhing out idea to drop card in row
   // if (dropResult.payload.type === 'col') {
   //   // return
@@ -104,7 +102,6 @@ const  FormDnDSandbox = React.memo((props) => {
         ...row,
         position: index,
       }));
-      console.log('updatedRow', updatedRow)
       // const updatedColumns = updatedRow.columns.map((column, index) => ({
       //   id: column,
       //   changes: {
@@ -126,8 +123,6 @@ const  FormDnDSandbox = React.memo((props) => {
     }
 
     const handleDecrement = (id, currentRowColumnCountSettings, currentColumnCount) => {
-      console.log('currentColumnCount',currentColumnCount)
-      console.log('currentRowColumnCountSettings', currentRowColumnCountSettings)
 
       if (currentRowColumnCountSettings > 1 && currentColumnCount < currentRowColumnCountSettings) {
         dispatch(decrementRowColCount(id));
@@ -135,7 +130,6 @@ const  FormDnDSandbox = React.memo((props) => {
     }
 
     const renderRow = (row, rowIndex) => {
-      console.log(row)
       return (
 
               <Row  

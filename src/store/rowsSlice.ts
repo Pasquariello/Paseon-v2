@@ -39,17 +39,14 @@ export const slice = createSlice({
 
     }, 
     moveRow(state, action) {
-      console.log('action.payload.row',  action.payload)
       rowsAdapter.setAll(state,  action.payload)
     },
     addRow(state, action) {
-      console.log('action.payload.row',  action.payload)
       rowsAdapter.addOne(state,  action.payload)
     }
   },
   extraReducers: (builder) => {
     builder.addCase(addField, (state, action) => {
-        console.log(' action.payload.row',  action.payload.row)
         rowsAdapter.addOne(state, action.payload.row)
     });
 

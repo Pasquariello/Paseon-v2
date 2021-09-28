@@ -25,9 +25,7 @@ const formsAdapter = createEntityAdapter<FormData>();
 
 export const fetchForms = createAsyncThunk('forms/fetchForms', async () => {
   const response = await formsService.getForms(); 
-  console.log('response', response)
   const formStructure = buildArrayMatrix(response[0].fields);
-  console.log('formStructure', formStructure)
   return (await response) as FormData[];
 });
 
@@ -141,7 +139,6 @@ export const slice = createSlice({
   reducers: {
     addField(state, action) {
         if (!state.activeForm){
-          console.log(' action.payload', action.payload)
             state.activeForm = action.payload.id
 
             const { row, column, ...formData } = action.payload;
@@ -166,7 +163,6 @@ export const slice = createSlice({
   },
   extraReducers:(builder) => {
     builder.addCase(fetchForms.pending, (state) => {
-      console.log('pending')
       state.loading = true;
     });
     builder.addCase(fetchForms.fulfilled, (state, action) => {
@@ -174,7 +170,6 @@ export const slice = createSlice({
       state.loading = false;
     });
     builder.addCase(fetchForms.rejected, (state) => {
-      console.log('rejected')
       state.loading = false;
     });
 

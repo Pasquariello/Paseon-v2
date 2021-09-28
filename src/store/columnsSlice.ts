@@ -36,7 +36,6 @@ export const slice = createSlice({
   reducers: {
     selectColumn(state, action){
       const id = action.payload;
-      console.log('state', state.entities[id])
       state.selectedColumn = state.entities[id] || {}
     },
     updateFieldDetails(state, action) {
@@ -46,7 +45,6 @@ export const slice = createSlice({
         id,
         changes:  {...state.entities[id], [field]: value}
       }
-      console.log('data', data)
       columnsAdapter.updateOne(state, data);
     },
   },
@@ -71,7 +69,6 @@ export const slice = createSlice({
     });
 
     builder.addCase(fetchFormData.fulfilled, (state, action) => {
-      console.log('col action.payload', action.payload)
       // const cols = action.payload.columns.sort((a, b) => (a.position > b.position) ? 1 : -1);
       // IF NEED TO FLATTEN ALL COLS
       // const cols = action.payload.rows
@@ -88,7 +85,6 @@ export const slice = createSlice({
           (arr, elem) => arr.concat(elem), []
         )
       
-      console.log('ADDED COL', cols)
       columnsAdapter.setAll(state, cols);
       // state.loading = false;
 

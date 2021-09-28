@@ -43,7 +43,6 @@ const Column = React.memo( (props) => {
 
 
     const renderInput = useCallback(() => {
-        console.log('renderInput')
             const obj = {
                 // text: <p>hello</p>
                 text: <TextInput label={label || ''}/>,
@@ -63,9 +62,11 @@ const Column = React.memo( (props) => {
     return (
         <Draggable 
             key={id} 
-            // style={{
-            //     width: WIDTH,
-            // }}
+            style={{
+                // width: WIDTH,
+                flex: 1
+
+            }}
 
         >
         <div
@@ -79,6 +80,7 @@ const Column = React.memo( (props) => {
                 justifyContent: 'space-between',
                 alignItems: 'space-between',
                 padding: 10,
+                // width: WIDTH,
           
             }}
         >

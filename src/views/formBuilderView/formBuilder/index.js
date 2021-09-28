@@ -48,8 +48,7 @@ const FormBuilderView = React.memo( ({formData }) => {
   // const form = useSelector((state) => useSelector(state,  ));
   const {id} = useSelector(state => state.formDetails);
   const form = useSelector(state => state.formDetails);
-  console.log('HERE FORM', form)
-  console.log('HERE id', id)
+  console.log('FORM', form)
 
   const {rows, columns} = useSelector(state => state.formDetails);
   const formDetails = useSelector(state => state.formDetails);
@@ -71,7 +70,6 @@ const FormBuilderView = React.memo( ({formData }) => {
    const  addNewField = (newField) => {
     const { name, type, label, options } = newField;
     const position = form?.fields?.length || 0
-    console.log(form)
     const formId = id || shortid.generate();
     // const columns = form?.row?.columns || []
     // const rows = form?.entities[id]?.rows || []
@@ -87,7 +85,6 @@ const FormBuilderView = React.memo( ({formData }) => {
       col: 0, 
       width: 50
     }
-    console.log('rows', rows)
     const newRow = {
         id: shortid.generate(),
         position: rows?.length || 0,
@@ -118,8 +115,6 @@ const FormBuilderView = React.memo( ({formData }) => {
         row: newRow,
         column: item,
       }
-
-      console.log('formFoo', formFoo)
 
 
       dispatch(
