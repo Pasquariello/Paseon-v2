@@ -5,7 +5,6 @@ import getTokenObj from 'src/utils/getToken';
 class authService {
 
     logout = () => {
-      console.log('LOGOUT')
       this.setSession(null);
     }
 
@@ -22,6 +21,7 @@ class authService {
 
 
     loginWithEmailAndPassword = (body) => {
+      console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
       return axios.post(`${process.env.REACT_APP_API_URL}/user/login`, body )
       .then(res => {
         const token = res.data.token;
@@ -38,7 +38,6 @@ class authService {
         Cookies.set('paseonAccessToken', JSON.stringify(tokenObj));
         axios.defaults.headers.common.Authorization = `Bearer ${tokenObj}`;
       } else {
-        console.log('REMOVE')
         Cookies.remove('paseonAccessToken');
         delete axios.defaults.headers.common.Authorization;
       }
