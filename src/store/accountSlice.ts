@@ -36,6 +36,10 @@ export const slice = createSlice({
     setUserData(state, action) {
       console.log('ACTION.PAYLOAD', action)
       state.auth = action.payload.auth
+    },
+    logout(state) {
+      authService.logout();
+      state.auth = false;
     }
   },
   extraReducers: (builder) => {
@@ -55,4 +59,4 @@ export const slice = createSlice({
 
 const reducer = slice.reducer;
 export default reducer;
-export const { setUserData } = slice.actions;
+export const { setUserData, logout} = slice.actions;

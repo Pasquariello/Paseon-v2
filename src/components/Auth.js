@@ -11,7 +11,8 @@ import React, {
   //   setUserData, 
   //   logout 
   // } from 'src/actions/accountActions';
-  import {setUserData} from 'src/store/accountSlice';
+
+  import {setUserData, logout} from 'src/store/accountSlice';
   import authService from 'src/services/authService';
 
   function Auth({ children }) {
@@ -19,10 +20,8 @@ import React, {
     const [isLoading, setLoading] = useState(true);
     
     useEffect(() => {
-      console.log('HERE 1')
 
       const initAuth = async () => {
-        console.log('HERE 2')
         // authService.setAxiosInterceptors({
         //    onLogout: () => dispatch(logout())
         // });
@@ -31,8 +30,6 @@ import React, {
         if (auth) {
           const user = await authService.loginWithToken();
           const auth = user.status === 200 || false
-          console.log('HERE 3',user.status )
-          console.log('HERE 3', auth )
           await dispatch(setUserData({user: user.data, auth}));
         }
         setLoading(false);

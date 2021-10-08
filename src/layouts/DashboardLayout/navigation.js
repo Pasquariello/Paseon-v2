@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { logout } from 'src/actions/accountActions';
+import { logout } from 'src/store/accountSlice';
 
 import { faHome, faUserPlus, faUser, faPlus, faKey, faHammer, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
 
