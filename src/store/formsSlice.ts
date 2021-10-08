@@ -1,10 +1,9 @@
 import { createSlice, createEntityAdapter, createAsyncThunk, EntityState, EntityId } from "@reduxjs/toolkit";
 // import { fetchForm } from "../articles/articlesSlice";
 import { RootState } from '.';
-import {Row} from './rowsSlice';
 import formsService from 'src/services/formServices';
 
-import {buildArrayMatrix} from 'src/views/formBuilderView/formBuilder/formBuilderUtilities.js';
+// import {buildArrayMatrix} from 'src/views/formBuilderView/formBuilder/formBuilderUtilities.js';
 interface FormData {
     id: string;
     user_id: string;
@@ -25,106 +24,9 @@ const formsAdapter = createEntityAdapter<FormData>();
 
 export const fetchForms = createAsyncThunk('forms/fetchForms', async () => {
   const response = await formsService.getForms(); 
-  const formStructure = buildArrayMatrix(response[0].fields);
+  console.log('response', response)
+  // const formStructure = buildArrayMatrix(response[0].fields);
   return (await response) as FormData[];
-});
-
-export const fetchFormData = createAsyncThunk('forms/fetchFormData', async () => {
-  const response =  {
-    id: 'form1',
-    user_id: '1',
-    name: 'My Test Form',
-    rows: [
-      {
-        id: 'row1',
-        position: 1,
-        formId: 'form1',
-        columns: [
-          {
-            id: 'col1',
-            name: '',
-            label:  'first Name',
-            type: 'text',
-            formId: 'form1',
-            rowId: '',
-            position: 1,
-          },
-          {
-            id: 'col2',
-            name: '',
-            label:  'first Name',
-            type: 'text',
-            formId: 'form1',
-            rowId: '',
-            position: 2,
-          }
-        ],
-      },
-      {
-        id: 'row0',
-        position: 0,
-        formId: 'form1',
-        columns: [{
-          id: 'col0',
-          name: '',
-          label:  'first Name',
-          type: 'text',
-          formId: 'form1',
-          rowId: '',
-          position: 0,
-        },
-        {
-          id: 'col3',
-          name: '',
-          label:  'first Name',
-          type: 'text',
-          formId: 'form1',
-          rowId: '',
-          position: 3,
-        },],
-      },
-    ],
-    // columns: [
-    //   {
-    //     id: 'col0',
-    //     name: '',
-    //     label:  'first Name',
-    //     type: '',
-    //     formId: 'form1',
-    //     // rowId: '',
-    //     position: 0,
-    //   },
-    //   {
-    //     id: 'col3',
-    //     name: '',
-    //     label:  'first Name',
-    //     type: '',
-    //     formId: 'form1',
-    //     // rowId: '',
-    //     position: 3,
-    //   },
-    //   {
-    //     id: 'col1',
-    //     name: '',
-    //     label:  'first Name',
-    //     type: '',
-    //     formId: 'form1',
-    //     // rowId: '',
-    //     position: 1,
-    //   },
-    //     {
-    //       id: 'col2',
-    //       name: '',
-    //       label:  'first Name',
-    //       type: '',
-    //       formId: 'form1',
-    //       // rowId: '',
-    //       position: 2,
-    //     }
-    //   ],
-  }
-  return response
-
 });
 
 
@@ -136,32 +38,9 @@ export const slice = createSlice({
       status: formReqState.DEFUALT,
       loading: false,
   }),
-  reducers: {
-    addField(state, action) {
-        if (!state.activeForm){
-            state.activeForm = action.payload.id
-
-            const { row, column, ...formData } = action.payload;
-            formsAdapter.addOne(state, formData)
-        }
-        else {
-          const id = action.payload.id;
-          const data = {
-            id,
-            changes:  {...state.entities[id], rows: action.payload.rows}
-          }
-          formsAdapter.updateOne(state, data)
-        }
-    },
-
-    updateForm(state, action) {
-        // formsAdapter.updateOne(state, action.payload)
-    },
-    selectField(state, action) {
-      state.selectedField = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers:(builder) => {
+    // start fetchForms
     builder.addCase(fetchForms.pending, (state) => {
       state.loading = true;
     });
@@ -172,28 +51,13 @@ export const slice = createSlice({
     builder.addCase(fetchForms.rejected, (state) => {
       state.loading = false;
     });
-
-    builder.addCase(fetchFormData.fulfilled, (state, action) => {
-      const {id, user_id, name, rows } = action.payload;
-      const form = {
-        id, 
-        user_id, 
-        name, 
-        rows: rows.map(row => row.id)
-      }
-      state.loading = false;
-      formsAdapter.addOne(state, form)
-    });
-
+    // end fetchForms
   }
 });
 
 const reducer = slice.reducer;
 export default reducer;
-export const { 
-  addField, 
-  // updateForm, 
-  selectField } = slice.actions;
+// export const {} = slice.actions;
 
 export const {
   selectById: selectFormById,

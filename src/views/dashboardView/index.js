@@ -56,19 +56,19 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
 
   useEffect(() => {
-    if (formSubmissionCount && formList) {
-      const temp = checked.map(form => {
-        const submissionData = formSubmissionCount.find(submissions => form.id === submissions._id.$oid);
-        const total = submissionData ? submissionData.total :  0;
-        return  { x: form.name, y: total, label: `${form.name}: ${total}` }
-      })
-      setChartData(temp)
-    }
+    // if (formSubmissionCount && formList) {
+    //   const temp = checked.map(form => {
+    //     const submissionData = formSubmissionCount.find(submissions => form.id === submissions._id.$oid);
+    //     const total = submissionData ? submissionData.total :  0;
+    //     return  { x: form.name, y: total, label: `${form.name}: ${total}` }
+    //   })
+    //   setChartData(temp)
+    // }
   }, [formList, formSubmissionCount, checked])
 
 
   useEffect(() => {
-    setChecked(formList.map(form => ({name: form.name, id: form._id.$oid})))
+    // setChecked(formList.map(form => ({name: form.name, id: form._id.$oid})))
   }, [formList])
 
   const handleOpenFormList = (event) => {
@@ -118,8 +118,9 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
                     {
                       formList.map(form => (
                         <MenuItem 
-                          key={form._id.$oid}
-                          onClick={() => history.push(`/app/form-builder/details/${form._id.$oid}`)}>
+                          // key={form._id.$oid}
+                          // onClick={() => history.push(`/app/form-builder/details/${form._id.$oid}`)}
+                        >
                             {form.name}
                         </MenuItem>
                       ))

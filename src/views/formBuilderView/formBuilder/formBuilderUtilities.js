@@ -32,7 +32,7 @@ export const formModel = (arr) => {
             const { label, name, type, _id, width } = formField
     
             return {
-                id: _id?.$oid ? _id?.$oid : formField.id, //shortid.generate(),
+                id: 0, ///_id?.$oid ? _id?.$oid : formField.id, //shortid.generate(),
                 label,
                 name,
                 type,

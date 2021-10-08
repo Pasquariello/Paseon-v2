@@ -3,11 +3,6 @@ import { createSlice, createEntityAdapter, createAsyncThunk, EntityState, Entity
 import authService from 'src/services/authService';
 
 import { RootState } from '.';
-import { 
-  addField,
-  //  updateForm
-  } from "./formsSlice";
-
 
 export interface AccountData {
     id: string,

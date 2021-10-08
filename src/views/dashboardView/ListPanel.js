@@ -43,27 +43,29 @@ function ListPanel({ formList, checked, setChecked }) {
   return (
     <List className={classes.root}>
         {formList.map((form, index) => (
-            <div key={form._id.$oid}>
+            <div 
+            // key={form._id.$oid}
+            >
               <ListItem >
                 <Checkbox
-                  onClick={handleToggleChecked({name: form.name, id:form._id.$oid})}
-                  checked={checked.findIndex(checkedItem => checkedItem.id === form._id.$oid) !== -1 }
+                  // onClick={handleToggleChecked({name: form.name, id:form._id.$oid})}
+                  // checked={checked.findIndex(checkedItem => checkedItem.id === form._id.$oid) !== -1 }
                   inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
                   <ListItemText primary={form.name} secondary={form.date} />
                   
                   <div style={{display: 'flex', justifyContent: 'space-around'}}>
                     <Box mx={1}>
-                      <Link component="button" onClick={()=> history.push(`/app/form-builder/details/${form._id.$oid}`)}><Typography style={{fontSize: 12, }}>Details</Typography></Link>
+                      {/* <Link component="button" onClick={()=> history.push(`/app/form-builder/details/${form._id.$oid}`)}><Typography style={{fontSize: 12, }}>Details</Typography></Link> */}
                     </Box>
                     <Box mx={1}>
                       <Link component="button"><Typography style={{fontSize: 12}}>Submissions</Typography></Link>
                     </Box>
                     <Box mx={1}>
-                      <Link component="button" onClick={()=> history.push(`/app/form-builder/edit/${form._id.$oid}`)}><Typography style={{fontSize: 12}}>Edit</Typography></Link>
+                      {/* <Link component="button" onClick={()=> history.push(`/app/form-builder/edit/${form._id.$oid}`)}><Typography style={{fontSize: 12}}>Edit</Typography></Link> */}
                     </Box>
                     <Box mx={1}>
-                      <Link onClick={() => setOpenConfirmation(form._id.$oid)} component="button"><Typography style={{fontSize: 12}}>Delete</Typography></Link>
+                      {/* <Link onClick={() => setOpenConfirmation(form._id.$oid)} component="button"><Typography style={{fontSize: 12}}>Delete</Typography></Link> */}
                     </Box>
                     
                   </div>

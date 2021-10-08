@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {createForm, deleteForm} from 'src/actions/formActions';
 import { Button, CircularProgress } from '@mui/material';
-
+import {addForm} from 'src/store/formDetailsSlice';
 
 
 function ActionControls({ formTitle, dataList }) {
@@ -18,6 +18,7 @@ function ActionControls({ formTitle, dataList }) {
             <Button
                 onClick={ async () => {
                     console.log('formDetails', formDetails)
+                    dispatch(addForm(formDetails))
                     return
                     setIsLoading(true)
                     // this will re clean the array row and col values
@@ -51,7 +52,7 @@ function ActionControls({ formTitle, dataList }) {
                 {isLoading ? <CircularProgress /> : ''}
             </Button>
 
-            {selectedFormData?._id?.$oid
+            {/* {selectedFormData?._id?.$oid
                 ? (
                     <Button
                     onClick={() => { dispatch(deleteForm(selectedFormData?._id.$oid)) }}
@@ -60,7 +61,7 @@ function ActionControls({ formTitle, dataList }) {
                     </Button>
                 ) 
                 : ''
-            }
+            } */}
 
             <Button>
                 Preview

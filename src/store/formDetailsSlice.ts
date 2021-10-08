@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import formServices from "src/services/formServices";
 
 // interface FormData {
 //     id: string;
@@ -16,6 +17,19 @@ import { createSlice, createAsyncThunk} from "@reduxjs/toolkit";
     SUCCESS,
     ERROR
   }
+
+
+  export const addForm = createAsyncThunk(
+    'formDetails/addForm',
+    async (formDetails, thunkAPI) => {
+      const response = await formServices.createForm(formDetails);
+      console.log('response', response);
+      return response.data
+    }
+  )
+  
+  
+  
 
 export const fetchFormData = createAsyncThunk('formDetails/fetchFormData', async () => {
   const response =  {

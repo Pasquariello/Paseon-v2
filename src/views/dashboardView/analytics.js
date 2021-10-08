@@ -74,7 +74,7 @@ function EnhancedTableHead(props) {
         </TableCell>
         {props.headCells.map((headCell, index) => (
           <TableCell
-            key={headCell.id.$oid}
+            // key={headCell.id.$oid}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -209,21 +209,21 @@ export default function AnalyticsTable() {
   const [ rows, setRows ] = useState([])
 
   useEffect(() => {
-    const list = submissionsList.map(submission => {
-      // return submission.values.map(val => {
-      //   return {
-      //     ...val
-      //   }
-      // })
-      const obj = {}
-      submission.values.forEach(field => {
-        obj.id = submission._id.$oid;
-        obj[field.field] = field.value
-      })
-      return obj;
-    })
+    // const list = submissionsList.map(submission => {
+    //   // return submission.values.map(val => {
+    //   //   return {
+    //   //     ...val
+    //   //   }
+    //   // })
+    //   const obj = {}
+    //   submission.values.forEach(field => {
+    //     obj.id = submission._id.$oid;
+    //     obj[field.field] = field.value
+    //   })
+    //   return obj;
+    // })
 
-    setRows(list)
+    // setRows(list)
   },[submissionsList])
 
   useEffect(() => {
