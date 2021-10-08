@@ -13,7 +13,7 @@ class formsService {
       return axios.get(`${process.env.REACT_APP_API_URL}/forms/user_form_list/1`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'token': `${token}`
         }
       })
         .then(res => {
