@@ -91,6 +91,30 @@ export const slice = createSlice({
 
 
     },
+    addRow(state, action) {
+
+      const newRow = {
+        id: action.payload.id ,
+        position: action.payload.indexToAdd,
+        formId: 'form1',
+        columns: [],
+        colCount: 1,
+      }
+
+      const rowsCopy = [...state.rows]
+      console.log(rowsCopy)
+      rowsCopy.splice(action.payload.indexToAdd, 0, newRow)
+        const updatedRows = rowsCopy.map((row, index) => ({
+          ...row,
+          position: index
+        }));
+
+
+      console.log('action.payload', action.payload)
+      console.log('updatedRows', updatedRows)
+
+      state.rows = updatedRows;
+    },
     moveRow(state, action) {
       console.log('action.payload', action.payload)
       state.rows = action.payload;
@@ -116,31 +140,63 @@ export const slice = createSlice({
       // rowsAdapter.setAll(state,  action.payload)
     },
 
+    clearEmptyRows(state){
+      const foo = state.rows.filter((row, index) => {
+        console.log('ROW', row.columns.length)
+        return row.columns.length
+      })
+      .map((row, index) => {
+        //  const columns = row.columns.map((col: any) => ({...col, rowPosition: index}))
+         return {
+           ...row,
+          // columns,
+          position: index,
+         }
+       })
+       
+       state.rows = foo
+    },
+
     moveCol(state, action) {
       const rowId = action.payload.updatedRow.id
+      console.log('action.payload.updatedRow', action.payload.updatedRow)
       // const updatedRowEntities: any =  {...state.rowEntities, [rowId]: action.payload.updatedRow}
       // const updatedRowArray = Object.keys(updatedRowEntities).map((k) => updatedRowEntities[k])
       const rowIndex = action.payload.rowIndex;
-
+      const { rows } = state;
       const colIndex = 0
       // state.rows = action.payload.updatedRow;
-      const updatedRows = state.rows.map((row, index) => {
-        if (index === rowIndex) {
+      const updatedRows = [...rows].map((row, index) => {
+        if (row.id === rowId) {
           return action.payload.updatedRow
         }
         return row
-      });
+      })
+      const foo = updatedRows.filter((row, index) => {
+        console.log('ROW', row.columns.length)
+        return row.columns.length
+      })
+      .map((row, index) => {
+        //  const columns = row.columns.map((col: any) => ({...col, rowPosition: index}))
+         return {
+           ...row,
+          // columns,
+          position: index,
+         }
+       })
 
-     const filteredRows = updatedRows.filter(row => row.columns.length)
-     const final = filteredRows.map((row, index) => {
-      //  const columns = row.columns.map((col: any) => ({...col, rowPosition: index}))
-       return {
-         ...row,
-        // columns,
-        position: index,
-       }
-     })
-     state.rows = final
+    // //  const filteredRows = [...updatedRows].filter(row => row.columns.length)
+    //  console.log('filteredRows', filteredRows)
+
+    //  const final = [...filteredRows].map((row, index) => {
+    //   //  const columns = row.columns.map((col: any) => ({...col, rowPosition: index}))
+    //    return {
+    //      ...row,
+    //     // columns,
+    //     position: index,
+    //    }
+    //  })
+     state.rows = updatedRows
     //  state.columns = action.payload.updatedCols;
       // state.rows[rowIndex] = action.payload.updatedRow
 
@@ -242,7 +298,9 @@ export default reducer;
 export const { 
   addField, 
   moveCol,
+  clearEmptyRows,
   moveRow,
+  addRow,
   selectField,
   updateFieldDetails,
   incrementRowColCount,

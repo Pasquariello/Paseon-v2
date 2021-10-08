@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Row from "./Row";
 import './form.css'
 import shortid from 'shortid';
@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addNewFieldAction} from 'src/actions/formActions';
 
 import { Container } from "react-smooth-dnd";
-import {fetchFormData, moveRow, moveCol, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
+import {fetchFormData, moveRow, moveCol, clearEmptyRows, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
 import {Button } from '@mui/material';
 import {List} from 'react-virtualized';
@@ -40,17 +40,25 @@ const  FormDnDSandbox = React.memo((props) => {
     const {rowEntities} = useSelector(state => state.formDetails);
 
     const rowsArray = useSelector(state => state.formDetails.rows);
-
-  
+  const [moveCount, setMoveCount] = useState(0);
+    
+  useEffect(() => {
+    if (moveCount >= 2) {
+      dispatch(clearEmptyRows())
+      setMoveCount(0)
+    }
+  }, [moveCount, dispatch])
     // Gets run twice - for the row the card left and for the row the card is dropped
     const onCardDrop = (rowIndex, dropResult)  => {
-      // console.log('rowId', rowId)
 
-      // console.log('dropResult', dropResult)
+      console.log('dropResult', dropResult)
+      console.log('rowIndex', rowIndex)
+
       // if (!dropResult.addedIndex && !dropResult.removedIndex){
       //   return
       // }
     
+
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
         const row = rowsArray[rowIndex];
         const dropResultCopy = {...dropResult}
@@ -86,7 +94,7 @@ const  FormDnDSandbox = React.memo((props) => {
         };
         dispatch(moveCol(data));
       }
-     
+      setMoveCount(moveCount + 1)
     }
 
     const onRowDrop = (dropResult) => {
@@ -196,7 +204,8 @@ return (
                         // addNewField={props.addNewField}
                         // handleIncrement={handleIncrement}
                         // handleDecrement={handleDecrement}
-                    />    
+                    /> 
+                       
             );
           }) : ''}
         </Container>   

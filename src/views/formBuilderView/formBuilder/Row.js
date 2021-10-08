@@ -22,7 +22,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-import {incrementRowColCount, decrementRowColCount, moveCol} from 'src/store/formDetailsSlice';
+import {incrementRowColCount, decrementRowColCount, moveCol, addRow, clearEmptyRows} from 'src/store/formDetailsSlice';
 
 
 // todo move to util file and delete
@@ -68,7 +68,10 @@ const Row = React.memo( (props) => {
     const rowColumnCount = row?.colCount || 1;
 
     // const [rowColumnCount, setRowColumnCount] = useState(row?.colCount || 1);
-    
+    // useEffect(() => {
+    //     console.log('CHnge')
+    //     if (columns.length) dispatch(clearEmptyRows())
+    // }, [dispatch, columns])
 
     const handleIncrement =  useCallback(() => {
         if (rowColumnCount < 3) {
@@ -332,8 +335,23 @@ const Row = React.memo( (props) => {
                     }                    
                     </Container>
                     </div>
+
             </div>
+
+            <button onClick={() => {
+                dispatch(addRow(
+                    (
+                        {
+                            indexToAdd: rowIndex + 1,
+                            id: shortid.generate()
+                        }
+                    )
+                ))
+            }}
+            >Add</button>
+
             </Draggable>
+
             </>
    
     );
