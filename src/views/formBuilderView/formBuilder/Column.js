@@ -36,8 +36,9 @@ const Column = React.memo( (props) => {
     } = props;
     const WIDTH = `${width}%`
     // const column = useSelector((state) => state.formDetails.columnEntities[columnId]);
-    const column = useSelector((state) => state.formDetails.rows[rowIndex].columns[colIndex]);
-
+    // const column = useSelector((state) => state.formDetails.rows[rowIndex].columns[colIndex]);
+    const column = useSelector((state) => state.formDetails.columns.find(col => col.id === columnId));
+    
     const {id, label, type} = column || {id: '', label: '', type: 'text'};
     // const widthSettings = colWidth ? 100 / (rowLength + 1) : 100 / rowLength;
 
@@ -55,9 +56,6 @@ const Column = React.memo( (props) => {
             return obj[type]
     }, [label, type]);
 
-    
-
-    
 
     return (
         <Draggable 
@@ -114,7 +112,7 @@ const Column = React.memo( (props) => {
                         <IconButton  
                         //  {/* TODO useCallback */}
                         // https://itnext.io/6-tips-for-better-react-performance-4329d12c126b
-                        // onClick={() => dispatch(selectField(columnId))}
+                        onClick={() => dispatch(selectField(column.id))}
                          aria-label="tune" size="large">
                             <TuneIcon/>
                         </IconButton>

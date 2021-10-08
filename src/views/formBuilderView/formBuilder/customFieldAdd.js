@@ -15,7 +15,8 @@ import {changeField} from 'src/actions/formActions';
 
 const CustomFieldAdd = (props) => {
     const {selectedField} = useSelector(state => state.formDetails);
-    const column = useSelector(state => state.formDetails.columnEntities[selectedField]);
+    const column = useSelector(state => state.formDetails.columns.find(col => col.id === selectedField));
+    // const column = selectedField;
 
     const dispatch = useDispatch()
     

@@ -19,7 +19,7 @@ const applyDrag = (arr, dragResult) => {
   if (removedIndex === null && addedIndex === null) return arr;
   const result = [...arr];
 
-  let itemToAdd = payload.id || shortid.generate();
+  let itemToAdd = payload.body;
 
   if (removedIndex !== null) {
 
@@ -52,30 +52,38 @@ const  FormDnDSandbox = React.memo((props) => {
       // }
     
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-
-        // const row = rowEntities[rowId];
         const row = rowsArray[rowIndex];
         const dropResultCopy = {...dropResult}
+
         //new 
         const newCol = applyDrag(row.columns, dropResultCopy);
-        const updatedCols = newCol.map(col =>( {...col, row: rowIndex} ));
-        const updatedRow = {...row, columns: updatedCols}
+        console.log('newCol', newCol)
+
+        const updatedCols = newCol.map((col, colIndex) => {
+          return {
+            ...col, 
+            position: colIndex,
+            // taylor
+            // rowPosition: rowIndex,
+          }
+        });
+
+        const updatedRowColumns = newCol.map((col, index)=> ({id: col.id, position: index}));
+        const updatedRow = {...row, columns: updatedRowColumns}
 
         const updatedColumns = updatedRow.columns.map((column, index) => ({
-          id: column,
+          id: column.id,
           changes: {
-            col: index,
-            row: updatedRow.position,
+            position: index,
+            // rowPosition: updatedRow.position,
           }
         }));
-
 
         const data = {
           updatedRow,
           updatedColumns,
           rowIndex
         };
-
         dispatch(moveCol(data));
       }
      
@@ -96,12 +104,16 @@ const  FormDnDSandbox = React.memo((props) => {
     
 
   // }
-      const updatedRow = applyDrag(rowsArray, dropResult);
-
-      const data = updatedRow.map((row, index) => ({
+      const updatedRows = applyDrag(rowsArray, dropResult);
+      const data = updatedRows.map((row, index) => {
+        return {
         ...row,
         position: index,
-      }));
+      }
+    });
+
+  
+  
       // const updatedColumns = updatedRow.columns.map((column, index) => ({
       //   id: column,
       //   changes: {

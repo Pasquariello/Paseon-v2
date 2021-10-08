@@ -17,7 +17,7 @@ function ActionControls({ formTitle, dataList }) {
         <>
             <Button
                 onClick={ async () => {
-             
+                    console.log('formDetails', formDetails)
                     return
                     setIsLoading(true)
                     // this will re clean the array row and col values

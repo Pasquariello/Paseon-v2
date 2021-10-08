@@ -31,7 +31,7 @@ const applyDrag = (arr, dragResult) => {
     if (removedIndex === null && addedIndex === null) return arr;
     const result = [...arr];
   
-    let itemToAdd = payload.id || shortid.generate();
+    let itemToAdd = payload.data || {};
   
     if (removedIndex !== null) {
   
@@ -198,7 +198,8 @@ const Row = React.memo( (props) => {
                     onDrop={handleOnCardDrop}
                     getChildPayload={(index) =>{
                         return {
-                            id: columns[index],
+                            id: columns[index].id,
+                            body: columns[index],
                             type: 'col',
                         }                   
                     }}
@@ -211,11 +212,14 @@ const Row = React.memo( (props) => {
                     dropPlaceholderAnimationDuration={200}
                
                     shouldAcceptDrop={(sourceContainerOptions, payload) => { 
-                        if (row.columns.includes(payload.id)) {
+                        if (row.columns.includes(payload.body)) {
                             return true;
                         }
 
-                        if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
+                        // if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
+                        //     return false;
+                        // } 
+                        if (row.colCount <= row.columns.length) {
                             return false;
                         } 
                         return payload?.type === 'col'
@@ -312,12 +316,13 @@ const Row = React.memo( (props) => {
                     {/* {columns?.length ? columns.map((columnId) => { */}
                     {/* // console.log('columnId', columnId) */}
                     {
-                        columns?.length ? columns.map((column, index) => {      
+                        columns?.length ? columns.map((col, index) => {      
+                            
                             return (
                         
                                 <Column 
-                                    key={column.id}
-                                    columnId={column.id}
+                                    key={col.id}
+                                    columnId={col.id}
                                     rowIndex={rowIndex || 0}
                                     colIndex={index}
                                     width={100 / row?.columns.length || 1}

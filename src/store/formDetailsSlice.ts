@@ -61,12 +61,13 @@ export const slice = createSlice({
       selectedField: '',
       status: formReqState.DEFUALT,
       loading: false,
-
       name: '',
-      columns: [] as Array<any>,
       rows: [] as Array<any>,
-      columnEntities: {} as any,
-      rowEntities: {}  as any,
+
+      // TODO - Remove when can
+      columns: [] as Array<any>,
+      // columnEntities: {} as any,
+      // rowEntities: {}  as any,
   },
   reducers: {
     addField(state, action) {
@@ -86,37 +87,69 @@ export const slice = createSlice({
       const colId = action.payload.column.id;
       state.rows = [...state.rows, action.payload.row];
 
+      state.columns = [...state.columns, action.payload.column];
 
 
     },
     moveRow(state, action) {
+      console.log('action.payload', action.payload)
       state.rows = action.payload;
-      const rowEntities = arrayToObject(action.payload);
-      state.rowEntities = rowEntities;
+      // action.payload.updatedColumns.forEach((updatedColumn: any) => {
+      //   console.log('updatedColumn', updatedColumn)
+      //   const updatedColumnId =  updatedColumn.id;
+        
+      //   const updatedColumnChanges = updatedColumn.changes || {};
+      //   const index = state.columns.findIndex((stateColumn) => stateColumn.id === updatedColumnId);
+      //   state.columns[index] = {...state.columns[index], ...updatedColumnChanges}
+      // })
+      // const rowEntities = arrayToObject(action.payload);
+      // state.rowEntities = rowEntities;
 
 
-      action.payload.forEach((row: any) => {
-        row.columns.forEach((colId: string) => {
-          const index = state.columns.findIndex((stateColumn) => stateColumn.id === colId);
-          state.columnEntities[colId] = {...state.columnEntities[colId], row: row.position}
-          state.columns[index] = {...state.columns[index], row: row.position}
-        });
-      });
+      // action.payload.forEach((row: any) => {
+      //   row.columns.forEach((colId: string) => {
+      //     const index = state.columns.findIndex((stateColumn) => stateColumn.id === colId);
+      //     state.columnEntities[colId] = {...state.columnEntities[colId], row: row.position}
+      //     state.columns[index] = {...state.columns[index], row: row.position}
+      //   });
+      // });
       // rowsAdapter.setAll(state,  action.payload)
     },
 
     moveCol(state, action) {
       const rowId = action.payload.updatedRow.id
-      const updatedRowEntities: any =  {...state.rowEntities, [rowId]: action.payload.updatedRow}
-      const updatedRowArray = Object.keys(updatedRowEntities).map((k) => updatedRowEntities[k])
-      const index = action.payload.rowIndex;
-      // state.rows = action.payload.updatedRow;
-      state.rows[index] = action.payload.updatedRow
+      // const updatedRowEntities: any =  {...state.rowEntities, [rowId]: action.payload.updatedRow}
+      // const updatedRowArray = Object.keys(updatedRowEntities).map((k) => updatedRowEntities[k])
+      const rowIndex = action.payload.rowIndex;
 
+      const colIndex = 0
+      // state.rows = action.payload.updatedRow;
+      const updatedRows = state.rows.map((row, index) => {
+        if (index === rowIndex) {
+          return action.payload.updatedRow
+        }
+        return row
+      });
+
+     const filteredRows = updatedRows.filter(row => row.columns.length)
+     const final = filteredRows.map((row, index) => {
+      //  const columns = row.columns.map((col: any) => ({...col, rowPosition: index}))
+       return {
+         ...row,
+        // columns,
+        position: index,
+       }
+     })
+     state.rows = final
+    //  state.columns = action.payload.updatedCols;
+      // state.rows[rowIndex] = action.payload.updatedRow
+
+
+      // state.columns = action.payload.updatedCols.
       // state.rowEntities = updatedRowEntities;
       // state.rows = updatedRowArray;
 
-      // const updatedColumns =  action.payload.updatedColumns;
+      // const updatedColumns =  action.payload.updatedCols;
 
 
       // updatedColumns.forEach((col: any) => {
@@ -131,19 +164,13 @@ export const slice = createSlice({
       //   }
       // });
 
-      // updatedColumns.forEach((updatedColumn: any) => {
-      //   const updatedColumnId =  updatedColumn.id;
-      //   const updatedColumnChanges = updatedColumn.changes || {};
-      //   const index = state.columns.findIndex((stateColumn) => stateColumn.id === updatedColumnId);
-      //   state.columns[index] = {...state.columns[index], ...updatedColumnChanges}
-      //   state.columnEntities = {
-      //     ...state.columnEntities, 
-      //     [updatedColumn]: {
-      //       ...state.columnEntities[updatedColumn],
-      //       ...updatedColumnChanges
-      //     }
-      //   }
-      // })
+      action.payload.updatedColumns.forEach((updatedColumn: any) => {
+        
+        const updatedColumnId =  updatedColumn.id;
+        const updatedColumnChanges = updatedColumn.changes || {};
+        const index = state.columns.findIndex((stateColumn) => stateColumn.id === updatedColumnId);
+        state.columns[index] = {...state.columns[index], ...updatedColumnChanges}
+      })
 
     },
     updateForm(state, action) {
@@ -161,8 +188,10 @@ export const slice = createSlice({
       //   changes:  {...state.columnEntities[id], [field]: value}
       // }
       console.log('action.payload', action.payload)
-    
-      state.columnEntities = {...state.columnEntities, [id]: value};
+      const index = state.columns.findIndex(col => col.id === id)
+      state.columns[index] = {...state.columns[index], label: value}
+  
+      // state.columnEntities = {...state.columnEntities, [id]: value};
     },
 
 
@@ -195,19 +224,14 @@ export const slice = createSlice({
     builder.addCase(fetchFormData.fulfilled, (state, action) => {
       const {id, user_id, name, rows} = action.payload;
 
-      // const cols = rows
-      // .map(row => row.columns)
-      // .reduce(
-      //   (arr, elem) => arr.concat(elem), []
-      // )
-      const columnEntities = arrayToObject(action.payload.columns);
-      const rowEntities = arrayToObject(action.payload.rows);
+      // const columnEntities = arrayToObject(action.payload.columns);
+      // const rowEntities = arrayToObject(action.payload.rows);
 
       state.name = name;
       state.rows = [...state.rows, ...rows]
       state.columns = [...state.columns, ...action.payload.columns]
-      state.columnEntities = columnEntities;
-      state.rowEntities = rowEntities;
+      // state.columnEntities = columnEntities;
+      // state.rowEntities = rowEntities;
     });
 
   }

@@ -73,26 +73,30 @@ const FormBuilderView = React.memo( ({formData }) => {
     const formId = id || shortid.generate();
     // const columns = form?.row?.columns || []
     // const rows = form?.entities[id]?.rows || []
-
-    const item = {
+    const rowId = shortid.generate()
+    const rowPosition = rows?.length || 0;
+    const column = {
       id: shortid.generate(), 
       name,
       label,
       type, 
       options,
-      position: form?.fields?.columns.length || 0, // TAYLOR todo - mograte to formDetails
-      row: dataList.length, 
-      col: 0, 
-      width: 50
+      position: form?.fields?.columns.length || 0, // TAYLOR todo - migrate to formDetails
+      rowPosition, 
+      // col: 0, 
+      width: 50,
+      rowId,
     }
+
+
     const newRow = {
-        id: shortid.generate(),
-        position: rows?.length || 0,
+        id: rowId,
+        position: rowPosition,
         formId: id || formId,
         colCount: 1,
         // DEPENDING ON HOW PASSING COLUMN!
-        // columns: [ item.id],
-        columns: [ ...columns, item]
+        columns: [ {id: column.id, position: column.position}],
+        // columns: [ ...columns, column]
 
     }
 
@@ -110,10 +114,11 @@ const FormBuilderView = React.memo( ({formData }) => {
         id: id || formId,
         name: form?.title || '',
         rows: [ ...rows, newRow],
-        columns: [ ...columns, item],  
+        columns: [column],  
 
+        // columns: [ ...columns, column],  
         row: newRow,
-        column: item,
+        column: column,
       }
 
 
