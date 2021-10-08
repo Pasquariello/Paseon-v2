@@ -16,6 +16,7 @@ const accountAdapter = createEntityAdapter<AccountData>();
 export const login = createAsyncThunk('account/fetchForms', async(data: {email: string, password: string}) => {
 
     const response  = await authService.loginWithEmailAndPassword({email: data.email, password: data.password});
+    console.log('response', response)
     return {
         user: response?.data?.user || {},
         auth: response?.status === 200 || false,
@@ -31,7 +32,12 @@ export const slice = createSlice({
     errorMessage: '',
     loading: false,
   }),
-  reducers: {},
+  reducers: {
+    setUserData(state, action) {
+      console.log('ACTION.PAYLOAD', action)
+      state.auth = action.payload.auth
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
       state.loading = true;
@@ -49,4 +55,4 @@ export const slice = createSlice({
 
 const reducer = slice.reducer;
 export default reducer;
-// export const { updateFieldDetails } = slice.actions;
+export const { setUserData } = slice.actions;

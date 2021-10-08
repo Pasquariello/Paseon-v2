@@ -7,8 +7,15 @@ class formsService {
       const tokenObj = await getTokenObj();
       const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
-      console.log('====', process.env.REACT_APP_API_URL);
-      return axios.get(`${process.env.REACT_APP_API_URL}/forms/user_form_list/1`)
+      console.log('token', token)
+      console.log('tokenObj', tokenObj)
+
+      return axios.get(`${process.env.REACT_APP_API_URL}/forms/user_form_list/1`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
         .then(res => {
           return res.data
         });
@@ -33,7 +40,7 @@ class formsService {
       const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
 
-      return axios.post(`http://localhost:3001/forms/add_form`, body )
+      return axios.post(`${process.env.REACT_APP_API_URL}/forms/add_form`, body )
       .then(res => {
         return res.data
       });

@@ -18,6 +18,7 @@ const accountReducer = (state = initialState, action) => {
 
       case SILENT_LOGIN: {
         const { user, auth } = action.payload;
+        console.log('SILENT LOGIN')
         return Object.assign({}, state, {
             user,
             auth
