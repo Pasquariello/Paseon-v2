@@ -40,6 +40,7 @@ function ListPanel({ formList, checked, setChecked }) {
     setChecked(newChecked);
   };
 
+  console.log('formList', formList)
   return (
     <List className={classes.root}>
         {formList.map((form, index) => (

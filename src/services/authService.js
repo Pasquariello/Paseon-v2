@@ -21,11 +21,9 @@ class authService {
 
 
     loginWithEmailAndPassword = (body) => {
-      console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
       return axios.post(`${process.env.REACT_APP_API_URL}/user/login`, body )
       .then(res => {
         const token = res.data.token;
-        console.log('TOKEN', token)
         this.setSession(token);
         return res
       }).catch(error => { 
