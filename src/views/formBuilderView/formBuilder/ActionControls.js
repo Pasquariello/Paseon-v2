@@ -6,6 +6,7 @@ import {addForm} from 'src/store/formDetailsSlice';
 // import {user} from 'src/store/accountSlice';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Highlight from 'react-highlight'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 function ActionControls({ formTitle, dataList }) {
   const dispatch = useDispatch();

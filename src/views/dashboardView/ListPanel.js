@@ -5,7 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Box, Checkbox, Divider, Link, List, ListItem, ListItemText, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { deleteForm } from 'src/actions/formActions';
+import { deleteOneForm } from 'src/store/formsSlice';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -87,7 +87,7 @@ function ListPanel({ formList, checked, setChecked }) {
           Are you sure you would like to continue?
         `}
         titleText="Confrim Delete Form?"
-        confirmationAction={()=> dispatch(deleteForm(openConfirmation)) }
+        confirmationAction={()=> dispatch(deleteOneForm(openConfirmation)) }
       />
     </List>
   );

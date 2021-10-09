@@ -38,39 +38,6 @@ import formServices from "src/services/formServices";
     }
   )
   
-  
-  
-
-// export const fetchFormData = createAsyncThunk('formDetails/fetchFormData', async () => {
-//   const response =  {
-//     id: 'form1',
-//     user_id: '1',
-//     name: 'My Test Form',
-//     rows: [
-//       {
-//         id: 'row0',
-//         position: 0,
-//         formId: 'form1',
-//         columns: ['col0'],
-//         colCount: 1,
-//       },
-//     ],
-//     columns: [
-//       {
-//         id: 'col0',
-//         rowId: 'row0',
-//         formId: 'form1',
-//         position: 0,
-//         //Field info
-//         name: '',
-//         label:  'first Name',
-//         type: 'text',
-//       },
-//     ]
-//   }
-//   return response
-
-// });
 
 const arrayToObject = (array: Array<any>) =>
    array.reduce((obj: any, item: any) => {
@@ -320,7 +287,7 @@ export const slice = createSlice({
     builder.addCase(fetchFormData.rejected, (state) => {
       state.loading = false;
     });
-
+    
   }
 });
 

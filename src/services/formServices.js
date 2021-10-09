@@ -30,7 +30,7 @@ class formsService {
     getSingleForm = async (form_id) => {
       const tokenObj = await getTokenObj();
       const token = tokenObj && tokenObj.accessToken;
-      
+
       return axios.get(`${process.env.REACT_APP_API_URL}/forms/details/${form_id}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,16 @@ class formsService {
     }
 
     deleteForm = (form_id) => {
-      return axios.delete(`http://localhost:4000/form/${form_id}`)
+      const tokenObj = getTokenObj();
+      const user_id = tokenObj && tokenObj.user_id;
+      const token = tokenObj && tokenObj.accessToken;
+
+      return axios.delete(`${process.env.REACT_APP_API_URL}/forms/delete/${form_id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'token': `${token}`
+        }
+      })
       .then(res => {
         return res.data
       });
