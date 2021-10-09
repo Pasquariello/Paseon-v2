@@ -163,8 +163,8 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           
-          <Box my={4} onClick={()=>{handleChangeCurrentView('email')}}>
-            <Typography> Submission Email</Typography>
+          <Box my={4} onClick={()=>{handleChangeCurrentView('submission')}}>
+            <Typography>Submission Results</Typography>
           </Box>
 
           <Box my={4}>

@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {createForm, deleteForm} from 'src/actions/formActions';
-import { Button, CircularProgress } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import {addForm} from 'src/store/formDetailsSlice';
 // import {user} from 'src/store/accountSlice';
-
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Highlight from 'react-highlight'
 
 function ActionControls({ formTitle, dataList }) {
   const dispatch = useDispatch();
@@ -14,42 +15,35 @@ function ActionControls({ formTitle, dataList }) {
   const form = useSelector(state => state.forms)
   const formDetails = useSelector(state => state.formDetails)
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const renderDetailsBody = () => {
     return (
         <>
+        <Typography variant="body1">Embed: </Typography>
+        <Highlight language='html'>
+        {`
+        <script src="https://google.com"/>
+        <PaseonForms id="FOO_ID"/>
+        `}     
+        </Highlight>
+        <br/>
+        <Typography variant="body1">Link: </Typography>
+        <Typography variant="body2">https://paseon-forms/form/FOO_ID</Typography>
+
+        </>
+    )
+  }
+
+  const [isLoading, setIsLoading] = useState(false);
+    return (
+        <Box>
             <Button
                 onClick={ async () => {
                     console.log('formDetails', formDetails) 
                     console.log('userId', user)
                     const userId = user.id;
                     dispatch(addForm({formDetails, userId}))
-                    return
-                    setIsLoading(true)
-                    // this will re clean the array row and col values
-                    // array will need to be the value to 'save'/post back to the DB
-                    const destructuredFormFields = [];
-                    dataList.forEach((row, rowIndex) => {
-                            row.subItems.forEach((formField, formFieldIndex) => {
-                            const { label, name, type } = formField
-                            destructuredFormFields.push(
-                                {
-                                label,
-                                name,
-                                type,
-                                col: formFieldIndex,
-                                row: rowIndex,
-                                }
-                            )
-                        })
-                        
-                    });
-
-                    await dispatch(createForm({
-                        name: formTitle || '',
-                        fields: destructuredFormFields
-                    }))
-
-                    setIsLoading(false);
                 }}
             >
                 Save
@@ -71,7 +65,21 @@ function ActionControls({ formTitle, dataList }) {
                 Preview
             </Button>
 
-        </>
+            <Button onClick={() => setOpen(true)}>
+                Details
+            </Button>
+
+            <ConfirmationDialog
+                content={renderDetailsBody()} 
+                titleText={'Share Options'}
+                cancelText={'Close'}
+                contentText={'choose to either embed your new awesome form within an existing site or share it using this unique link'}
+                open={open} 
+                setOpen={() => setOpen(!open)}
+            />
+
+
+        </Box>
     );
 }
 

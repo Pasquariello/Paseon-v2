@@ -17,8 +17,8 @@ import React, {
       form: {
         title: 'Form'
       },
-    email: {
-        title: 'Email Submission'
+      submission: {
+        title: 'Submission Results'
       },
       conditionals: {
         title: 'Field Conditions'

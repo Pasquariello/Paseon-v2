@@ -5,9 +5,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Typography } from '@mui/material';
 
 export default function ConfirmationDialog(props) {
-  const { contentText, titleText, open, setOpen, confirmationAction } = props;
+  const { contentText, titleText, open, setOpen, confirmationAction, content, cancelText} = props;
 //   const [open, setOpen] = useState(false);
 
 //   const handleClickOpen = () => {
@@ -26,25 +27,33 @@ export default function ConfirmationDialog(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-        {titleText ? titleText : ''}
+        {titleText ? titleText: ''}
         </DialogTitle>
+
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
               {contentText ? contentText : ''}
+              <br/><br/>
+              {content ? content : null}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Disagree
+            {cancelText}
           </Button>
-          <Button 
-            onClick={() => {
-            handleClose();
-            confirmationAction();
-            }} 
-            color="primary" autoFocus>
-            Agree
-          </Button>
+          {
+            confirmationAction ? (
+              <Button 
+                onClick={() => {
+                handleClose();
+                confirmationAction();
+                }} 
+                color="primary" autoFocus>
+                Agree
+              </Button>
+            ) : null
+          }
+          
         </DialogActions>
       </Dialog>
   );
