@@ -28,40 +28,49 @@ import formServices from "src/services/formServices";
       return response.data
     }
   )
+
+  export const fetchFormData = createAsyncThunk(
+    'formDetails/fetchFormData',
+    async (formId, thunkAPI) => {
+      const response = await formServices.getSingleForm(formId);
+      console.log('response', response);
+      return response
+    }
+  )
   
   
   
 
-export const fetchFormData = createAsyncThunk('formDetails/fetchFormData', async () => {
-  const response =  {
-    id: 'form1',
-    user_id: '1',
-    name: 'My Test Form',
-    rows: [
-      {
-        id: 'row0',
-        position: 0,
-        formId: 'form1',
-        columns: ['col0'],
-        colCount: 1,
-      },
-    ],
-    columns: [
-      {
-        id: 'col0',
-        rowId: 'row0',
-        formId: 'form1',
-        position: 0,
-        //Field info
-        name: '',
-        label:  'first Name',
-        type: 'text',
-      },
-    ]
-  }
-  return response
+// export const fetchFormData = createAsyncThunk('formDetails/fetchFormData', async () => {
+//   const response =  {
+//     id: 'form1',
+//     user_id: '1',
+//     name: 'My Test Form',
+//     rows: [
+//       {
+//         id: 'row0',
+//         position: 0,
+//         formId: 'form1',
+//         columns: ['col0'],
+//         colCount: 1,
+//       },
+//     ],
+//     columns: [
+//       {
+//         id: 'col0',
+//         rowId: 'row0',
+//         formId: 'form1',
+//         position: 0,
+//         //Field info
+//         name: '',
+//         label:  'first Name',
+//         type: 'text',
+//       },
+//     ]
+//   }
+//   return response
 
-});
+// });
 
 const arrayToObject = (array: Array<any>) =>
    array.reduce((obj: any, item: any) => {
@@ -292,17 +301,24 @@ export const slice = createSlice({
 
   },
   extraReducers:(builder) => {
+    builder.addCase(fetchFormData.pending, (state) => {
+      state.loading = true
+    });
+
     builder.addCase(fetchFormData.fulfilled, (state, action) => {
       const {id, user_id, name, rows} = action.payload;
 
       // const columnEntities = arrayToObject(action.payload.columns);
       // const rowEntities = arrayToObject(action.payload.rows);
-
+      state.loading = false;
       state.name = name;
       state.rows = [...state.rows, ...rows]
       state.columns = [...state.columns, ...action.payload.columns]
       // state.columnEntities = columnEntities;
       // state.rowEntities = rowEntities;
+    });
+    builder.addCase(fetchFormData.rejected, (state) => {
+      state.loading = false;
     });
 
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {useSelector, useDispatch } from 'react-redux';
 import { Box, IconButton } from '@mui/material';
 import FormDnDSandbox from "./FormDnDSandbox";
@@ -12,7 +12,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 // NEW 
-import {addField} from 'src/store/formDetailsSlice'
+import {addField, fetchFormData} from 'src/store/formDetailsSlice'
 
 
 const applyDrag = (arr, dragResult) => {
@@ -43,7 +43,15 @@ const generateItems = (count, creator) => {
 const FormBuilderView = React.memo( ({formData }) => {
 
   const dispatch = useDispatch();
-  const dataList = [];
+  const params = useParams();
+
+  const formId = params.id;
+
+  useEffect(() => {
+    dispatch(fetchFormData(formId));
+  }, [dispatch, formId]);
+
+  // const dataList = [];
   
   // const form = useSelector((state) => useSelector(state,  ));
   const {id} = useSelector(state => state.formDetails);
@@ -191,7 +199,7 @@ const FormBuilderView = React.memo( ({formData }) => {
 
               <PanelControls
                 addNewField={addNewField}
-                fieldList={dataList}
+                // fieldList={dataList}
                 isEdit={isEdit}
                 setIsEdit={setIsEdit}
                 formTitle={formTitle || ''}
@@ -214,7 +222,7 @@ const FormBuilderView = React.memo( ({formData }) => {
           >
             <ActionControls 
                 formTitle={formTitle}
-                dataList={[]}
+                // dataList={[]}
             />
               <Box
                 style={{

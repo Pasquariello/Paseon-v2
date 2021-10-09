@@ -27,8 +27,16 @@ class formsService {
         // });
     }
 
-    getSingleForm = (form_id) => {
-      return axios.get(`http://localhost:4000/form/${form_id}`)
+    getSingleForm = async (form_id) => {
+      const tokenObj = await getTokenObj();
+      const token = tokenObj && tokenObj.accessToken;
+      
+      return axios.get(`${process.env.REACT_APP_API_URL}/forms/details/${form_id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'token': `${token}`
+        }
+      })
       .then(res => {
         return res.data
       });

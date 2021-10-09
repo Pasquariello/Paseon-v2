@@ -207,7 +207,17 @@ return (
                     /> 
                        
             );
-          }) : ''}
+          }) : (
+            <Row  
+            rowIndex={0}
+            key={0}
+            rowId={shortid.generate()}
+            onCardDrop={onCardDrop}
+            // addNewField={props.addNewField}
+            // handleIncrement={handleIncrement}
+            // handleDecrement={handleDecrement}
+        /> 
+          )}
         </Container>   
     );
 })
