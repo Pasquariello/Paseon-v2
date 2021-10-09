@@ -85,7 +85,7 @@ export default function DetailsPanel() {
         <AnalyticsTable />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        Item Three f
       </TabPanel>
     </div>
   );

@@ -5,11 +5,35 @@ import React, {
   } from 'react';
   import PropTypes from 'prop-types';
   
-  const FormBuilderContext = createContext();
+  export const FormBuilderContext = createContext({
+    handleChangeCurrentView: () => {},
+    currentView: '',
+  });
 
-  
   export function FormBuilderProvider({ settings, children }) {
     const [currentSettings, setCurrentSettings] = useState();
+
+    const views = {
+      form: {
+        title: 'Form'
+      },
+    email: {
+        title: 'Email Submission'
+      },
+      conditionals: {
+        title: 'Field Conditions'
+      },
+      success: {
+        title: 'Thank you'
+      },
+
+    }
+
+    const [currentView, setCurrentView] = useState(views['form']);
+
+    const handleChangeCurrentView = (key) => {
+      setCurrentView(views[key]);
+    }
   
     const handleSaveSettings = () => {};
   
@@ -19,7 +43,9 @@ import React, {
       <FormBuilderContext.Provider
         value={{
           settings: currentSettings,
-          saveSettings: handleSaveSettings
+          saveSettings: handleSaveSettings,
+          handleChangeCurrentView: handleChangeCurrentView,
+          currentView: currentView,
         }}
       >
         {children}
@@ -32,7 +58,7 @@ import React, {
     settings: PropTypes.object
   };
   
-  export const FormBuilderConsumer = FormBuilderContext.Consumer;
+  // export const FormBuilderConsumer = FormBuilderContext.Consumer;
   
-  export default FormBuilderContext;
+  export default FormBuilderProvider;
   

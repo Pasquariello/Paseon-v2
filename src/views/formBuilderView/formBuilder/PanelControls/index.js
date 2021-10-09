@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {Box, Tabs, Tab, Typography, TextField, } from '@mui/material';
+import React, { useEffect, useState, useContext } from 'react';
+import {Box, Button, Tabs, Tab, Typography, TextField, } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import SwipeableViews from 'react-swipeable-views';
@@ -11,6 +11,7 @@ import CustomFieldAdd from '../customFieldAdd'
 import { useTheme } from '@mui/material/styles';
 
 import {useDispatch, useSelector} from 'react-redux';
+import { FormBuilderContext } from 'src/context/FormBuilderContext';
 
 
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
@@ -59,6 +60,7 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
   setIsDragging
  }) {
   const theme = useTheme();
+  const { handleChangeCurrentView } = useContext(FormBuilderContext);
 
   const {selectedField} = useSelector(state => state.formDetails);
 
@@ -88,14 +90,11 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
- 
+  
   return (
       <Box 
         p={2}
       >
-
-
       <Tabs
         value={value}
         onChange={handleChange}
@@ -163,7 +162,20 @@ function PanelControls({isEdit, setIsEdit, formTitle, setFormTitle,
           />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
+          
+          <Box my={4} onClick={()=>{handleChangeCurrentView('email')}}>
+            <Typography> Submission Email</Typography>
+          </Box>
+
+          <Box my={4}>
+            <Typography>Conditions</Typography>
+          </Box>
+
+          <Box my={4}>
+            <Typography>Thank You</Typography>
+          </Box>
+          
+          
         </TabPanel>
 
  

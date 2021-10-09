@@ -12,8 +12,9 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 // NEW 
-import {addField, fetchFormData} from 'src/store/formDetailsSlice'
+import {addField, fetchFormData} from 'src/store/formDetailsSlice';
 
+import FormBuilderProvider from 'src/context/FormBuilderContext';
 
 const applyDrag = (arr, dragResult) => {
   const { removedIndex, addedIndex, payload } = dragResult;
@@ -43,12 +44,13 @@ const generateItems = (count, creator) => {
 const FormBuilderView = React.memo( ({formData }) => {
 
   const dispatch = useDispatch();
+
   const params = useParams();
 
   const formId = params.id;
 
   useEffect(() => {
-    dispatch(fetchFormData(formId));
+    if (formId) dispatch(fetchFormData(formId));
   }, [dispatch, formId]);
 
   // const dataList = [];
@@ -56,31 +58,16 @@ const FormBuilderView = React.memo( ({formData }) => {
   // const form = useSelector((state) => useSelector(state,  ));
   const {id} = useSelector(state => state.formDetails);
   const form = useSelector(state => state.formDetails);
-  console.log('FORM', form)
 
-  const {rows, columns} = useSelector(state => state.formDetails);
-  const formDetails = useSelector(state => state.formDetails);
-  // console.log('formDetails', formDetails)
+  const {rows} = useSelector(state => state.formDetails);
 
-  // const [id, setId] = useState();
-  
-  // useEffect(() => {
-  //  if (form.ids) {
-  //    setId(form.ids[0])
-  //   }
-  // }, [form])
-  // const formElementsList = useSelector(state => state.forms.selected ? state.forms.selected.fields : [] )
-  // const [ fieldList, setFieldList ] = useState(formData?.fields)
   const [isEdit, setIsEdit] = useState(null);
-  // const [elemWidth, setElemWidth] = useState(false);
   const [formTitle, setFormTitle] = useState('');
 
-   const  addNewField = (newField) => {
+  const  addNewField = (newField) => {
     const { name, type, label, options } = newField;
-    const position = form?.fields?.length || 0
     const formId = id || shortid.generate();
-    // const columns = form?.row?.columns || []
-    // const rows = form?.entities[id]?.rows || []
+
     const rowId = shortid.generate()
     const rowPosition = rows?.length || 0;
     const column = {
@@ -142,10 +129,9 @@ const FormBuilderView = React.memo( ({formData }) => {
   }
 
   return (
- 
+    <FormBuilderProvider>
     <Box display="flex" 
       style={{
-      // border: '1px solid', flex: 1, height: '100%', overflow: 'hidden'
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
@@ -155,7 +141,6 @@ const FormBuilderView = React.memo( ({formData }) => {
           style={{
             display: 'flex',
             overflow: 'hidden',
-            // height: '100%',
             width: '100%',
             flex: 1,
 
@@ -195,17 +180,12 @@ const FormBuilderView = React.memo( ({formData }) => {
 
               }}
             >
-            
-
               <PanelControls
                 addNewField={addNewField}
-                // fieldList={dataList}
                 isEdit={isEdit}
                 setIsEdit={setIsEdit}
                 formTitle={formTitle || ''}
                 setFormTitle={setFormTitle}
-                // setIsDragging={setIsDragging}
-                // editField={editField}
               /> 
             </Box>
           </div>
@@ -221,27 +201,20 @@ const FormBuilderView = React.memo( ({formData }) => {
             }}
           >
             <ActionControls 
-                formTitle={formTitle}
-                // dataList={[]}
+              formTitle={formTitle}
             />
-              <Box
-                style={{
-                  overflow: 'auto',
-                  border: '1px dashed',
-                  overflowY: "auto",
-                  width: '50%',
-                }}
-                
-              >
-                {id}
+
+   
+           
                 {/* TODO - rename */}
+  
                 <FormDnDSandbox
                   addNewField={addNewField}
                   />
-              </Box>
           </Box>
         </Box> 
     </Box>
+    </FormBuilderProvider>
   );
 });
 

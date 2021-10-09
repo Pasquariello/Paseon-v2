@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import Row from "./Row";
 import './form.css'
 import shortid from 'shortid';
@@ -9,8 +9,9 @@ import {addNewFieldAction} from 'src/actions/formActions';
 import { Container } from "react-smooth-dnd";
 import {fetchFormData, moveRow, moveCol, clearEmptyRows, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
-import {Button } from '@mui/material';
+import {Box, Button} from '@mui/material';
 import {List} from 'react-virtualized';
+import { FormBuilderContext } from 'src/context/FormBuilderContext';
 
 
 // todo move to util file and delete
@@ -35,11 +36,12 @@ const applyDrag = (arr, dragResult) => {
 };
 
 const  FormDnDSandbox = React.memo((props) => {
-    const dispatch = useDispatch() 
+  const dispatch = useDispatch() 
+  const { currentView } = useContext(FormBuilderContext);
+  console.log('currentView', currentView)
+  const {rowEntities} = useSelector(state => state.formDetails);
 
-    const {rowEntities} = useSelector(state => state.formDetails);
-
-    const rowsArray = useSelector(state => state.formDetails.rows);
+  const rowsArray = useSelector(state => state.formDetails.rows);
   const [moveCount, setMoveCount] = useState(0);
     
   useEffect(() => {
@@ -149,20 +151,17 @@ const  FormDnDSandbox = React.memo((props) => {
       }
     }
 
-    const renderRow = (row, rowIndex) => {
-      return (
-
-              <Row  
-                rowIndex={row.index}
-                key={row.index}
-                rowId={row.index}
-                onCardDrop={onCardDrop}
-              />    
-      );
-
-    }
-
     return ( 
+      <Box
+      style={{
+        overflow: 'auto',
+        border: '1px dashed',
+        overflowY: "auto",
+        width: '50%',
+      }}
+      
+    >
+
         <Container
         // TAYLOR - DO I NEED TO REMOVE!?
         // groupName="col"
@@ -218,7 +217,8 @@ return (
             // handleDecrement={handleDecrement}
         /> 
           )}
-        </Container>   
+        </Container> 
+        </Box>  
     );
 })
 
