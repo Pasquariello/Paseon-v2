@@ -34,6 +34,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
   // const formList = useSelector(state => state.forms.list)
   // const formList = useSelector(selectAllForms(state));
   const formList = useSelector((state) => selectAllForms(state));
+  console.log('selectAllForms', formList)
   const formSubmissionCount = useSelector(state => state.submissions.form_submission_count)
   const history = useHistory();
 
@@ -68,7 +69,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
 
 
   useEffect(() => {
-    // setChecked(formList.map(form => ({name: form.name, id: form._id.$oid})))
+    setChecked(formList.map(form => ({name: form.name, id: form.id})))
   }, [formList])
 
   const handleOpenFormList = (event) => {
@@ -118,8 +119,8 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
                     {
                       formList.map(form => (
                         <MenuItem 
-                          // key={form._id.$oid}
-                          // onClick={() => history.push(`/app/form-builder/details/${form._id.$oid}`)}
+                          key={form.id}
+                          onClick={() => history.push(`/app/form-builder/details/${form.id}`)}
                         >
                             {form.name}
                         </MenuItem>

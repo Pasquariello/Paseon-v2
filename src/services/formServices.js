@@ -10,7 +10,7 @@ class formsService {
       console.log('token', token)
       console.log('tokenObj', tokenObj)
 
-      return axios.get(`${process.env.REACT_APP_API_URL}/forms/user_form_list/1`, {
+      return axios.get(`${process.env.REACT_APP_API_URL}/forms/user_form_list/${user_id}`, {
         headers: {
           'Content-Type': 'application/json',
           'token': `${token}`
@@ -40,7 +40,7 @@ class formsService {
       const user_id = tokenObj && tokenObj.user_id;
       const token = tokenObj && tokenObj.accessToken;
 
-      return axios.post(`${process.env.REACT_APP_API_URL}/forms/add_form`, body )
+      return axios.post(`${process.env.REACT_APP_API_URL}/forms/add_form/${user_id}`, body )
       .then(res => {
         return res.data
       });

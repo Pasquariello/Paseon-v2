@@ -3,11 +3,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {createForm, deleteForm} from 'src/actions/formActions';
 import { Button, CircularProgress } from '@mui/material';
 import {addForm} from 'src/store/formDetailsSlice';
+// import {user} from 'src/store/accountSlice';
 
 
 function ActionControls({ formTitle, dataList }) {
   const dispatch = useDispatch();
   const selectedFormData = useSelector(state => state.forms.selected)
+  const user = useSelector(state => state.account.user)
 
   const form = useSelector(state => state.forms)
   const formDetails = useSelector(state => state.formDetails)
@@ -17,8 +19,10 @@ function ActionControls({ formTitle, dataList }) {
         <>
             <Button
                 onClick={ async () => {
-                    console.log('formDetails', formDetails)
-                    dispatch(addForm(formDetails))
+                    console.log('formDetails', formDetails) 
+                    console.log('userId', user)
+                    const userId = user.id;
+                    dispatch(addForm({formDetails, userId}))
                     return
                     setIsLoading(true)
                     // this will re clean the array row and col values

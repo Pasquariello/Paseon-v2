@@ -29,6 +29,7 @@ export const slice = createSlice({
   name: "account",
   initialState:  accountAdapter.getInitialState({
     auth: false,
+    user: null,
     errorMessage: '',
     loading: false,
   }),
@@ -36,10 +37,12 @@ export const slice = createSlice({
     setUserData(state, action) {
       console.log('ACTION.PAYLOAD', action)
       state.auth = action.payload.auth
+      state.user = action.payload.user
     },
     logout(state) {
       authService.logout();
       state.auth = false;
+      state.user = null;
     }
   },
   extraReducers: (builder) => {

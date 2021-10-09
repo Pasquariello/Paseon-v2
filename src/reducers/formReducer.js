@@ -92,7 +92,7 @@ const formReducer = (state = initialState, action) => {
         const { id } = action.payload;
         return Object.assign({}, state, {
           selected: null,
-          list: state.list.filter(form => form._id.$oid !== id),
+          list: state.list.filter(form => form.id !== id),
         });
       }
 

@@ -45,6 +45,7 @@ export const slice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchForms.fulfilled, (state, action) => {
+      console.log('fullfulled', action.payload)
       formsAdapter.setAll(state, action.payload);
       state.loading = false;
     });

@@ -21,7 +21,8 @@ import formServices from "src/services/formServices";
 
   export const addForm = createAsyncThunk(
     'formDetails/addForm',
-    async (formDetails, thunkAPI) => {
+    async (data: any, thunkAPI) => {
+      const {formDetails} = data;
       const response = await formServices.createForm(formDetails);
       console.log('response', response);
       return response.data
