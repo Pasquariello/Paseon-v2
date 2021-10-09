@@ -77,10 +77,7 @@ function DashboardView({ className, onSubmitSuccess, ...rest }) {
   };
 
   return (
-    <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0',}} p={4}>
-        
-  
-        
+    <Box style={{display: 'flex', flexDirection:'column', width: '100%', minHeight: '100vh', height: '100%', background: '#e0e0e0',}} p={4}>  
         <Box my={2} display="flex" justifyContent="space-between" >
           <Box display="flex" alignItems="flex-end">
             <Typography variant="h6">Quick Statistics</Typography>

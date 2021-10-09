@@ -12,7 +12,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import { IconButton, Typography, Menu, MenuItem,  ButtonGroup } from '@mui/material';
+import { IconButton, Typography, Menu, MenuItem,  ButtonGroup, Button } from '@mui/material';
 import shortid from 'shortid';
 
 import RowSettingsModal from './rowSettingsModal';
@@ -338,7 +338,7 @@ const Row = React.memo( (props) => {
 
             </div>
 
-            <button onClick={() => {
+            {/* <Button onClick={() => {
                 dispatch(addRow(
                     (
                         {
@@ -348,8 +348,24 @@ const Row = React.memo( (props) => {
                     )
                 ))
             }}
-            >Add</button>
+            >
+                            <AddBoxIcon/>
 
+            </Button> */}
+        <div style={{flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <AddBoxIcon
+                onClick={() => {
+                    dispatch(addRow(
+                        (
+                            {
+                                indexToAdd: rowIndex + 1,
+                                id: shortid.generate()
+                            }
+                        )
+                    ))
+                }}
+            />
+</div>
             </Draggable>
 
             </>
