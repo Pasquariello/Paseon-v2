@@ -11,6 +11,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
+import {  TextField } from '@mui/material';
+
+
 // import CheckboxInput from 'src/components/formBuilderInputControls/checkboxInput';
 // import SelectInput from 'src/components/formBuilderInputControls/selectInput';
 // import TextAreaInput from 'src/components/formBuilderInputControls/textAreaInput';
@@ -57,16 +60,41 @@ const Column = React.memo( (props) => {
     }, [label, type]);
 
 
+    const fooCol = {
+        fields: [
+            {
+                label: 'First Name',
+                type: 'text',
+                fullWidth: false
+            },
+            {
+                label: 'Last Name',
+                type: 'text',
+                fullWidth: false
+
+            },
+            {
+                label: 'Emial',
+                type: 'text',
+                fullWidth: true
+
+            },
+        ]
+    }
+
     return (
         <Draggable 
             key={id} 
             style={{
-                // width: WIDTH,
                 flex: 1
 
             }}
 
         >
+        
+     
+
+
         <div
             className="draggable-item-horizontal"
             style={{
@@ -77,7 +105,7 @@ const Column = React.memo( (props) => {
                 flex: 1,
                 justifyContent: 'space-between',
                 alignItems: 'space-between',
-                padding: 10,
+                // padding: 10,
                 // width: WIDTH,
           
             }}
@@ -97,7 +125,35 @@ const Column = React.memo( (props) => {
 
             {/* TODO useCallback */}
             {/* https://itnext.io/6-tips-for-better-react-performance-4329d12c126b */}
-                { label ? renderInput() : null } 
+                {/* { label ? renderInput() : null }  */}
+        
+        {/* Start Example of layout */}
+        <div style={{display: 'flex',  flex: 1, flexWrap: 'wrap', justifyContent: 'space-between', width: '100%',  border: '1px solid red'}}>
+        {
+            column.fields.map(field => {
+                return (
+                    <div 
+                    style={{
+                        // display: 'flex',  
+                        // flex: !field.fullWidth && 1,
+                        flexWrap: 'wrap',
+                        width: field.fullWidth ? "100%" : '50%'
+                    }}
+                    >
+                    <div style={{padding: 8}}>
+                    <TextField 
+                        margin='normal'
+                        label={field.label}
+                        fullWidth={field.fullWidth}
+                        style={{ width: !field.fullWidth && '100%' }}
+                    />
+                    </div>
+                 </div>
+                )
+            })
+        }
+        </div>
+        {/* End Example of layout */}
 
             </div>
 

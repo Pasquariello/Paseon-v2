@@ -93,44 +93,6 @@ const Row = React.memo( (props) => {
         onCardDrop(rowIndex, e)
       }, [onCardDrop, rowIndex])
 
-
-    //   const onCardDrop = (dropResult)  => {
-    //     // console.log('rowId', rowId)
-  
-    //     // console.log('dropResult', dropResult)
-    //     // if (!dropResult.addedIndex && !dropResult.removedIndex){
-    //     //   return
-    //     // }
-      
-    //     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-  
-    //     //   const row = rowEntities[rowId];
-    //       const dropResultCopy = {...dropResult}
-    //       //new 
-    //       const newCol = applyDrag(row.columns, dropResultCopy);
-    //       const updatedRow = {...row, columns: newCol}
-    //       const updatedColumns = updatedRow.columns.map((column, index) => ({
-    //         id: column,
-    //         changes: {
-    //           ...dropResult.payload.body,
-    //           position: index
-    //         }
-    //       }));
-  
-  
-    //       const data = {
-    //         updatedRow,
-    //         updatedColumns,
-    //       };
-  
-  
-    //       dispatch(moveCol(data));
-    //     }
-       
-    //   }
-
-    // const handleChange = useCallback(() => props.callback(props.id), [props.id]);
-   
     return (
         <>
         {/* <RowSettingsModal 
@@ -241,79 +203,7 @@ const Row = React.memo( (props) => {
                         display: 'flex',
                         border: '1px dashed',
                     }}
-                >
-
-                    {/* {
-                       [...Array(rowColumnCount)].map((e, i) => {
-                           return (
-                                
-                                    columns[i] ? (
-                                        <Column 
-                                            key={columns[i]}
-                                            columnId={columns[i]}
-                                            width={100 / row?.colCount || 1}
-                                        />
-                                    ): (
-                                    //     <div 
-                                    //     style={{
-                                    //         flex: 1,
-                                    //         border: '1px dashed'
-                                    //     }}
-                                    // >
-            
-                                    // </div>
-                                    // )
-                                    // (
-                                       
-                                    <Container    
-                                        groupName="col"
-                                        onDrop={e => onCardDrop(rowId, e)}
-                                        getChildPayload={(index) =>{
-                                            return {
-                                                id: columns[index],
-                                                type: 'col',
-                                            }                   
-                                        }}
-                                        dragClass="card-ghost"
-                                        dropPlaceholder={{                      
-                                            animationDuration: 150,
-                                            showOnTop: false,
-                                            className: 'drop-preview-2' 
-                                        }}
-                                        dropPlaceholderAnimationDuration={200}
-                                        style={{
-                                            flex: 1,
-                                            border: '1px dashed'
-                                        }}
-                                        shouldAcceptDrop={(sourceContainerOptions, payload) => {
-                 
-                                            if (row.columns.includes(payload.id)) {
-                                                return true;
-                                            }
-                    
-                                            if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
-                                                return false;
-                                            } 
-                                    
-                                        
-                                            return payload?.type === 'col'
-                                            // const widthSum = row.columns.reduce((a, b) => a + (b['width'] || 0), 0);
-                                            // const foo = row.columns.filter(col => col.id === b.id)
-                                            // console.log('widthSum', widthSum)
-                                            // if (widthSum >= 100 && !foo.length || a.groupName !== 'col' ) return false
-                                            // return true;
-                                        }}
-                                    ></Container>
-                                    )
-                                
-                           )
-                       })
-                    } */}
-
-                    
-                      
-                    
-               
+                >       
                     
                     {/* // DEPENDING ON HOW PASSING COLUMN! */}
                     {/* {columns?.length ? columns.map((columnId) => { */}

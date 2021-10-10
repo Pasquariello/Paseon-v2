@@ -72,6 +72,7 @@ const FormBuilderView = React.memo( ({formData }) => {
     const rowPosition = rows?.length || 0;
     const column = {
       id: shortid.generate(), 
+      fields: [...newField],
       name,
       label,
       type, 
@@ -116,6 +117,8 @@ const FormBuilderView = React.memo( ({formData }) => {
         column: column,
       }
 
+
+   
 
       dispatch(
         addField(formFoo)

@@ -4,6 +4,8 @@ import {  TextField } from '@mui/material';
 const TextInput = React.memo( (props) => {
     const { label } = props;
     return (
+        <div>
+            {label}
         <TextField 
             // label="LABEL"
             label={label || ''}
@@ -13,6 +15,7 @@ const TextInput = React.memo( (props) => {
             disabled
             // style={{background: 'blue'}}
         />
+        </div>
     )
 })
 

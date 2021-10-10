@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Container, Draggable } from "react-smooth-dnd";
 import {useDispatch} from 'react-redux';
 
-import {commonFields, basicFields} from 'src/utils/fieldTypeArrays';
+import {commonFields, basicFields, commonFoo} from 'src/utils/fieldTypeArrays';
 import Icon from '@mui/material/Icon';
 import { display } from '@mui/system';
 import { Typography } from '@mui/material';
@@ -59,7 +59,16 @@ const FieldOptions = (props) => {
         basic: basicFields,
     }
 
-    const fieldArray = fieldArrayOptions[variant];
+    const foo = {
+        common: commonFoo,
+        basic: basicFields,
+    }
+
+    console.log('fooArrray', foo[variant])
+
+
+    const fieldArray = foo[variant];
+    console.log('fieldArray', fieldArray)
 
     return (
  
@@ -72,14 +81,15 @@ const FieldOptions = (props) => {
                 overflow: 'hidden',
                 flexWrap: 'wrap',
             }}
-            getChildPayload={i => ({
-                id: fieldArray[i].id, 
-                body: fieldArray[i], 
-                type: 'col' })} 
+            // getChildPayload={i => ({
+            //     id: fieldArray[i].id, 
+            //     body: fieldArray[i], 
+            //     type: 'col' })} 
 
         >
         {
           fieldArray.map((field, i) => {
+              console.log('FIELD', field)
             return (
               <Draggable 
                 key={i}
@@ -96,12 +106,15 @@ const FieldOptions = (props) => {
                     display: 'flex',
                     justifyContent: 'space-between',
                 }}
-                onClick={() => addNewField(field)}
+                onClick={() =>{
+                     const fieldToAdd = field.properties ? field.properties : [field]
+                     addNewField(fieldToAdd)}
+                }
                 className="draggable-item" 
 
             >
                 {field.icon && field.icon}
-                <Typography>{field.label}</Typography>
+               <Typography>{field.label}</Typography>
             </Draggable>
             );
           })
