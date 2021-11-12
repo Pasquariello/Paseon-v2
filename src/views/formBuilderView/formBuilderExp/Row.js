@@ -93,10 +93,6 @@ const Row = React.memo( (props) => {
         onCardDrop(rowIndex, e)
       }, [onCardDrop, rowIndex])
 
-      console.log('row', row)
-
-      const cols = new Array(row?.colCount || 1).fill(row.columns)
-      
     return (
         <>
         {/* <RowSettingsModal 
@@ -145,23 +141,22 @@ const Row = React.memo( (props) => {
                         <DeleteOutlineIcon/>
                 </div>
                 
-                <div style={{flex: 1}}>
+              <div style={{flex: 1}}>
              
-                    <Typography style={{ fontSize: 10 }}>Column Count</Typography>
-                    <div>
-                        <IconButton size="small" 
-                        onClick={handleDecrement}
-                        ><RemoveIcon style={{ fontSize: 16 }}/></IconButton>
-                            <Typography variant="caption" style={{ fontSize: 12 }}>{rowColumnCount}</Typography>
-                        <IconButton size="small" 
-                            onClick={handleIncrement}
-                        ><AddIcon style={{ fontSize: 16 }}/></IconButton>
-                    </div>
+                <Typography style={{ fontSize: 10 }}>Column Count</Typography>
+                <div>
+                    <IconButton size="small" 
+                    onClick={handleDecrement}
+                    ><RemoveIcon style={{ fontSize: 16 }}/></IconButton>
+                        <Typography variant="caption" style={{ fontSize: 12 }}>{rowColumnCount}</Typography>
+                    <IconButton size="small" 
+                        onClick={handleIncrement}
+                    ><AddIcon style={{ fontSize: 16 }}/></IconButton>
+                </div>
+          
 
-                    {cols.map((col, index) => {
-                        console.log('col', col)
-                        return (
-                            <Container
+                        
+              <Container
                     groupName="rowContainer"
                     orientation="horizontal"
                     // onDrop={(e) => onCardDrop(rowIndex, e)}
@@ -171,25 +166,27 @@ const Row = React.memo( (props) => {
                             id: columns[index].id,
                             body: columns[index],
                             type: 'col',
-                        }
+                        }                   
                     }}
                     dragClass="card-ghost"
-                    dropPlaceholder={{
+                    dropPlaceholder={{                      
                         animationDuration: 150,
                         showOnTop: true,
-                        className: 'drop-preview'
+                        className: 'drop-preview' 
                     }}
                     dropPlaceholderAnimationDuration={200}
-                    shouldAcceptDrop={(sourceContainerOptions, payload) => {
+               
+                    shouldAcceptDrop={(sourceContainerOptions, payload) => { 
                         if (row.columns.includes(payload.body)) {
                             return true;
                         }
+
                         // if (row.colCount <= row.columns.length && !row.columns.includes(payload.id)) {
                         //     return false;
-                        // }
+                        // } 
                         if (row.colCount <= row.columns.length) {
                             return false;
-                        }
+                        } 
                         return payload?.type === 'col'
                         // const widthSum = row.columns.reduce((a, b) => a + (b['width'] || 0), 0);
                         // const foo = row.columns.filter(col => col.id === b.id)
@@ -198,40 +195,36 @@ const Row = React.memo( (props) => {
                         // return true;
                     }}
                     index={rowIndex}
+                
                     style={{
-                        flex: 1,
+                        // flex: 1,
                         minHeight: '100px',
                         padding: 0,
                         display: 'flex',
                         border: '1px dashed',
                     }}
-                >
+                >       
+                    
                     {/* // DEPENDING ON HOW PASSING COLUMN! */}
                     {/* {columns?.length ? columns.map((columnId) => { */}
                     {/* // console.log('columnId', columnId) */}
                     {
-                        // columns?.length ? columns.map((col, index) => {
-                        //     return (
-                                <Column
+                        columns?.length ? columns.map((col, index) => {      
+                            
+                            return (
+                        
+                                <Column 
                                     key={col.id}
                                     columnId={col.id}
                                     rowIndex={rowIndex || 0}
                                     colIndex={index}
-                                    width={100 / row?.colCount || 1}
-                                    // width={100 / row?.columns.length || 1}
+                                    width={100 / row?.columns.length || 1}
                                 />
-                        //     )
-                        // }) : null
-                    }
+                            )
+                        }) : null
+                    }                    
                     </Container>
-                        )
-                            
-                    })}
-          
-
-                        
-            
-                </div>
+                    </div>
 
             </div>
 

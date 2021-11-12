@@ -38,7 +38,6 @@ const Column = React.memo( (props) => {
         colIndex,
     } = props;
     const WIDTH = `${width}%`
-    console.log('WIDTH', WIDTH)
     // const column = useSelector((state) => state.formDetails.columnEntities[columnId]);
     // const column = useSelector((state) => state.formDetails.rows[rowIndex].columns[colIndex]);
     const column = useSelector((state) => state.formDetails.columns.find(col => col.id === columnId));
@@ -101,13 +100,13 @@ const Column = React.memo( (props) => {
             style={{
              
                 width: '100%',
-                border: '1px solid green',
                 display: "flex",
                 height: '100%',
                 flex: 1,
                 justifyContent: 'space-between',
                 alignItems: 'space-between',
                 // padding: 10,
+                // width: WIDTH,
           
             }}
         >
@@ -142,7 +141,6 @@ const Column = React.memo( (props) => {
                     }}
                     >
                     <div style={{padding: 8}}>
-                        {WIDTH}
                     <TextField 
                         margin='normal'
                         label={field.label}
@@ -165,11 +163,10 @@ const Column = React.memo( (props) => {
                     flexDirection: 'column'
                 }}
                 >
- 
-                    {/* <Tooltip title="Tune Properties">
+{/*  
+                    <Tooltip title="Tune Properties">
                         <IconButton  
-                        //  TODO useCallback 
-                        // https://itnext.io/6-tips-for-better-react-performance-4329d12c126b
+                       // https://itnext.io/6-tips-for-better-react-performance-4329d12c126b
                         onClick={() => dispatch(selectField(column.id))}
                          aria-label="tune" size="large">
                             <TuneIcon/>
@@ -179,8 +176,8 @@ const Column = React.memo( (props) => {
                         <IconButton aria-label="edit" size="large">
                             <DeleteIcon/>
                         </IconButton>
-                    </Tooltip> */}
-                    
+                    </Tooltip>
+                     */}
                 </div>
         </div>
                    
