@@ -6,11 +6,10 @@ import shortid from 'shortid';
 import { useDispatch, useSelector } from 'react-redux';
 import {addNewFieldAction} from 'src/actions/formActions';
 
-import { Container } from "react-smooth-dnd";
+import { Container, Draggable } from "react-smooth-dnd";
 import {fetchFormData, moveRow, moveCol, clearEmptyRows, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
-import {Box, Button} from '@mui/material';
-import {List} from 'react-virtualized';
+import {Box, Button, Typography} from '@mui/material';
 import { FormBuilderContext } from 'src/context/FormBuilderContext';
 
 
@@ -20,7 +19,8 @@ const applyDrag = (arr, dragResult) => {
   if (removedIndex === null && addedIndex === null) return arr;
   const result = [...arr];
 
-  let itemToAdd = payload.body;
+  let itemToAdd = payload;
+  console.log('ITEM TO ADD', itemToAdd)
 
   if (removedIndex !== null) {
 
@@ -35,188 +35,387 @@ const applyDrag = (arr, dragResult) => {
   return result;
 };
 
+const myfields = [
+  {
+    name: 'Taylor',
+    half: true,
+    row: 0,
+    col: 0
+  }, 
+  {
+    name: 'Sylvia',
+    half: true,
+    row: 0,
+    col: 1,
+  },
+  {
+    name: 'Huron',
+    row: 1,
+    col: 0,
+    half: false,
+  },
+  {
+    name: 'Barley',
+    row: 2,
+    col: 0,
+    half: true,
+  },
+  {
+    name: 'Bear',
+    row: 2,
+    col: 1,
+    half: true,
+
+  },
+  {
+    name: 'Gabrielle',
+    row: 3,
+    col: 0,
+    half: false,
+
+  },
+  {
+    name: 'Selina',
+    row: 4,
+    col: 0,
+    half: false,
+  },
+];
+
+
 const  FormDnDSandbox = React.memo((props) => {
-  const dispatch = useDispatch() 
-  const { currentView } = useContext(FormBuilderContext);
-  console.log('currentView', currentView)
-  const {rowEntities} = useSelector(state => state.formDetails);
 
-  const rowsArray = useSelector(state => state.formDetails.rows);
-  const [moveCount, setMoveCount] = useState(0);
-    
+  const [formStructure, setFormStructure] = useState(myfields);
+  const [rows, setRows] = useState([]);
+  const [cols, setCols] = useState([]);
+
+  const rowCount = Math.max.apply(Math, myfields.map(function(field) { return field.row; })) + 1;
+  console.log('rowCount', rowCount)
+
+  const buildRows = (arrayToSort) => {
+    // sort by row
+    arrayToSort.sort((a, b) => a.row - b.row);
+
+    let rowArray = [];
+    arrayToSort.forEach((field, index) => { 
+      if (rowArray[field.row]){
+        rowArray[field.row] = [...rowArray[field.row], field]
+      } 
+      else { 
+        rowArray.push([field]) 
+      }
+    })
+
+    return rowArray;
+
+  }
+
   useEffect(() => {
-    if (moveCount >= 2) {
-      dispatch(clearEmptyRows())
-      setMoveCount(0)
-    }
-  }, [moveCount, dispatch])
-    // Gets run twice - for the row the card left and for the row the card is dropped
-    const onCardDrop = (rowIndex, dropResult)  => {
+    const structuredRow = buildRows(myfields);
+    console.log('structuredRow', structuredRow)
+    setRows(structuredRow);
 
-      console.log('dropResult', dropResult)
-      console.log('rowIndex', rowIndex)
+  }, []);
 
-      // if (!dropResult.addedIndex && !dropResult.removedIndex){
-      //   return
-      // }
-    
-
-      if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-        const row = rowsArray[rowIndex];
-        const dropResultCopy = {...dropResult}
-
-        //new 
-        const newCol = applyDrag(row.columns, dropResultCopy);
-        console.log('newCol', newCol)
-
-        const updatedCols = newCol.map((col, colIndex) => {
-          return {
-            ...col, 
-            position: colIndex,
-            // taylor
-            // rowPosition: rowIndex,
-          }
-        });
-
-        const updatedRowColumns = newCol.map((col, index)=> ({id: col.id, position: index}));
-        const updatedRow = {...row, columns: updatedRowColumns}
-
-        const updatedColumns = updatedRow.columns.map((column, index) => ({
-          id: column.id,
-          changes: {
-            position: index,
-            // rowPosition: updatedRow.position,
-          }
-        }));
-
-        const data = {
-          updatedRow,
-          updatedColumns,
-          rowIndex
-        };
-        dispatch(moveCol(data));
+  const addNewField = () => {
+    const newRow = [
+      {
+        name: 'new',
+        col: 0,
+        row: rows.length + 1,
       }
-      setMoveCount(moveCount + 1)
-    }
+    ]
+    setRows([...rows, newRow])
+  }
 
-    const onRowDrop = (dropResult) => {
-  // TAYLOR - flexhing out idea to drop card in row
-  // if (dropResult.payload.type === 'col') {
-  //   // return
-  //   const newRow = {
-  //       id: 'row1',
-  //       position: dropResult.addedIndex,
-  //       formId: 'form1',
-  //       columns: [dropResult.payload.id]
-  //   }
-  //   dispatch(addRow(newRow))
-  //   //ADD NEW ROW
+
+
+  const handleRowDrop = (dropResult) => {
+    console.log('dropResult', dropResult)
+
+    // if (dropResult.payload.length) {
+
+    // }
+    const dragResults = dropResult.payload.length ? applyDrag(rows, dropResult) 
+    : applyDrag(rows, {...dropResult, payload: [dropResult.payload], removedIndex: dropResult.payload.row});
     
+    console.log('dragResults', dragResults)
 
-  // }
-      const updatedRows = applyDrag(rowsArray, dropResult);
-      const data = updatedRows.map((row, index) => {
+    const updatedRows = dragResults.map((row, rowIndex) => {
+      return row.map(field => {
+        return {...field, row: rowIndex}
+      }) 
+    })
+    setRows(updatedRows)
+  }
+
+  const handleCardDrop = (rowIndex, dropResult) => {
+    if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+      const row = rows[rowIndex];
+      const newCol = applyDrag(row, dropResult);
+
+      const updatedCols = newCol.map((col, colIndex) => {
         return {
-        ...row,
-        position: index,
-      }
-    });
+          ...col, 
+          col: colIndex,
+          row: rowIndex,
+        }
+      });
 
   
+      const updatedRows = rows.map((row, i) => {
+        if (rowIndex === i) {
+          return updatedCols
+        }
+        return row
+      })
+      setRows(updatedRows);
+
+     
+    }
+
+
+  }
+
+  const allowDrop = (ev) => {
+    ev.preventDefault();
+  }
   
-      // const updatedColumns = updatedRow.columns.map((column, index) => ({
-      //   id: column,
-      //   changes: {
-      //     col: index,
-      //     row: updatedRow.position,
-      //   }
-      // }));
-      // 
-      // console.log('updatedColumns', updatedColumns)
+  const dragMe = (ev) => {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+  
+  const dropMe = (ev) => {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+  }
 
-      dispatch(moveRow(data));
+  const Wrapper = (props) => {
+    if (props.length === 1) {
+      return (
+      <div
+      style={{
+        width: '100%',
+      }}>
+        {props.children}
+      </div>
+      )
+    } else {
+      return (
+      <Draggable
+        style={{
+          width: '50%',
+        }}
+      >
+         {props.children}
+      </Draggable>
+      )
     }
+  }
 
-    const handleIncrement = (id, currentColumnCount) => {
-      if (currentColumnCount < 3) {
-        dispatch(incrementRowColCount(id));
 
-      }
+  // const example = [
+  //   {full: true, fields: []},
+  //   {full: true, fields: []},
+  //   {full: true, fields: []}
+  // ]
+
+  const Wrapper2 = (props) => {
+    if (props.half === false) {
+      return (
+      <div {...props}>
+        {props.children}
+      </div>
+      )
+    } else {
+      return (
+      <Draggable
+        {...props}
+      >
+         {props.children}
+      </Draggable>
+      )
     }
-
-    const handleDecrement = (id, currentRowColumnCountSettings, currentColumnCount) => {
-
-      if (currentRowColumnCountSettings > 1 && currentColumnCount < currentRowColumnCountSettings) {
-        dispatch(decrementRowColCount(id));
-      }
-    }
+  }
 
     return ( 
       <Box
-      style={{
+        style={{
         overflow: 'auto',
-        border: '1px dashed',
+        border: '1px dashed blue',
         overflowY: "auto",
         width: '50%',
       }}
       
     >
-
+        form container
+        <Button onClick={addNewField}>addNewField test button</Button>
         <Container
-        // TAYLOR - DO I NEED TO REMOVE!?
         // groupName="col"
-        style={{background: '#f6f6f6'}}
+        // groupName="row container" // contains all draggble rows
+          style={{
+            background: '#f6f6f6',
+            border: '1px dashed black',
+          }}
           orientation="vertical"
-          onDrop={onRowDrop}
-          getChildPayload={index =>rowsArray[index]}
-          dragHandleSelector=".column-drag-handle"
+          onDrop={handleRowDrop}
+          getChildPayload={index =>rows[index]}
+          // dragHandleSelector=".column-drag-handle"
           dropPlaceholder={{
             animationDuration: 150,
             showOnTop: true,
             className: 'cards-drop-preview'
-          }}
+          }}   
+          // shouldAcceptDrop={(sourceContainerOptions, payload,) => {
+          //   console.log('sourceContainerOptions', sourceContainerOptions)
+          //   console.log('payload', payload)
+          //   if (payload.length === 1) {
+          //     return true
+          //   }
+
+          // }}     
         >
-                      {/* {rowsArray ? rowsArray.map((row, rowIndex) => {
-return (
-          <List
-    width={300}
-    height={300}
-    rowCount={rowsArray.length}
-    rowHeight={100}
-    rowRenderer={renderRow}
-  />
-  );
-}) : ''} */}
-          {/* DO NOT ADD ANY ELEMS AS CHILDREN THIS WILL BREAK ROW DND */}
-          {/* ! Important Comment button below out when not in use! */}
-          {/* <Button onClick={() => {
-            dispatch(fetchFormData())
-          }}>Test Get Form</Button> */}
-            {rowsArray ? rowsArray.map((row, rowIndex) => {
+
+          {rows.map((row, rowIndex) => {
+            const dropAllowed = !row.some(col => col.half === false) || row.length === 2;
+
+            const dropAllow = () => {
+              if(row.some(col => col.half === false)){
+                return 'nonDroppable'
+              } else {
+                if(row.length === 2){
+                  return `droppableAt${rowIndex}`
+                } else {
+                  return `droppableAll`
+                }              
+              }
+            }
+            
+
+            console.log('dropAllow', dropAllow())
+            console.log('ROW', row)
+            return (
+              <Draggable
+                length={row.length}
+                key={rowIndex}
+                style={{
+                  border: '1px dashed black'
+                }}
+              >
+                row {rowIndex}
+                <Container
+                  orientation="horizontal"
+                  onDrop={(e) => handleCardDrop(rowIndex, e)}
+                  getChildPayload={index =>rows[rowIndex][index]}
+                  index={rowIndex}
+                  dragClass="card-ghost"
+                  groupName="col"
+
+                  // groupName={`col${rowIndex}`} 
+                  // groupName={`col`} 
+                  groupName={dropAllow()}
+                  rowLength={row.length}
+                  fooIndex={rowIndex}
+            
+                  style={{
+                    display: 'flex',
+                  }}
+                  dropPlaceholder={{
+                    animationDuration: 150,
+                    showOnTop: true,
+                    className: 'cards-drop-preview'
+                  }} 
+
+                 shouldAcceptDrop={(sourceContainerOptions, payload) => {
+                    // console.log('sourceContainerOptions', sourceContainerOptions)
+                    console.log('payload', payload)
+                    console.log('sourceContainerOptions', sourceContainerOptions)
+                    console.log('row', row)
+                    if(row.some(col => col.half === false)){
+                      return false
+                    } else {
+                      if(row.length === 2){
+                        if(row.some(col => col.name === payload.name)) {
+                          return true // coming from row currently being dragged from
+                        }
+                        return false // already has 2 columns
+                      } else {
+                        return true // all
+                      }              
+                    }                  
+                 }}
+
+                >
+                  {row.map((col, colIndex) => {
+                     return (
+        
+                      <Wrapper2
+                        half={col.half} // only used if comp is Wrapper2
+                        style={{
+                          // flex: 1,
+                          width: col.half ? '50%' : '100%',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            border: '1px dashed black',
+                            display: 'flex',
+
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                           
+                              const foo = {
+                                ...rows[rowIndex][colIndex],
+                                half: !rows[rowIndex][colIndex].half
+                              };
+
+                              const newRows = rows[rowIndex].map(col => {
+                                return [{
+                                  ...col,
+                                  half: !rows[rowIndex][colIndex].half
+                                }];
+                              })
+                              console.log('newRows', newRows)
+                              
+                              const test = [...rows];
+                              test.splice(rowIndex, 1, ...newRows)
+                              console.log('test', test);
+                              console.log('rows', rows);
+
+                              // const updatedRows = rows.map((row, i) => {
+                              //   if (rowIndex === i) {
+                              //     return [...newRows]
+                              //     // return row.map((col, j) => {
+                              //     //   return [{
+                              //     //     ...col,
+                              //     //     half: !rows[rowIndex][colIndex].half
+                              //     //   }];
+                                   
+                              //     // })
+                              //   }
+                              //   return row
+                              // })
+                              // console.log('updatedRows', updatedRows)
+                              setRows(test);
+                            }}
+                          >{col.half ? 'half' : 'full'}</button>
+
+                          <Typography>{col.name}</Typography>
+                        </Box>
+                      </Wrapper2>
+                    )
+                  })}
+                </Container>
+              </Draggable>
+            )
+          })}
+
+
+          
               
-                return (
-                    <Row  
-                        rowIndex={rowIndex}
-                        key={row.id}
-                        rowId={row.id}
-                        onCardDrop={onCardDrop}
-                        // addNewField={props.addNewField}
-                        // handleIncrement={handleIncrement}
-                        // handleDecrement={handleDecrement}
-                    /> 
-                       
-            );
-          }) : (
-            <Row  
-            rowIndex={0}
-            key={0}
-            rowId={shortid.generate()}
-            onCardDrop={onCardDrop}
-            // addNewField={props.addNewField}
-            // handleIncrement={handleIncrement}
-            // handleDecrement={handleDecrement}
-        /> 
-          )}
         </Container> 
         </Box>  
     );
