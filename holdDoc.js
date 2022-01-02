@@ -23,7 +23,6 @@ const applyDrag = (arr, dragResult) => {
   const result = [...arr];
 
   let itemToAdd = payload;
-  console.log('ITEM TO ADD', itemToAdd)
 
   if (removedIndex !== null) {
 
@@ -197,7 +196,6 @@ const  FormDnDSandbox = React.memo((props) => {
 
   useEffect(() => {
     const structuredRow = buildRows(myfields);
-    console.log('structuredRow', structuredRow)
     setRows(structuredRow);
   }, []);
 
@@ -279,7 +277,6 @@ const  FormDnDSandbox = React.memo((props) => {
   }
 
   const handleEditLabel = (value, rowIndex, colIndex, fieldIndex) => {
-    console.log(value, rowIndex, colIndex, fieldIndex)
   
 
     const copy = rows.map((row, ri) => {
@@ -385,7 +382,7 @@ const  FormDnDSandbox = React.memo((props) => {
 
           {rows.map((row, rowIndex) => {
             return (
-              <Draggable
+                React.memo(<Draggable
                 length={row.length}
                 key={rowIndex}
                 style={{
@@ -417,7 +414,6 @@ const  FormDnDSandbox = React.memo((props) => {
                   }} 
                
                  shouldAcceptDrop={(sourceContainerOptions, payload) => {
-                   console.log('payload', payload.length)
                     // console.log('sourceContainerOptions', sourceContainerOptions)
                     if (sourceContainerOptions.groupName === 'row') {
                       return false; // must come first
@@ -491,7 +487,7 @@ const  FormDnDSandbox = React.memo((props) => {
                     )
                   })}
                 </Container>
-              </Draggable>
+              </Draggable>)
             )
           })}     
         </Container> 

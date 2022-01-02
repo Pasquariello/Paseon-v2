@@ -13,7 +13,7 @@ import { FormBuilderContext } from 'src/context/FormBuilderContext';
 
 
 import ContentEditable from 'react-contenteditable'
-
+import Column from './Column';
 
 
 
@@ -85,74 +85,17 @@ const Row = React.memo((props) => {
                   {row.map((col, colIndex) => {
                      return (
         
-                      <Draggable
-                        key={colIndex}
-                        style={{
-                          width: col.half ? '50%' : '100%',
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            border: '1px dashed black',
-                            display: 'flex',
-
-                          }}
-                        >
-                          <button
-                            onClick={() => handleToggleWidth(rowIndex, colIndex)}
-                          >{col.half ? 'Expand' : 'Shrink'}</button>
-                          
-                          {myfields[col.id].map((field, fieldIndex) => {
-                              return (
-                           
-                              <Box
-                                key={fieldIndex}
-                                sx={{
-                                  width: '100%',
-                                }}
-                              >
-                               
-                                <Typography>
-                                  <ContentEditable
-                                    html={field.label} // innerHTML of the editable div
-                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex, col.id)} // handle innerHTML change
-                                  />
-                                </Typography>
-                                <TextField fullWidth id="outlined-basic" label={field.label} variant="outlined" />
-                              </Box>
-                              )
-                            })}
-
-
-                            {/* {col.fields.map((field, fieldIndex) => {
-                              return (
-                           
-                              <Box
-                                key={fieldIndex}
-                                sx={{
-                                  width: '100%',
-                                }}
-                              >
-                                <Typography>
-                                  <ContentEditable
-                                    html={field.label} // innerHTML of the editable div
-                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex, col.id)} // handle innerHTML change
-                                  />
-                                </Typography>
-                                <TextField fullWidth id="outlined-basic" label={field.label} variant="outlined" />
-                              </Box>
-                              )
-                            })} */}
-
-
-                          {/* <button
-                            onClick={() => {
-                              setEditField(col)
-                              console.log(col)
-                            }}
-                          >edit me</button> */}
-                        </Box>
-                      </Draggable>
+                      <Column
+                      colIndex={colIndex}
+                      col={col}
+                      row={row}
+                      rowIndex={rowIndex}
+                      handleCardDrop={handleCardDrop}
+                      handleEditLabel={handleEditLabel}
+                      // handleRowDrop={handleRowDrop}
+                      handleToggleWidth={handleToggleWidth}
+                      myfields={myfields}
+                      />
                     )
                   })}
                 </Container>
