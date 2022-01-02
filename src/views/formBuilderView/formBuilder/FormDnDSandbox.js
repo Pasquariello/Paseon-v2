@@ -23,7 +23,6 @@ const applyDrag = (arr, dragResult) => {
   const result = [...arr];
 
   let itemToAdd = payload;
-  console.log('ITEM TO ADD', itemToAdd)
 
   if (removedIndex !== null) {
 
@@ -197,7 +196,6 @@ const  FormDnDSandbox = React.memo((props) => {
         col: field.col,
         half: field.half,
       }
-      console.log('col', col)
       if (rowArray[field.row]){
         rowArray[field.row] = [...rowArray[field.row], col]
       } 
@@ -338,20 +336,8 @@ const  FormDnDSandbox = React.memo((props) => {
   }
 
   const handleEditLabel = (value, rowIndex, colIndex, fieldIndex, id) => {
-    console.log(value, rowIndex, colIndex, fieldIndex)
     
-    // const copy = {
-    //   ...myfields,
-    //   [id]: myfields[id].map((field, index) => {
-    //     if (index === fieldIndex){
-    //       return {
-    //         ...field,
-    //         label: value
-    //       }
-    //     }
-    //     return field
-    //   }) 
-    // }
+  
     setMyfields({...myfields,
       [id]: myfields[id].map((field, index) => {
         if (index === fieldIndex){
@@ -383,7 +369,6 @@ const  FormDnDSandbox = React.memo((props) => {
 
 
     
-    // rowsCopy = 'yo';
     // // setRows(rowsCopy);
     // console.log('rowsCopy', rowsCopy)
     // console.log('rows', rows)
@@ -420,47 +405,6 @@ const  FormDnDSandbox = React.memo((props) => {
   }
 
 
-  const Wrapper = (props) => {
-    if (props.length === 1) {
-      return (
-      <div
-      style={{
-        width: '100%',
-      }}>
-        {props.children}
-      </div>
-      )
-    } else {
-      return (
-      <Draggable
-        style={{
-          width: '50%',
-        }}
-      >
-         {props.children}
-      </Draggable>
-      )
-    }
-  }
-
-
-  const Wrapper2 = (props) => {
-    if (props.half === false) {
-      return (
-      <div {...props}>
-        {props.children}
-      </div>
-      )
-    } else {
-      return (
-      <Draggable
-        {...props}
-      >
-         {props.children}
-      </Draggable>
-      )
-    }
-  }
 
   const [editField, setEditField] = useState();
 
@@ -498,141 +442,19 @@ const  FormDnDSandbox = React.memo((props) => {
 
           {rows.map((row, rowIndex) => {
             return (
-              <Draggable
-                length={row.length}
-                key={rowIndex}
-                style={{
-                  border: '1px dashed black'
-                }}
-              >
-                row {rowIndex}
-                <Container
-                  orientation="horizontal"
-                  onDrop={(e) => handleCardDrop(rowIndex, e)}
-                  getChildPayload={index =>rows[rowIndex][index]}
-                  index={rowIndex}
-                  dragClass="card-ghost"
-
-                  // groupName={`col${rowIndex}`} 
-                  groupName='col'
-                  // groupName={`col${row.length}`} 
-
-                  rowLength={row.length}
-                  fooIndex={rowIndex}
-            
-                  style={{
-                    display: 'flex',
-                  }}
-                  dropPlaceholder={{
-                    animationDuration: 150,
-                    showOnTop: true,
-                    className: 'cards-drop-preview'
-                  }} 
-               
-                 shouldAcceptDrop={(sourceContainerOptions, payload) => {
-                   console.log('payload', payload.length)
-                    // console.log('sourceContainerOptions', sourceContainerOptions)
-                    if (sourceContainerOptions.groupName === 'row') {
-                      return false; // must come first
-                    }
-                    if(rowIndex === payload.row) {
-                        return true // coming from row currently being dragged from
-                    }
-                    if (row.length === 0) { 
-                      return true // if empty row
-                    }
-    
-                    if (row.length === 1 && row[0].half && rowIndex !== payload.row && payload.half) {
-                      return true;
-                    }
-
-                    return false // all other cases
-                
-                 }}
-                >
-                  {row.map((col, colIndex) => {
-                     return (
-        
-                      <Draggable
-                        key={colIndex}
-                        style={{
-                          width: col.half ? '50%' : '100%',
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            border: '1px dashed black',
-                            display: 'flex',
-
-                          }}
-                        >
-                          <button
-                            onClick={() => handleToggleWidth(rowIndex, colIndex)}
-                          >{col.half ? 'Expand' : 'Shrink'}</button>
- {col.id}
-                          
-                          {myfields[col.id].map((field, fieldIndex) => {
-                            console.log('col.id', col.id)
-                              return (
-                           
-                              <Box
-                                key={fieldIndex}
-                                sx={{
-                                  width: '100%',
-                                }}
-                              >
-                               
-                                <Typography>
-                                  <ContentEditable
-                                    html={field.label} // innerHTML of the editable div
-                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex, col.id)} // handle innerHTML change
-                                  />
-                                </Typography>
-                                <TextField fullWidth id="outlined-basic" label={field.label} variant="outlined" />
-                              </Box>
-                              )
-                            })}
-
-
-                            {/* {col.fields.map((field, fieldIndex) => {
-                              return (
-                           
-                              <Box
-                                key={fieldIndex}
-                                sx={{
-                                  width: '100%',
-                                }}
-                              >
-                                <Typography>
-                                  <ContentEditable
-                                    html={field.label} // innerHTML of the editable div
-                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex, col.id)} // handle innerHTML change
-                                  />
-                                </Typography>
-                                <TextField fullWidth id="outlined-basic" label={field.label} variant="outlined" />
-                              </Box>
-                              )
-                            })} */}
-
-
-                          {/* <button
-                            onClick={() => {
-                              setEditField(col)
-                              console.log(col)
-                            }}
-                          >edit me</button> */}
-                        </Box>
-                      </Draggable>
-                    )
-                  })}
-                </Container>
-              </Draggable>
+             <Row
+              row={row}
+              rowIndex={rowIndex}
+              handleCardDrop={handleCardDrop}
+              handleEditLabel={handleEditLabel}
+              // handleRowDrop={handleRowDrop}
+              handleToggleWidth={handleToggleWidth}
+              myfields={myfields}
+             />
             )
-          })}     
+          })}   
         </Container> 
-
-
-        </Box>  
+        </Box> 
     );
 })
 
