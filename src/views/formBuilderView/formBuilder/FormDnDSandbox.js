@@ -35,62 +35,138 @@ const applyDrag = (arr, dragResult) => {
   return result;
 };
 
+// const myfields = [
+//   {
+//     name: 'Taylor',
+//     half: true,
+//     row: 0,
+//     col: 0
+//   }, 
+//   {
+//     name: 'Sylvia',
+//     half: true,
+//     row: 0,
+//     col: 1,
+//   },
+//   {
+//     name: 'Huron',
+//     row: 1,
+//     col: 0,
+//     half: false,
+//   },
+//   {
+//     name: 'Barley',
+//     row: 2,
+//     col: 0,
+//     half: true,
+//   },
+//   {
+//     name: 'Bear',
+//     row: 2,
+//     col: 1,
+//     half: true,
+
+//   },
+//   {
+//     name: 'Gabrielle',
+//     row: 3,
+//     col: 0,
+//     half: false,
+
+//   },
+//   {
+//     name: 'Selina',
+//     row: 4,
+//     col: 0,
+//     half: false,
+//   },
+// ];
+
+
 const myfields = [
   {
-    name: 'Taylor',
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],
     half: true,
     row: 0,
     col: 0
   }, 
   {
-    name: 'Sylvia',
-    half: true,
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],    half: true,
     row: 0,
     col: 1,
   },
   {
-    name: 'Huron',
-    row: 1,
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],    row: 1,
     col: 0,
     half: false,
   },
   {
-    name: 'Barley',
-    row: 2,
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],    row: 2,
     col: 0,
     half: true,
   },
   {
-    name: 'Bear',
-    row: 2,
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],    row: 2,
     col: 1,
     half: true,
 
   },
   {
-    name: 'Gabrielle',
-    row: 3,
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],    row: 3,
     col: 0,
     half: false,
 
   },
   {
-    name: 'Selina',
-    row: 4,
+    fields: [
+      {
+        label: 'First Name',
+        value: 'Taylor'
+      }
+    ],    row: 4,
     col: 0,
     half: false,
   },
 ];
 
 
+
 const  FormDnDSandbox = React.memo((props) => {
 
-  const [formStructure, setFormStructure] = useState(myfields);
   const [rows, setRows] = useState([]);
   const [cols, setCols] = useState([]);
 
-  const rowCount = Math.max.apply(Math, myfields.map(function(field) { return field.row; })) + 1;
-  console.log('rowCount', rowCount)
+  // const rowCount = Math.max.apply(Math, myfields.map(function(field) { return field.row; })) + 1;
 
   const buildRows = (arrayToSort) => {
     // sort by row
@@ -117,29 +193,24 @@ const  FormDnDSandbox = React.memo((props) => {
 
   }, []);
 
-  const addNewField = () => {
-    const newRow = [
-      {
-        name: 'new',
-        col: 0,
-        row: rows.length + 1,
-      }
-    ]
-    setRows([...rows, newRow])
-  }
+  // const addNewField = () => {
+  //   const newRow = [
+  //     {
+  //       name: 'new',
+  //       col: 0,
+  //       row: rows.length + 1,
+  //     }
+  //   ]
+  //   setRows([...rows, newRow])
+  // }
 
 
 
   const handleRowDrop = (dropResult) => {
-    console.log('dropResult', dropResult)
 
-    // if (dropResult.payload.length) {
-
-    // }
     const dragResults = dropResult.payload.length ? applyDrag(rows, dropResult) 
     : applyDrag(rows, {...dropResult, payload: [dropResult.payload], removedIndex: dropResult.payload.row});
     
-    console.log('dragResults', dragResults)
 
     const updatedRows = dragResults.map((row, rowIndex) => {
       return row.map(field => {
@@ -177,19 +248,21 @@ const  FormDnDSandbox = React.memo((props) => {
 
   }
 
-  const allowDrop = (ev) => {
-    ev.preventDefault();
+  const  handleToggleWidth = (rowIndex, colIndex) => {
+            
+    const newRows = rows[rowIndex].map((col, i) => {
+      const colSize = i === colIndex ? !rows[rowIndex][colIndex].half : rows[rowIndex][colIndex].half;
+      return [{
+        ...col,
+        half: colSize,
+      }];
+    })
+    
+    const test = [...rows];
+    test.splice(rowIndex, 1, ...newRows)
+    setRows(test);
   }
-  
-  const dragMe = (ev) => {
-    ev.dataTransfer.setData("text", ev.target.id);
-  }
-  
-  const dropMe = (ev) => {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-  }
+
 
   const Wrapper = (props) => {
     if (props.length === 1) {
@@ -215,12 +288,6 @@ const  FormDnDSandbox = React.memo((props) => {
   }
 
 
-  // const example = [
-  //   {full: true, fields: []},
-  //   {full: true, fields: []},
-  //   {full: true, fields: []}
-  // ]
-
   const Wrapper2 = (props) => {
     if (props.half === false) {
       return (
@@ -239,6 +306,8 @@ const  FormDnDSandbox = React.memo((props) => {
     }
   }
 
+  const [editField, setEditField] = useState();
+
     return ( 
       <Box
         style={{
@@ -250,10 +319,10 @@ const  FormDnDSandbox = React.memo((props) => {
       
     >
         form container
-        <Button onClick={addNewField}>addNewField test button</Button>
+        {/* <Button onClick={addNewField}>addNewField test button</Button> */}
+          edit field: {editField?.name}      
         <Container
-        // groupName="col"
-        // groupName="row container" // contains all draggble rows
+          groupName="row" // contains all draggble rows
           style={{
             background: '#f6f6f6',
             border: '1px dashed black',
@@ -266,35 +335,10 @@ const  FormDnDSandbox = React.memo((props) => {
             animationDuration: 150,
             showOnTop: true,
             className: 'cards-drop-preview'
-          }}   
-          // shouldAcceptDrop={(sourceContainerOptions, payload,) => {
-          //   console.log('sourceContainerOptions', sourceContainerOptions)
-          //   console.log('payload', payload)
-          //   if (payload.length === 1) {
-          //     return true
-          //   }
-
-          // }}     
+          }}      
         >
 
           {rows.map((row, rowIndex) => {
-            const dropAllowed = !row.some(col => col.half === false) || row.length === 2;
-
-            const dropAllow = () => {
-              if(row.some(col => col.half === false)){
-                return 'nonDroppable'
-              } else {
-                if(row.length === 2){
-                  return `droppableAt${rowIndex}`
-                } else {
-                  return `droppableAll`
-                }              
-              }
-            }
-            
-
-            console.log('dropAllow', dropAllow())
-            console.log('ROW', row)
             return (
               <Draggable
                 length={row.length}
@@ -310,11 +354,9 @@ const  FormDnDSandbox = React.memo((props) => {
                   getChildPayload={index =>rows[rowIndex][index]}
                   index={rowIndex}
                   dragClass="card-ghost"
-                  groupName="col"
 
                   // groupName={`col${rowIndex}`} 
-                  // groupName={`col`} 
-                  groupName={dropAllow()}
+                  groupName='col'
                   rowLength={row.length}
                   fooIndex={rowIndex}
             
@@ -326,26 +368,29 @@ const  FormDnDSandbox = React.memo((props) => {
                     showOnTop: true,
                     className: 'cards-drop-preview'
                   }} 
-
+               
                  shouldAcceptDrop={(sourceContainerOptions, payload) => {
                     // console.log('sourceContainerOptions', sourceContainerOptions)
-                    console.log('payload', payload)
-                    console.log('sourceContainerOptions', sourceContainerOptions)
-                    console.log('row', row)
+                 
+                 
+                    if (sourceContainerOptions.groupName === 'row' || payload.half === false) {
+                      return false
+                    }  
+                    
                     if(row.some(col => col.half === false)){
                       return false
                     } else {
                       if(row.length === 2){
-                        if(row.some(col => col.name === payload.name)) {
+                        // if(row.some(col => col.name === payload.name)) {
+                        if(rowIndex === payload.row) {
                           return true // coming from row currently being dragged from
                         }
                         return false // already has 2 columns
                       } else {
                         return true // all
-                      }              
+                      }       
                     }                  
                  }}
-
                 >
                   {row.map((col, colIndex) => {
                      return (
@@ -365,45 +410,25 @@ const  FormDnDSandbox = React.memo((props) => {
                           }}
                         >
                           <button
-                            onClick={() => {
-                           
-                              const foo = {
-                                ...rows[rowIndex][colIndex],
-                                half: !rows[rowIndex][colIndex].half
-                              };
-
-                              const newRows = rows[rowIndex].map(col => {
-                                return [{
-                                  ...col,
-                                  half: !rows[rowIndex][colIndex].half
-                                }];
-                              })
-                              console.log('newRows', newRows)
-                              
-                              const test = [...rows];
-                              test.splice(rowIndex, 1, ...newRows)
-                              console.log('test', test);
-                              console.log('rows', rows);
-
-                              // const updatedRows = rows.map((row, i) => {
-                              //   if (rowIndex === i) {
-                              //     return [...newRows]
-                              //     // return row.map((col, j) => {
-                              //     //   return [{
-                              //     //     ...col,
-                              //     //     half: !rows[rowIndex][colIndex].half
-                              //     //   }];
-                                   
-                              //     // })
-                              //   }
-                              //   return row
-                              // })
-                              // console.log('updatedRows', updatedRows)
-                              setRows(test);
-                            }}
+                            onClick={() => handleToggleWidth(rowIndex, colIndex)}
                           >{col.half ? 'half' : 'full'}</button>
 
-                          <Typography>{col.name}</Typography>
+                          {/* <Typography>{col.name}</Typography> */}
+
+                            {console.log(col)}
+                            {col.fields.map(field => {
+                              return (
+                                <Typography>{field.label}</Typography>
+                              )
+                            })}
+
+
+                          <button
+                            onClick={() => {
+                              setEditField(col)
+                              console.log(col)
+                            }}
+                          >edit me</button>
                         </Box>
                       </Wrapper2>
                     )
@@ -411,12 +436,10 @@ const  FormDnDSandbox = React.memo((props) => {
                 </Container>
               </Draggable>
             )
-          })}
-
-
-          
-              
+          })}     
         </Container> 
+
+
         </Box>  
     );
 })
