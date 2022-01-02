@@ -86,9 +86,8 @@ const applyDrag = (arr, dragResult) => {
 // ];
 
 
-const myfieldsOrig = [
+const myfields = [
   {
-    id: 1,
     fields: [
       {
         label: 'First Name',
@@ -100,7 +99,6 @@ const myfieldsOrig = [
     col: 0
   }, 
   {
-    id: 2,
     fields: [
       {
         label: 'First Name',
@@ -112,7 +110,6 @@ const myfieldsOrig = [
     col: 1,
   },
   {
-    id: 3,
     fields: [
       {
         label: 'First Name',
@@ -124,7 +121,6 @@ const myfieldsOrig = [
     half: false,
   },
   {
-    id: 4,
     fields: [
       {
         label: 'First Name',
@@ -136,7 +132,6 @@ const myfieldsOrig = [
     half: true,
   },
   {
-    id: 5,
     fields: [
       {
         label: 'First Name',
@@ -149,7 +144,6 @@ const myfieldsOrig = [
 
   },
   {
-    id: 6,
     fields: [
       {
         label: 'First Name',
@@ -162,7 +156,6 @@ const myfieldsOrig = [
 
   },
   {
-    id: 7,
     fields: [
       {
         label: 'First Name',
@@ -180,7 +173,6 @@ const myfieldsOrig = [
 const  FormDnDSandbox = React.memo((props) => {
 
   const [rows, setRows] = useState([]);
-  const [myfields, setMyfields] = useState()
   const [cols, setCols] = useState([]);
 
   // const rowCount = Math.max.apply(Math, myfields.map(function(field) { return field.row; })) + 1;
@@ -191,98 +183,48 @@ const  FormDnDSandbox = React.memo((props) => {
 
     let rowArray = [];
     arrayToSort.forEach((field, index) => { 
-      const col = {
-        id: field.id,
-        row: field.row,
-        col: field.col,
-        half: field.half,
-      }
-      console.log('col', col)
       if (rowArray[field.row]){
-        rowArray[field.row] = [...rowArray[field.row], col]
+        rowArray[field.row] = [...rowArray[field.row], field]
       } 
       else { 
-    
-        rowArray.push([col]) 
-
-        // rowArray.push([field]) 
+        rowArray.push([field]) 
       }
     })
-    console.log('rowArray', rowArray)
+
     return rowArray;
 
   }
 
-
   useEffect(() => {
-    const structuredRow = buildRows(myfieldsOrig);
+    const structuredRow = buildRows(myfields);
     console.log('structuredRow', structuredRow)
     setRows(structuredRow);
-    
-    const foo = myfieldsOrig.map(fieldSet => {
-      return {
-        id: fieldSet.id,
-        fields: fieldSet.fields
-      }
-    })
-
-    const obj = myfieldsOrig.reduce((o, key) => ({ ...o, [key.id]: key.fields}), {})
-    console.log('obj', obj)
-
-    setMyfields(obj)
-    
   }, []);
 
   const addNewField = () => {
-    // const newRow = [
-    //   {
-    //     fields: [
-    //       {
-    //         label: 'First Name',
-    //         value: 'Test New'
-    //       }
-    //     ],
-    //     half: false,
-    //     col: 0,
-    //     row: rows.length + 1,
-    //   }
-    // ]
-    const newId = Math.floor(Math.random() * 1000);
-    const col = {
-      id: newId,
-      row: rows.length + 1,
-      col: 0,
-      half: false,
-    }
-
-    const fieldSet = {
-      value: 'New',
-      label: 'New'
-    }
-
-    setRows([...rows, [col]])
-    setMyfields({...myfields, [newId]: [fieldSet]})
-
+    const newRow = [
+      {
+        fields: [
+          {
+            label: 'First Name',
+            value: 'Test New'
+          }
+        ],
+        half: false,
+        col: 0,
+        row: rows.length + 1,
+      }
+    ]
+    setRows([...rows, newRow])
   }
 
 
 
   const handleRowDrop = (dropResult) => {
-    // new stuff
-    console.log('dropResult', dropResult)
-    const dragResults  = applyDrag(rows, dropResult) 
-    console.log('dragResults', dragResults)
-    // get rows at removed index
 
-    // get rows at added index
-
-
-  
-   
-    // Origninal working stuff
     // const dragResults = dropResult.payload.length ? applyDrag(rows, dropResult) 
     // : applyDrag(rows, {...dropResult, payload: [dropResult.payload], removedIndex: dropResult.payload.row});
-    // const dragResults  = applyDrag(rows, dropResult) 
+    const dragResults  = applyDrag(rows, dropResult) 
     
 
     const updatedRows = dragResults.map((row, rowIndex) => {
@@ -290,7 +232,6 @@ const  FormDnDSandbox = React.memo((props) => {
         return {...field, row: rowIndex}
       }) 
     })
-  
     setRows(updatedRows)
   }
 
@@ -337,85 +278,31 @@ const  FormDnDSandbox = React.memo((props) => {
     setRows(rowsCopy);
   }
 
-  const handleEditLabel = (value, rowIndex, colIndex, fieldIndex, id) => {
+  const handleEditLabel = (value, rowIndex, colIndex, fieldIndex) => {
     console.log(value, rowIndex, colIndex, fieldIndex)
-    
-    // const copy = {
-    //   ...myfields,
-    //   [id]: myfields[id].map((field, index) => {
-    //     if (index === fieldIndex){
-    //       return {
-    //         ...field,
-    //         label: value
-    //       }
-    //     }
-    //     return field
-    //   }) 
-    // }
-    setMyfields({...myfields,
-      [id]: myfields[id].map((field, index) => {
-        if (index === fieldIndex){
-          return {
-            ...field,
-            label: value
+  
+
+    const copy = rows.map((row, ri) => {
+      if (ri === rowIndex) {
+        return row.map((col, ci) => {
+          if (ci === colIndex) {
+            const newField = col.fields.map((field, fi) => {
+              if (fi === fieldIndex) {
+                return {
+                  ...field,
+                  label: value
+                }
+              }
+              return field
+            })
+            return {...col, fields: newField }
           }
-        }
-        return field
-      }) 
+          return col
+        })
+      }
+      return row
     })
-  
-  
-    // const copy = myfields.map(col => {
-    //   if (col.id === id) {
-    //     const newField = col.fields.map((field, fi) => {
-    //       if (fi === fieldIndex) {
-    //         return {
-    //           ...field,
-    //           label: value
-    //         }
-    //       }
-    //       return field
-    //     })
-    //     return {...col, fields: newField }
-    //   }
-    //   return col
-    // })
-
-
-    
-    // rowsCopy = 'yo';
-    // // setRows(rowsCopy);
-    // console.log('rowsCopy', rowsCopy)
-    // console.log('rows', rows)
-
-    // const copy = rows.map((row, ri) => {
-    //   if (ri === rowIndex) {
-    //     return row.map((col, ci) => {
-    //       if (ci === colIndex) {
-    //         console.log('COLS', col)
-    //         const newField = col.fields.map((field, fi) => {
-    //           if (fi === fieldIndex) {
-    //             return {
-    //               ...field,
-    //               label: value
-    //             }
-    //           }
-    //           return field
-    //         })
-    //         return {...col, fields: newField }
-    //       }
-    //       return col
-    //     })
-    //   }
-    //   return row
-    // })
-
-    // console.log('copy', copy)
-    // setRows(copy)
-
-    // data.name = e.target.value;
-    // setDatas([...datas]);
-
+    setRows(copy)
 
   }
 
@@ -569,10 +456,10 @@ const  FormDnDSandbox = React.memo((props) => {
                           <button
                             onClick={() => handleToggleWidth(rowIndex, colIndex)}
                           >{col.half ? 'Expand' : 'Shrink'}</button>
- {col.id}
-                          
-                          {myfields[col.id].map((field, fieldIndex) => {
-                            console.log('col.id', col.id)
+
+                          {/* <Typography>{col.name}</Typography> */}
+
+                            {col.fields.map((field, fieldIndex) => {
                               return (
                            
                               <Box
@@ -581,38 +468,16 @@ const  FormDnDSandbox = React.memo((props) => {
                                   width: '100%',
                                 }}
                               >
-                               
                                 <Typography>
                                   <ContentEditable
                                     html={field.label} // innerHTML of the editable div
-                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex, col.id)} // handle innerHTML change
+                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex)} // handle innerHTML change
                                   />
                                 </Typography>
                                 <TextField fullWidth id="outlined-basic" label={field.label} variant="outlined" />
                               </Box>
                               )
                             })}
-
-
-                            {/* {col.fields.map((field, fieldIndex) => {
-                              return (
-                           
-                              <Box
-                                key={fieldIndex}
-                                sx={{
-                                  width: '100%',
-                                }}
-                              >
-                                <Typography>
-                                  <ContentEditable
-                                    html={field.label} // innerHTML of the editable div
-                                    onChange={(e) => handleEditLabel(e.target.value, rowIndex, colIndex, fieldIndex, col.id)} // handle innerHTML change
-                                  />
-                                </Typography>
-                                <TextField fullWidth id="outlined-basic" label={field.label} variant="outlined" />
-                              </Box>
-                              )
-                            })} */}
 
 
                           {/* <button
