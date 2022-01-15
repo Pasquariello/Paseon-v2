@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {addNewFieldAction} from 'src/actions/formActions';
 
 import { Container, Draggable } from "react-smooth-dnd";
-import {fetchFormData, moveRow, moveCol, clearEmptyRows, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
 
 import {Box, Button, TextField, Typography} from '@mui/material';
 import { FormBuilderContext } from 'src/context/FormBuilderContext';
@@ -18,31 +17,39 @@ import Column from './Column';
 
 
 const Row = React.memo((props) => {
+
   const {
-    row,
+    rowId,
+    rowLength,
     rowIndex,
     handleCardDrop,
-    handleEditLabel,
     handleRowDrop,
     handleToggleWidth,
     myfields,
+    row,
   } = props;
-  
+  const {addNewRow} = useContext(FormBuilderContext);
+
+  // const row = rows2.find(row => row.rowId === rowId);
+  // console.log(row)
     return ( 
     
    
               <Draggable
-                length={row.length}
+                // length={row.length}
                 key={rowIndex}
                 style={{
                   border: '1px dashed black'
                 }}
               >
                 row {rowIndex}
+                <Button onClick={() => addNewRow(rowIndex) }>Above</Button>
+                <Button onClick={() => addNewRow(rowIndex + 1) }>Below</Button>
                 <Container
                   orientation="horizontal"
                   onDrop={(e) => handleCardDrop(rowIndex, e)}
-                  getChildPayload={index => row[index]}
+                  // getChildPayload={index => row[index]}
+                  getChildPayload={index => row.columns[index]}
                   index={rowIndex}
                   dragClass="card-ghost"
 
@@ -50,7 +57,7 @@ const Row = React.memo((props) => {
                   groupName='col'
                   // groupName={`col${row.length}`} 
 
-                  rowLength={row.length}
+                  rowLength={rowLength}
                   fooIndex={rowIndex}
             
                   style={{
@@ -64,17 +71,18 @@ const Row = React.memo((props) => {
                
                  shouldAcceptDrop={(sourceContainerOptions, payload) => {
                     // console.log('sourceContainerOptions', sourceContainerOptions)
+                    console.log('payload', payload)
                     if (sourceContainerOptions.groupName === 'row') {
                       return false; // must come first
                     }
                     if(rowIndex === payload.row) {
                         return true // coming from row currently being dragged from
                     }
-                    if (row.length === 0) { 
+                    if (rowLength === 0) { 
                       return true // if empty row
                     }
     
-                    if (row.length === 1 && row[0].half && rowIndex !== payload.row && payload.half) {
+                    if (rowLength === 1 && row[0].half && rowIndex !== payload.row && payload.half) {
                       return true;
                     }
 
@@ -82,19 +90,19 @@ const Row = React.memo((props) => {
                 
                  }}
                 >
-                  {row.map((col, colIndex) => {
+                  {row.columns.map((col, colIndex) => {
                      return (
         
                       <Column
-                      colIndex={colIndex}
-                      col={col}
-                      row={row}
-                      rowIndex={rowIndex}
-                      handleCardDrop={handleCardDrop}
-                      handleEditLabel={handleEditLabel}
-                      // handleRowDrop={handleRowDrop}
-                      handleToggleWidth={handleToggleWidth}
-                      myfields={myfields}
+                        key={col.id}
+                        colIndex={colIndex}
+                        col={col}
+                        row={row}
+                        rowIndex={rowIndex}
+                        handleCardDrop={handleCardDrop}
+                        // handleRowDrop={handleRowDrop}
+                        handleToggleWidth={handleToggleWidth}
+                        myfields={myfields}
                       />
                     )
                   })}

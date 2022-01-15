@@ -87,6 +87,11 @@ import React, {
           path: '/app/form-builder/edit/:id',
           component: lazy(() => import('src/views/formBuilderView/formBuilder'))
         },
+        {
+          exact: true,
+          path: '/app/test',
+          component: lazy(() => import('src/views/testViews'))
+        },
         // {
         //   component: () => <Redirect to="/404" />
         // }

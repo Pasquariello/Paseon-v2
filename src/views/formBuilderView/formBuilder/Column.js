@@ -17,15 +17,33 @@ import ContentEditable from 'react-contenteditable'
 
 
 
-const Row = React.memo((props) => {
+const Column = React.memo((props) => {
   const {
     rowIndex,
-    handleEditLabel,
+    // handleEditLabel,
     handleToggleWidth,
-    myfields,
+    // myfields,
     colIndex,
     col
   } = props;
+  const { myfields, setMyfields } = useContext(FormBuilderContext);
+
+  const handleEditLabel = (value, rowIndex, colIndex, fieldIndex, id) => {
+    
+
+    setMyfields({...myfields,
+      [id]: myfields[id].map((field, index) => {
+        if (index === fieldIndex){
+          return {
+            ...field,
+            label: value
+          }
+        }
+        return field
+      }) 
+    })
+
+  }
   
     return ( 
     
@@ -72,4 +90,4 @@ const Row = React.memo((props) => {
     );
 })
 
-export default Row;
+export default Column;
