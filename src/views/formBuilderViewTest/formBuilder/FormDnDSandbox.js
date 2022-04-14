@@ -1,21 +1,10 @@
-import React, {useEffect, useContext, useState, useCallback} from 'react';
+import React, {useEffect, useContext, useCallback} from 'react';
 import Row from "./Row";
-import Column from "./Column";
 import './form.css'
 import shortid from 'shortid';
-
-import { useDispatch, useSelector } from 'react-redux';
-import {addNewFieldAction} from 'src/actions/formActions';
-
-import { Container, Draggable } from "react-smooth-dnd";
-import {fetchFormData, moveRow, moveCol, clearEmptyRows, incrementRowColCount, decrementRowColCount} from 'src/store/formDetailsSlice';
-
-import {Box, Button, TextField, Typography} from '@mui/material';
+import { Container } from "react-smooth-dnd";
+import {Button } from '@mui/material';
 import { FormBuilderContext } from 'src/context/FormBuilderContext';
-
-
-import ContentEditable from 'react-contenteditable'
-
 
 // todo move to util file and delete
 const applyDrag = (arr, dragResult) => {
@@ -130,28 +119,21 @@ const myfieldsOrig = [
 
 
 
-const  FormDnDSandbox = React.memo((props) => {
-  const { buildRows, rows2, setRows2, rows, myfields, setMyfields, addNewField} = useContext(FormBuilderContext);
+const  FormDnDSandbox = (props) => {
+  const { buildRows, rows2, setRows2, rows, setMyfields, addNewField} = useContext(FormBuilderContext);
 
 
   useEffect(() => {
-    // const structuredRow = 
-    buildRows(myfieldsOrig);
-    // console.log('structuredRow', structuredRow)
-    // setRows(structuredRow);
+    buildRows(myfieldsOrig); // this will call setRows2
 
     const obj = myfieldsOrig.reduce((o, key) => ({ ...o, [key.id]: key.fields}), {})
-    console.log('obj', obj)
-    console.log("")
+
     setMyfields(obj)
 
-
-    
   }, [setMyfields]);
 
   const handleEditLabel = useCallback( ({value, fieldIndex, colId, myfields}) => {
     
-    // console.log('ID', id)
     const row = myfields[colId].map((field, index) => {
           if (index === fieldIndex){
             return {
@@ -170,57 +152,22 @@ const  FormDnDSandbox = React.memo((props) => {
 
 
   const handleRowDrop = (dropResult) => {
-    console.log('dropResult row', dropResult)
 
   
     if (dropResult.removedIndex === null) {
-      console.log('IF')
-      const fooDropResult = {
-        ...dropResult,
-        removedIndex: dropResult.payload.row,
-        payload: {
-          columns: [dropResult.payload],
-          rowId: "9zscoBiWu8",
-        }
-      }
-      const item = {
-        columns: [dropResult.payload],
-        rowId: "9zscoBiWu8",
-      };
 
       const rows2Copy = [...rows2]; 
       const elem = rows2Copy.splice(dropResult.payload.row, 1)[0];
       rows2Copy.splice(dropResult.addedIndex, 0, elem);
   
-      console.log('rows2Copy', rows2Copy)
-
-
-      const fooDragResults  = applyDrag(rows2Copy, fooDropResult) 
-      setRows2(fooDragResults)
-      // console.log('fooDragResults', fooDragResults)
+      const updatedRows = applyDrag(rows2Copy, dropResult) 
+      setRows2(updatedRows)
     } 
     else {
-      console.log('ELSE')
-
       const dragResults  = applyDrag(rows2, dropResult) 
-      console.log('dragResults', dragResults)
       setRows2(dragResults)
-  
     }
    
-    // Origninal working stuff
-    // const dragResults = dropResult.payload.length ? applyDrag(rows, dropResult) 
-    // : applyDrag(rows, {...dropResult, payload: [dropResult.payload], removedIndex: dropResult.payload.row});
-    // const dragResults  = applyDrag(rows, dropResult) 
-    
-
-    // const updatedRows = dragResults.map((row, rowIndex) => {
-    //   return row.map(field => {
-    //     return {...field, row: rowIndex}
-    //   }) 
-    // })
-  
-    // setRows(updatedRows)
   }
 
   const handleCardDrop = (rowIndex, dropResult) => {
@@ -238,7 +185,6 @@ const  FormDnDSandbox = React.memo((props) => {
         }
       });
       
-      console.log(updatedCols)
   
       const updatedRows = rows2.map((row, i) => {
         if (rowIndex === i) {
@@ -250,7 +196,6 @@ const  FormDnDSandbox = React.memo((props) => {
         return row
       })
       setRows2(updatedRows);
-
      
     }
 
@@ -271,15 +216,10 @@ const  FormDnDSandbox = React.memo((props) => {
     
     const rowsCopy = [...rows2];
     rowsCopy.splice(rowIndex, 1, ...newRows)
-    console.log('rowsCopy', rowsCopy)
     setRows2(rowsCopy);
   }
 
  
-  console.log("rows2", rows2)
-
-  const [editField, setEditField] = useState();
-
     return ( 
       <div
         style={{
@@ -292,9 +232,8 @@ const  FormDnDSandbox = React.memo((props) => {
     >
         form container
         <Button onClick={addNewField}>addNewField test button</Button>
-                <Button onClick={() => console.log('rows', rows)}>Print state</Button>
-
-          edit field: {editField?.name}      
+        <Button onClick={() => console.log('rows', rows)}>Print state</Button>
+     
         <Container
           groupName="row" // contains all draggble rows
           style={{
@@ -323,7 +262,6 @@ const  FormDnDSandbox = React.memo((props) => {
               row={row}
               rowIndex={rowIndex}
               handleCardDrop={handleCardDrop}
-              // handleRowDrop={handleRowDrop}
               handleToggleWidth={handleToggleWidth}
              />
             )
@@ -331,6 +269,6 @@ const  FormDnDSandbox = React.memo((props) => {
         </Container> 
         </div> 
     );
-})
+}
 
 export default FormDnDSandbox;

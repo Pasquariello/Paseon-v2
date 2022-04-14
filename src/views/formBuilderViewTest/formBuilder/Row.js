@@ -1,37 +1,28 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, { useContext } from 'react';
 import './form.css'
-import shortid from 'shortid';
-
-import { useDispatch, useSelector } from 'react-redux';
-import {addNewFieldAction} from 'src/actions/formActions';
 
 import { Container, Draggable } from "react-smooth-dnd";
 
-import {Box, Button, TextField, Typography} from '@mui/material';
 import { FormBuilderContext } from 'src/context/FormBuilderContext';
 
 
-import ContentEditable from 'react-contenteditable'
 import Column from './Column';
 
 
 
-const Row = React.memo((props) => {
+const Row = (props) => {
 
   const {
     rowId,
     rowLength,
     rowIndex,
     handleCardDrop,
-    handleRowDrop,
     handleToggleWidth,
     row,
     handleEditLabel
   } = props;
   const {addNewRow} = useContext(FormBuilderContext);
 
-  // const row = rows2.find(row => row.rowId === rowId);
-  console.log("rowLength", rowLength)
     return ( 
     
    
@@ -47,15 +38,10 @@ const Row = React.memo((props) => {
                 <Container
                   orientation="horizontal"
                   onDrop={(e) => handleCardDrop(rowIndex, e)}
-                  // getChildPayload={index => row[index]}
                   getChildPayload={index => row.columns[index]}
                   index={rowIndex}
                   dragClass="card-ghost"
-
-                  // groupName={`col${rowIndex}`} 
                   groupName='col'
-                  // groupName={`col${row.length}`} 
-
                   rowLength={rowLength}
                   fooIndex={rowIndex}
             
@@ -98,15 +84,13 @@ const Row = React.memo((props) => {
                         row={row}
                         rowIndex={rowIndex}
                         handleCardDrop={handleCardDrop}
-                        // handleRowDrop={handleRowDrop}
                         handleToggleWidth={handleToggleWidth}
-                        // myfields={myfields}
                       />
                     )
                   })}
                 </Container>
               </Draggable>
     );
-})
+}
 
 export default Row;
