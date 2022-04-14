@@ -56,7 +56,7 @@ import React, {
     // },
     {
       path: '/app',
-      guard: AuthGuard,
+      // guard: AuthGuard,
       layout: DashboardLayout,
       routes: [
         // NEW
