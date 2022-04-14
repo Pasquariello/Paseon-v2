@@ -45,6 +45,7 @@ import React, {
     const handleSaveSettings = () => {};
 
     const buildRows = (arrayToSort) => {
+      console.log("this is why")
       // sort by row
       arrayToSort.sort((a, b) => a.row - b.row);
       let foo = [...arrayToSort]
@@ -116,6 +117,19 @@ import React, {
         value: 'New',
         label: 'New'
       }
+
+      // const fieldSet = {
+      //     id: shortid.generate(),
+      //     fields: [
+      //       {
+      //         label: 'new',
+      //         value: 'new'
+      //       }
+      //     ],    
+      //     row: rows.length + 1,
+      //     col: 0,
+      //     half: false,
+      // }
   
       setRows2([
         ...rows2,
@@ -124,9 +138,13 @@ import React, {
           columns: [col]
         }
       ])
+
+      console.log('MYFIELDS', myfields)
   
       setRows([...rows, [col]])
       setMyfields({...myfields, [newId]: [fieldSet]})
+      // setMyfields([...myfields, fieldSet])
+
   
     }
   

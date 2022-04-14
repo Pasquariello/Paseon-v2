@@ -29,18 +29,31 @@ const Column = React.memo((props) => {
   const { myfields, setMyfields } = useContext(FormBuilderContext);
 
   const handleEditLabel = (value, rowIndex, colIndex, fieldIndex, id) => {
-    
+    console.log(myfields)
+
+    const row = myfields[id].map((field, index) => {
+          if (index === fieldIndex){
+            return {
+              ...field,
+              label: value
+            }
+          }
+          return field
+        }) 
+
+    console.log(row)
 
     setMyfields({...myfields,
-      [id]: myfields[id].map((field, index) => {
-        if (index === fieldIndex){
-          return {
-            ...field,
-            label: value
-          }
-        }
-        return field
-      }) 
+      [id]: row
+      // [id]: myfields[id].map((field, index) => {
+      //   if (index === fieldIndex){
+      //     return {
+      //       ...field,
+      //       label: value
+      //     }
+      //   }
+      //   return field
+      // }) 
     })
 
   }

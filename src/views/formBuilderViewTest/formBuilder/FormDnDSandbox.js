@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useEffect, useContext, useState, useCallback} from 'react';
 import Row from "./Row";
 import Column from "./Column";
 import './form.css'
@@ -41,10 +41,10 @@ const applyDrag = (arr, dragResult) => {
 
 const myfieldsOrig = [
   {
-    id: 1,
+    id: 88,
     fields: [
       {
-        label: 'First Name',
+        label: 'First Name T',
         value: 'Taylor'
       }
     ],
@@ -132,116 +132,41 @@ const myfieldsOrig = [
 
 const  FormDnDSandbox = React.memo((props) => {
   const { buildRows, rows2, setRows2, rows, myfields, setMyfields, addNewField} = useContext(FormBuilderContext);
-  // console.log('rows2', rows2)
-  // const [rows, setRows] = useState([]);
-  // const [rows2, setRows2] = useState([]);
-
-  // const [myfields, setMyfields] = useState()
-
-  // const rowCount = Math.max.apply(Math, myfields.map(function(field) { return field.row; })) + 1;
-
-  // const buildRows = (arrayToSort) => {
-  //   // sort by row
-  //   arrayToSort.sort((a, b) => a.row - b.row);
-  //   let foo = [...arrayToSort]
-  //   foo.sort((a, b) => a.row - b.row);
-
-  //   let rowArray = [];
-  //   arrayToSort.forEach((field, index) => { 
-  //     const col = {
-  //       id: field.id,
-  //       row: field.row,
-  //       col: field.col,
-  //       half: field.half,
-  //     }
-  //     if (rowArray[field.row]){
-  //       rowArray[field.row] = [...rowArray[field.row], col]
-  //     } 
-  //     else { 
-    
-  //       rowArray.push([col]) 
-  //     }
-  //   })
-
-  //   let rowArray2 = [];
-  //   foo.forEach((field, index) => { 
-  //     const col = {
-  //       id: field.id,
-  //       row: field.row,
-  //       col: field.col,
-  //       half: field.half,
-  //     }
-  //     if (rowArray2[field.row]){
-  //       rowArray2[field.row] = {...rowArray2[field.row], columns: [...rowArray2[field.row].columns, col]}
-  //     } 
-  //     else { 
-    
-  //       rowArray2.push({
-  //         rowId: shortid.generate(),
-  //         columns: [col]
-  //       }) 
-  //     }
-  //   })
-  //   console.log('HERE', rowArray2)
-  //   setRows2(rowArray2)
-  //   console.log('rowArray', rowArray)
-  //   return rowArray;
-
-  // }
 
 
   useEffect(() => {
-    const structuredRow = buildRows(myfieldsOrig);
-    console.log('structuredRow', structuredRow)
+    // const structuredRow = 
+    buildRows(myfieldsOrig);
+    // console.log('structuredRow', structuredRow)
     // setRows(structuredRow);
 
     const obj = myfieldsOrig.reduce((o, key) => ({ ...o, [key.id]: key.fields}), {})
     console.log('obj', obj)
-
+    console.log("")
     setMyfields(obj)
+
+
     
-  }, []);
+  }, [setMyfields]);
 
-  // const addNewField = () => {
-  //   // const newRow = [
-  //   //   {
-  //   //     fields: [
-  //   //       {
-  //   //         label: 'First Name',
-  //   //         value: 'Test New'
-  //   //       }
-  //   //     ],
-  //   //     half: false,
-  //   //     col: 0,
-  //   //     row: rows.length + 1,
-  //   //   }
-  //   // ]
-  //   const newId = Math.floor(Math.random() * 1000);
-  //   const col = {
-  //     id: newId,
-  //     row: rows.length + 1,
-  //     col: 0,
-  //     half: false,
-  //   }
+  const handleEditLabel = useCallback( ({value, fieldIndex, colId, myfields}) => {
+    
+    // console.log('ID', id)
+    const row = myfields[colId].map((field, index) => {
+          if (index === fieldIndex){
+            return {
+              ...field,
+              label: value
+            }
+          }
+          return field
+        }) 
 
-  //   const fieldSet = {
-  //     value: 'New',
-  //     label: 'New'
-  //   }
+    setMyfields({...myfields,
+      [colId]: row
+    })
 
-  //   setRows2([
-  //     ...rows2,
-  //     {
-  //       rowId: shortid.generate(),
-  //       columns: [col]
-  //     }
-  //   ])
-
-  //   setRows([...rows, [col]])
-  //   setMyfields({...myfields, [newId]: [fieldSet]})
-
-  // }
-
+  }, [setMyfields]);
 
 
   const handleRowDrop = (dropResult) => {
@@ -299,8 +224,6 @@ const  FormDnDSandbox = React.memo((props) => {
   }
 
   const handleCardDrop = (rowIndex, dropResult) => {
-    console.log(rowIndex)
-    console.log('dropResult card', dropResult)
 
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
       const row = rows2[rowIndex].columns;
@@ -319,45 +242,22 @@ const  FormDnDSandbox = React.memo((props) => {
   
       const updatedRows = rows2.map((row, i) => {
         if (rowIndex === i) {
-          return updatedCols
+          return {
+            ...row,
+            columns: updatedCols
+          }
         }
         return row
       })
-      console.log('updatedRows', updatedRows)
-      // setRows(updatedRows);
+      setRows2(updatedRows);
 
      
     }
-    // if col to row
 
 
   }
 
   const  handleToggleWidth = (rowIndex, colIndex) => {
-
-    // const newRows = rows2.map((row, ri) => {
-    //   if (ri === rowIndex) {
-    //       // const colSize = ri === colIndex ? !rows2[rowIndex].columns[colIndex].half : rows2[rowIndex].columns[colIndex].half;
-    //       const columns = row.columns.map((col, ci) => {
-    //         if (ci === colIndex) {
-    //           return {
-    //             ...col,
-    //             half: !col.half
-    //           } 
-    //         } 
-    //         return col
-    //       })
-    //     return {
-    //       ...row,
-    //       columns,
-    //     }
-    //   }
-    //   return row;
-    // })
-    // const rowsCopy = [...rows];
-    // rowsCopy.splice(rowIndex, 1, ...newRows)
-    // setRows2(newRows);
-
     const newRows = rows2[rowIndex].columns.map((col, i) => {
       const colSize = i === colIndex ? !rows2[rowIndex].columns[colIndex].half : rows2[rowIndex].columns[colIndex].half;
       return {
@@ -376,11 +276,12 @@ const  FormDnDSandbox = React.memo((props) => {
   }
 
  
+  console.log("rows2", rows2)
 
   const [editField, setEditField] = useState();
 
     return ( 
-      <Box
+      <div
         style={{
         overflow: 'auto',
         border: '1px dashed blue',
@@ -403,12 +304,6 @@ const  FormDnDSandbox = React.memo((props) => {
           orientation="vertical"
           onDrop={handleRowDrop}
           getChildPayload={index =>rows2[index]}
-          // shouldAcceptDrop={(sourceContainerOptions, payload) => {
-          //   if (sourceContainerOptions.groupName === 'col') {
-          //     return true
-          //   }
-          //   return true
-          // }}
           // dragHandleSelector=".column-drag-handle"
           dropPlaceholder={{
             animationDuration: 150,
@@ -419,23 +314,22 @@ const  FormDnDSandbox = React.memo((props) => {
 
           {rows2.map((row, rowIndex) => {
             return (
-            <>
+
              <Row
               key={row.rowId}
-              rowLength={row.length}
+              handleEditLabel={handleEditLabel}
+              rowLength={row.columns.length}
               rowId={row.rowId}
               row={row}
               rowIndex={rowIndex}
               handleCardDrop={handleCardDrop}
               // handleRowDrop={handleRowDrop}
               handleToggleWidth={handleToggleWidth}
-              myfields={myfields}
              />
-             </>
             )
           })}   
         </Container> 
-        </Box> 
+        </div> 
     );
 })
 

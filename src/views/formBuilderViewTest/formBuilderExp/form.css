@@ -1,0 +1,71 @@
+.test:focus {
+    outline: none;
+}
+
+
+.card-ghost {
+ 
+    width:100%;
+    overflow:auto;
+    /* background: 'red' */
+
+
+
+}
+
+.card-ghost-drop {
+    width:100%;
+    overflow:auto;
+    /* background: 'red' */
+
+}
+
+.cards-drop-preview {
+    background-color: rgba(150, 150, 200, 0.1);
+    border: 1px dashed #abc;
+    /* margin: 5px 45px 5px 5px; */
+    width: 100%;
+    top: 0;
+    /* height: 100%; */
+    display: flex;
+    overflow: hidden;
+  }
+
+  .drop-preview {
+    background-color: rgba(124, 124, 196, 0.1);
+    border: 1px solid #abc;
+    height: 100%;
+    top: 0;
+    /* width: 100%; */
+    display: flex;
+    /* overflow: hidden; */
+    /* width: 100%; */
+    /* flex: 1; */
+
+    
+
+    
+
+
+    /* margin: 5px; */
+  }
+  
+  /* * {
+      margin: 0;
+      padding: 0;
+  } */
+
+  .draggable-item-horizontal{
+    height: 100px;
+    /* padding: 10px; */
+    /* line-height: 100px; */
+    /* text-align: center; */
+    width : 200px;
+    display: block;
+    /* background-color: #fff; */
+
+    background-color: #fff;
+    outline: 0;
+    border: 1px solid rgba(0,0,0,.125);
+    margin-right: 4px;
+}
