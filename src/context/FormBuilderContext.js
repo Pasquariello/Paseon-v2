@@ -58,6 +58,9 @@ import React, {
           row: field.row,
           col: field.col,
           half: field.half,
+          name: field.name,
+          direction: field.direction,
+          labelAlign: field.labelAlign
         }
         if (rowArray[field.row]){
           rowArray[field.row] = [...rowArray[field.row], col]
@@ -75,6 +78,9 @@ import React, {
           row: field.row,
           col: field.col,
           half: field.half,
+          name: field.name,
+          direction: field.direction,
+          labelAlign: field.labelAlign
         }
         if (rowArray2[field.row]){
           rowArray2[field.row] = {...rowArray2[field.row], columns: [...rowArray2[field.row].columns, col]}
@@ -111,6 +117,7 @@ import React, {
         row: rows.length + 1,
         col: 0,
         half: false,
+        name: "",
       }
   
       const fieldSet = {

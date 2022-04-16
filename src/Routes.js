@@ -79,9 +79,9 @@ import React, {
         },
         {
           exact: true,
-          path: '/app/form-builder/test',
+          path: '/app/form-builder',
           // component: lazy(() => import('src/views/formBuilderView'))
-          component: lazy(() => import('src/views/formBuilderViewTest/formBuilder'))
+          component: lazy(() => import('src/views/formBuilderView/formBuilder'))
 
         },
         {
