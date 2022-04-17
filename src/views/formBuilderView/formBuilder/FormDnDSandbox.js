@@ -247,7 +247,8 @@ const  FormDnDSandbox = (props) => {
 
   const handleRowDrop = (dropResult) => {
 
-  
+    console.log('dropResult ==== ROW', dropResult)
+
     if (dropResult.removedIndex === null) {
 
       const rows2Copy = [...rows2]; 
@@ -265,11 +266,34 @@ const  FormDnDSandbox = (props) => {
   }
 
   const handleCardDrop = (rowIndex, dropResult) => {
+    console.log('dropResult ==== COL', dropResult)
+
+    if (dropResult.payload.body) {
+      console.log('hello', dropResult.payload.body)
+      // addNewField()
+      const id = dropResult.payload.body.id
+      const fieldSet = dropResult.payload.body.properties
+      console.log('FIELD SET', fieldSet)
+
+      const col = {
+        id,
+        row: rows.length + 1,
+        col: 0,
+        half: false,
+        name: "",
+      }
+      console.log('myfields', myfields)
+      setMyfields({...myfields, [`${id}`]: fieldSet})
+       
+  
+    
+    }
 
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
       const row = rows2[rowIndex].columns;
   
-      const newCol = applyDrag(row, dropResult);
+      const res = dropResult.payload.body ? dropResult : dropResult;
+      const newCol = applyDrag(row, res);
 
       const updatedCols = newCol.map((col, colIndex) => {
         return {
@@ -289,6 +313,7 @@ const  FormDnDSandbox = (props) => {
         }
         return row
       })
+      console.log('updatedRows', updatedRows)
       setRows2(updatedRows);
      
     }
@@ -313,6 +338,7 @@ const  FormDnDSandbox = (props) => {
     setRows2(rowsCopy);
   }
 
+    console.log('ROWS2', rows2);
  
     return ( 
       <div

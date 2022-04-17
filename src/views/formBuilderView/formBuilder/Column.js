@@ -11,13 +11,39 @@ import ContentEditable from 'react-contenteditable'
 
 const Input = ({name, label, labelAlign, value, subType, required, handleEditLabel, fieldIndex, colId, subFields, checked
 }) => {
-  console.log('labelAlign', labelAlign)
-  console.log('checked', checked)
+  const { myfields, setMyfields } = useContext(FormBuilderContext);
+
   const direction = {
     top: 'column',
     right: 'row-reverse',
     bottom: 'column-reverse',
     left: 'row',
+  }
+
+  const handleEditSubFieldLabel = (value, fieldIndex, subFieldIndex, colId) => {
+
+    const row = myfields[colId].map((field, index) => {
+      if (index === fieldIndex){
+        const subFields = field.subFields.map((subField, subIndex) => {
+          if (subIndex === subFieldIndex){
+            return {
+              ...subField,
+              label: value
+            }
+          }
+          return subField
+        })
+        return {
+          ...field,
+          subFields: subFields
+        }
+      }
+      return field
+    }) 
+
+    setMyfields({...myfields,
+      [colId]: row
+    })
   }
 
 
@@ -39,16 +65,15 @@ const Input = ({name, label, labelAlign, value, subType, required, handleEditLab
         html={label} // innerHTML of the editable div
         onChange={(e) => handleEditLabel({value: e.target.value, fieldIndex, colId})} // handle innerHTML change
       />
-      {subFields?.length ? subFields.map(subField => {
-        console.log("value", value)
-        console.log("subField.value", subField.value)
+      {subFields?.length ? subFields.map((subField, subFieldIndex) => {
 
         return (
           <Input
-            handleEditLabel={handleEditLabel}
+            key={subFieldIndex}
+            handleEditLabel={({value}) => handleEditSubFieldLabel(value, fieldIndex, subFieldIndex, colId)}
             colId={colId}
             value={subField.value}
-            fieldIndex={fieldIndex}
+            fieldIndex={subFieldIndex}
             label={subField.label}
             subType={subField.subType}
             required={false}
@@ -75,7 +100,6 @@ const Input = ({name, label, labelAlign, value, subType, required, handleEditLab
 }
 
 const Radio = ({name, label, labelAlign, value, subType, required, handleEditLabel, fieldIndex, colId}) => {
-  console.log('labelAlign', labelAlign)
 
   const direction = {
     top: 'column',
@@ -85,7 +109,6 @@ const Radio = ({name, label, labelAlign, value, subType, required, handleEditLab
   }
 
   const labelAlignment = direction[labelAlign] || 'column';
-  console.log('labelAlignment', labelAlignment)
  return (
   <div 
   style={{
@@ -197,7 +220,7 @@ const Column = (props) => {
                             flex: '1', // sets to full width
                             minWidth: 0 // prevents overflow
                             }}>
-                          {myfields[col.id].map((field, fieldIndex) => {
+                          {myfields[col.id]?.map((field, fieldIndex) => {
                               return (
                                 <div key={ fieldIndex } 
                                 style={{minWidth: 0, flex: '1'}}

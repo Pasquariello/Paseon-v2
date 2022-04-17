@@ -73,7 +73,8 @@ const FieldOptions = (props) => {
     return (
  
         <Container 
-            groupName="rowContainer" 
+            // groupName="rowContainer" 
+            groupName="col"
             behaviour="copy" 
             style={{
                 display: 'flex',
@@ -81,10 +82,14 @@ const FieldOptions = (props) => {
                 overflow: 'hidden',
                 flexWrap: 'wrap',
             }}
-            // getChildPayload={i => ({
-            //     id: fieldArray[i].id, 
-            //     body: fieldArray[i], 
-            //     type: 'col' })} 
+            getChildPayload={i => (
+                {
+                    id: fieldArray[i].id, 
+                    body: fieldArray[i],       
+                    type: 'col',
+                    half: true,
+                }
+            )} 
 
         >
         {

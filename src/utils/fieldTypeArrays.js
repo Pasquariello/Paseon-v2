@@ -17,11 +17,14 @@ const firstName = {
 }
 
 const lastName = {
-    name: 'lastName',
-    type: 'text',
-    label: 'Last Name',
-    width: 50,
     variant: 'common',
+
+    label: 'Last Name',
+    name: 'last_name',
+    labelAlight: 'top',
+    value: 'Gabrielle',
+    type: 'input',
+    subType: 'text',
 }
 
 const addressLine1 = {
@@ -109,12 +112,19 @@ export const commonFields = [
         variant: 'common',
     },
     {
-        id: shortid.generate(),
-        name: 'lastName',
-        type: 'text',
+        // id: shortid.generate(),
+        // name: 'lastName',
+        // type: 'text',
+        // label: 'Last Name',
+        // width: 50,
+        // variant: 'common',
+
         label: 'Last Name',
-        width: 50,
-        variant: 'common',
+        name: 'last_name',
+        labelAlight: 'top',
+        value: 'Gabrielle',
+        type: 'input',
+        subType: 'text',
     },
     {
         id: shortid.generate(),

@@ -38,7 +38,11 @@ const Row = (props) => {
                 <Container
                   orientation="horizontal"
                   onDrop={(e) => handleCardDrop(rowIndex, e)}
-                  getChildPayload={index => row.columns[index]}
+                  getChildPayload={index => {
+                    console.log('row.columns[index]', row.columns[index])
+                    return row.columns[index]
+                  }
+                }
                   index={rowIndex}
                   dragClass="card-ghost"
                   groupName='col'
@@ -55,7 +59,12 @@ const Row = (props) => {
                   }} 
                
                  shouldAcceptDrop={(sourceContainerOptions, payload) => {
+                    console.log("sourceContainerOptions", sourceContainerOptions)
+                    console.log("payload", payload)
+                    console.log("rowIndex", rowIndex)
+
                     if (sourceContainerOptions.groupName === 'row') {
+                      console.log('FALSE 1')
                       return false; // must come first
                     }
                     // if(rowIndex === payload.row) {
@@ -66,9 +75,10 @@ const Row = (props) => {
                       return true // if empty row
                     }
     
-                    if (rowLength === 1 && row.columns[0].half && rowIndex !== payload.row && payload.half) {
+                    if (rowLength === 1 && row?.columns[0]?.half && rowIndex !== sourceContainerOptions.index && payload?.half) {
                       return true;
                     }
+                    console.log('FALSE 2')
                     return false // all other cases
                 
                  }}

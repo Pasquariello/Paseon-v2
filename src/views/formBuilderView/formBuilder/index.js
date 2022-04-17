@@ -183,13 +183,13 @@ const FormBuilderView = React.memo( ({formData }) => {
 
               }}
             >
-              {/* <PanelControls
+              <PanelControls
                 addNewField={addNewField}
                 isEdit={isEdit}
                 setIsEdit={setIsEdit}
                 formTitle={formTitle || ''}
                 setFormTitle={setFormTitle}
-              />  */}
+              /> 
             </Box>
           </div>
   

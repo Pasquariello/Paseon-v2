@@ -120,10 +120,10 @@ import React, {
         name: "",
       }
   
-      const fieldSet = {
-        value: 'New',
-        label: 'New'
-      }
+      // const fieldSet = {
+      //   value: 'New',
+      //   label: 'New'
+      // }
 
       // const fieldSet = {
       //     id: shortid.generate(),
@@ -137,7 +137,18 @@ import React, {
       //     col: 0,
       //     half: false,
       // }
+
+     const fieldSet = {   
+      label: 'Favorite Snack New',
+      name: 'favorite_snack_new',
+      labelAlight: 'top',
+      value: 'test',
+      type: 'input',
+      subType: 'text',
+    }
   
+    console.log('ADDED ====== ')
+
       setRows2([
         ...rows2,
         {
@@ -149,7 +160,7 @@ import React, {
       console.log('MYFIELDS', myfields)
   
       setRows([...rows, [col]])
-      setMyfields({...myfields, [newId]: [fieldSet]})
+      setMyfields({...myfields, [78]: [fieldSet]})
       // setMyfields([...myfields, fieldSet])
 
   
